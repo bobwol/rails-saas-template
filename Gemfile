@@ -38,9 +38,17 @@ gem 'sdoc', '~> 0.4.0',          group: :doc
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin]
 
-# Only need these in development
+# Code quality tools
 group :development do
   gem 'rails_best_practices', '~> 1.15.4'
   gem 'brakeman', '~> 2.6.0'
   gem 'rubocop', '~> 0.24.0'
+end
+
+# Testing tools
+group :test, :development do
+  gem 'rspec', '~> 3.0.0'
+  gem 'rspec-rails', '~> 3.0.2'
+  gem 'cucumber-rails', '~> 1.4.1'
+  gem 'database_cleaner', '~> 1.3.0'
 end
