@@ -3,8 +3,8 @@ source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.1.4'
-# Use sqlite3 as the database for Active Record
-gem 'sqlite3'
+# Use MySQL as the database for Active Record
+gem 'mysql2', '= 0.3.14'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.3'
 # Use Uglifier as compressor for JavaScript assets
@@ -49,6 +49,6 @@ end
 group :test, :development do
   gem 'rspec', '~> 3.0.0'
   gem 'rspec-rails', '~> 3.0.2'
-  gem 'cucumber-rails', '~> 1.4.1'
+  gem 'cucumber-rails', '~> 1.4.1', :require => false
   gem 'database_cleaner', '~> 1.3.0'
 end
