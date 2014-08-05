@@ -37,3 +37,10 @@ gem 'sdoc', '~> 0.4.0',          group: :doc
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin]
+
+# Only need these in development
+group :development do
+  gem 'rails_best_practices', '~> 1.15.4'
+  gem 'brakeman', '~> 2.6.0'
+  gem 'rubocop', '~> 0.24.0'
+end
