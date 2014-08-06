@@ -1,0 +1,257 @@
+// Place all the styles related to the dashboard controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+/* GLOBAL STYLES
+-------------------------------------------------- */
+/* Padding below the footer and lighter body text */
+
+#home-body {
+  padding-top: 50px;
+  padding-bottom: 40px;
+  color: #5a5a5a;
+}
+
+
+
+/* CUSTOMIZE THE NAVBAR
+-------------------------------------------------- */
+
+/* Special class on .container surrounding .navbar, used for positioning it into place. */
+#home-body .navbar-wrapper {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 20;
+}
+
+/* Flip around the padding for proper display in narrow viewports */
+#home-body .navbar-wrapper .container {
+  padding-right: 0;
+  padding-left: 0;
+}
+#home-body .navbar-wrapper .navbar {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+
+/* CUSTOMIZE THE CAROUSEL
+-------------------------------------------------- */
+
+/* Carousel base class */
+#home-body .carousel {
+  height: 500px;
+  margin-bottom: 60px;
+}
+/* Since positioning the image, we need to help out the caption */
+#home-body .carousel-caption {
+  z-index: 10;
+}
+
+/* Declare heights because of positioning of img element */
+#home-body .carousel .item {
+  height: 500px;
+  background-color: #777;
+}
+#home-body .carousel-inner > .item > img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  height: 500px;
+}
+
+
+
+/* MARKETING CONTENT
+-------------------------------------------------- */
+
+/* Pad the edges of the mobile views a bit */
+#home-body .marketing {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+/* Center align the text within the three columns below the carousel */
+#home-body .marketing .col-lg-4 {
+  margin-bottom: 20px;
+  text-align: center;
+}
+#home-body .marketing h2 {
+  font-weight: normal;
+}
+#home-body .marketing .col-lg-4 p {
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+
+/* Featurettes
+------------------------- */
+
+#home-body .featurette-divider {
+  margin: 80px 0; /* Space out the Bootstrap <hr> more */
+}
+
+/* Thin out the marketing headings */
+#home-body .featurette-heading {
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -1px;
+}
+
+
+
+/* RESPONSIVE CSS
+-------------------------------------------------- */
+
+@media (min-width: 768px) {
+
+  /* Remove the edge padding needed for mobile */
+  #home-body .marketing {
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  /* Navbar positioning foo */
+  #home-body .navbar-wrapper {
+    margin-top: 20px;
+  }
+  #home-body .navbar-wrapper .container {
+    padding-right: 15px;
+    padding-left:  15px;
+  }
+  #home-body .navbar-wrapper .navbar {
+    padding-right: 0;
+    padding-left:  0;
+  }
+
+  /* The navbar becomes detached from the top, so we round the corners */
+  #home-body .navbar-wrapper .navbar {
+    border-radius: 4px;
+  }
+
+  /* Bump up size of carousel content */
+  #home-body .carousel-caption p {
+    margin-bottom: 20px;
+    font-size: 21px;
+    line-height: 1.4;
+  }
+
+  #home-body .featurette-heading {
+    font-size: 50px;
+  }
+}
+
+@media (min-width: 992px) {
+  #home-body .featurette-heading {
+    margin-top: 120px;
+  }
+}
+
+
+
+
+// Place all the styles related to the admin/dashboard controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+
+/*
+ * Base structure
+ */
+
+/* Move down content because we have a fixed navbar that is 50px tall */
+#app-body {
+  padding-top: 50px;
+}
+
+
+/*
+ * Global add-ons
+ */
+
+#app-body .sub-header {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+
+/*
+ * Sidebar
+ */
+
+/* Hide for mobile, show later */
+#app-body .sidebar {
+  display: none;
+}
+@media (min-width: 768px) {
+  #app-body .sidebar {
+    position: fixed;
+    top: 51px;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    display: block;
+    padding: 20px;
+    overflow-x: hidden;
+    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+    background-color: #f5f5f5;
+    border-right: 1px solid #eee;
+  }
+}
+
+/* Sidebar navigation */
+#app-body .nav-sidebar {
+  margin-right: -21px; /* 20px padding + 1px border */
+  margin-bottom: 20px;
+  margin-left: -20px;
+}
+#app-body .nav-sidebar > li > a {
+  padding-right: 20px;
+  padding-left: 20px;
+}
+#app-body .nav-sidebar > .active > a {
+  color: #fff;
+  background-color: #428bca;
+}
+
+
+/*
+ * Main content
+ */
+
+#app-body .main {
+  padding: 20px;
+}
+@media (min-width: 768px) {
+  #app-body .main {
+    padding-right: 40px;
+    padding-left: 40px;
+  }
+}
+#app-body .main .page-header {
+  margin-top: 0;
+}
+
+
+/*
+ * Placeholder dashboard ideas
+ */
+
+#app-body .placeholders {
+  margin-bottom: 30px;
+  text-align: center;
+}
+#app-body .placeholders h4 {
+  margin-bottom: 0;
+}
+#app-body .placeholder {
+  margin-bottom: 20px;
+}
+#app-body .placeholder img {
+  display: inline-block;
+  border-radius: 50%;
+}

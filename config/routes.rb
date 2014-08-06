@@ -53,4 +53,9 @@ Rails.application.routes.draw do
   #     # (app/controllers/admin/products_controller.rb)
   #     resources :products
   #   end
+
+  constraints :subdomain => 'www' do
+    root 'marketing#index', as: :marketing_root
+  end
+  root 'dashboard#index'
 end

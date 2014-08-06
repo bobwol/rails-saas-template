@@ -30,6 +30,8 @@ GEM
     arel (5.0.1.20140414130214)
     ast (2.0.0)
     awesome_print (1.2.0)
+    bootstrap-sass (3.2.0.1)
+      sass (~> 3.2)
     brakeman (2.6.1)
       erubis (~> 2.6)
       fastercsv (~> 1.5)
@@ -217,6 +219,7 @@ PLATFORMS
   x86-mingw32
 
 DEPENDENCIES
+  bootstrap-sass (~> 3.2.0.1)
   brakeman (~> 2.6.0)
   coffee-rails (~> 4.0.0)
   cucumber-rails (~> 1.4.1)

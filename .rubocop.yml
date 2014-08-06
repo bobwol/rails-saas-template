@@ -16,6 +16,7 @@ AllCops:
     - 'vendor/**/*'
     - 'bin/**/*'
     - 'script/**/*'
+    - 'db/schema.rb'
     - 'Rakefile'
   # By default, the rails cops are not run. Override in project or home
   # directory .rubocop.yml files, or by giving the -R/--rails option.
@@ -157,7 +158,7 @@ Style/ClassCheck:
 
 Style/ClassLength:
   CountComments: false  # count full line comments?
-  Max: 80
+  Max: 120
 
 # Align with the style guide.
 Style/CollectionMethods:
@@ -244,7 +245,7 @@ Style/HashSyntax:
     - hash_rockets
 
 Style/IfUnlessModifier:
-  MaxLineLength: 80
+  MaxLineLength: 120
 
 # Checks the indentation of the first key in a hash literal.
 Style/IndentHash:
@@ -267,7 +268,7 @@ Style/LambdaCall:
     - braces
 
 Style/LineLength:
-  Max: 80
+  Max: 120
   AllowURI: true
 
 Style/Next:
@@ -460,7 +461,7 @@ Style/VariableName:
     - camelCase
 
 Style/WhileUntilModifier:
-  MaxLineLength: 80
+  MaxLineLength: 120
 
 Style/WordArray:
   MinSize: 0

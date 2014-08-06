@@ -38,6 +38,9 @@ gem 'sdoc', '~> 0.4.0',          group: :doc
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin]
 
+# Add bootstrap-sass for a theme
+gem 'bootstrap-sass', '~> 3.2.0.1'
+
 # Code quality tools
 group :development do
   gem 'rails_best_practices', '~> 1.15.4'
