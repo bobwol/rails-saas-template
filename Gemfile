@@ -41,6 +41,9 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin]
 # Add bootstrap-sass for a theme
 gem 'bootstrap-sass', '~> 3.2.0.1'
 
+# Add kaminari for paging results
+gem 'kaminari', '~> 0.15.1'
+
 # Add delayed jobs so we can background tasks that aren't critical
 gem 'daemons', '~> 1.1.9'
 gem 'delayed_job', '~> 4.0.1'
