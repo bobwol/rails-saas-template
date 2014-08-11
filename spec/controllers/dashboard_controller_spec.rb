@@ -34,17 +34,30 @@ require 'rails_helper'
 RSpec.describe DashboardController, type: :controller do
   # Requesting http://app.[your-domain]/ should show the application dashboard
   describe 'GET #index' do
-    it 'responds successfully with an HTTP 200 status code' do
-      get :index
-      expect(response).to be_success
-      expect(response).to have_http_status(200)
+    context 'as anonymous user' do
+      it 'redirect to login page' do
+        get :index
+        expect(response).to redirect_to(new_user_session_path)
+      end
     end
 
-    it 'renders the index template' do
-      get :index
-      expect(response).to render_template('index')
-      expect(response).to render_template('layouts/application')
-      # TODO: How do I check for no layout?
+    context 'as super admin user' do
+      before(:each) do
+        admin = FactoryGirl.create(:admin)
+        sign_in :user, admin
+      end
+
+      it 'responds successfully with an HTTP 200 status code' do
+        get :index
+        expect(response).to be_success
+        expect(response).to have_http_status(200)
+      end
+
+      it 'renders the index template' do
+        get :index
+        expect(response).to render_template('index')
+        expect(response).to render_template('layouts/application')
+      end
     end
   end
 end

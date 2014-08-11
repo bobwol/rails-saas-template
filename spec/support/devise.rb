@@ -28,12 +28,7 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# Base class for all application controllers
-class ApplicationController < ActionController::Base
-  # Prevent CSRF attacks by raising an exception.
-  # For APIs, you may want to use :null_session instead.
-  protect_from_forgery with: :exception
-
-  # Make sure the user is authenticated by default
-  before_action :authenticate_user!
+# Configuration for devise
+RSpec.configure do |config|
+  config.include Devise::TestHelpers, type: :controller
 end

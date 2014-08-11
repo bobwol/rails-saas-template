@@ -28,14 +28,9 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-require 'rails_helper'
-
-# Tests for dashboard routing
-RSpec.describe 'routing to application homepage', type: :routing do
-  it 'routes http://app.example.com/ to dashboard#index' do
-    expect(get: 'http://app.example.com/').to route_to(
-      controller: 'marketing',
-      action: 'index'
-    )
+# Configuration for Factory Girl
+RSpec.configure do |config|
+  config.before(:suite) do
+    FactoryGirl.lint
   end
 end

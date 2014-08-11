@@ -1,0 +1,59 @@
+<%
+@title = 'Edit User'
+@heading = 'Users'
+@subheading = 'Edit User'
+%>
+<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title">Edit User</h3>
+  </div>
+  <div class="panel-body">
+    <%= devise_error_messages! %>
+    <div class="form-group">
+      <%= f.label :first_name, class: "control-label" %>
+      <%= f.text_field :first_name, class: "form-control" %>
+    </div>
+    <div class="form-group">
+      <%= f.label :last_name, class: "control-label" %>
+      <%= f.text_field :last_name, class: "form-control" %>
+    </div>
+    <div class="form-group">
+      <%= f.label :email, class: "control-label" %>
+      <%= f.text_field :email, class: "form-control" %>
+    </div>
+<% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+    <div class="form-group">
+      Currently waiting confirmation for: <%= resource.unconfirmed_email %>
+    </div>
+<% end %>
+    <div class="form-group">
+      <%= f.label :password, class: "control-label" %>
+      <%= f.password_field :password, autocomplete: "off", class: "form-control" %>
+    </div>
+    <div class="form-group">
+      <%= f.label :password_confirmation, class: "control-label" %>
+      <%= f.password_field :password_confirmation, autocomplete: "off", class: "form-control" %>
+    </div>
+    <div class="form-group">
+      <%= f.label :current_password, class: "control-label" %>
+      <%= f.password_field :current_password, autocomplete: "off", class: "form-control" %>
+    </div>
+
+    <%= render "devise/shared/links" %>
+
+    <div></div>
+
+  </div>
+
+  <div class="panel-footer">
+    <div class="row">
+      <div class="col-xs-6 col-sm-6 col-md-6"></div>
+      <div class="col-xs-6 col-sm-6 col-md-6" style="text-align: right">
+        <%= button_to "Cancel", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete %>
+		<%= f.submit "Update", class: "btn btn-primary" %>
+      </div>
+    </div>
+  </div>
+</div>
+<% end %>

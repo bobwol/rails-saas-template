@@ -28,12 +28,30 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# Base class for all application controllers
-class ApplicationController < ActionController::Base
-  # Prevent CSRF attacks by raising an exception.
-  # For APIs, you may want to use :null_session instead.
-  protect_from_forgery with: :exception
+# User model
+class User < ActiveRecord::Base
+  # Include default devise modules. Others available are:
+  # :confirmable, :lockable, :timeoutable and :omniauthable
+  devise :database_authenticatable, :lockable, :registerable,
+         :recoverable, :rememberable, :trackable, :validatable
 
-  # Make sure the user is authenticated by default
-  before_action :authenticate_user!
+  validates :first_name, length: { maximum: 80 }, presence: true, allow_blank: true
+  validates :last_name, length: { maximum: 80 }, presence: true
+  validates :password, confirmation: true, presence: true, on: :create
+
+  def to_s
+    if first_name.empty?
+      if last_name.empty?
+        '(unknown)'
+      else
+        last_name
+      end
+    else
+      if last_name.empty?
+        first_name
+      else
+        first_name + ' ' + last_name
+      end
+    end
+  end
 end

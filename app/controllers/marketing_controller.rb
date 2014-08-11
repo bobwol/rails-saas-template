@@ -30,6 +30,9 @@
 
 # The Marketing controller implements all of the marketing pages
 class MarketingController < ApplicationController
+  # Skip authentication for the marketing controller. We want anonymous users to be able to access it
+  skip_before_action :authenticate_user!
+
   def index
     render layout: false
   end

@@ -43,7 +43,9 @@ RSpec.describe MarketingController, type: :controller do
     it 'renders the index template' do
       get :index
       expect(response).to render_template('index')
-      # TODO: How do I check for no layout?
     end
+
+    pending 'How do I check for no layout?'
+
   end
 end

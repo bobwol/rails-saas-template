@@ -28,12 +28,21 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# Base class for all application controllers
-class ApplicationController < ActionController::Base
-  # Prevent CSRF attacks by raising an exception.
-  # For APIs, you may want to use :null_session instead.
-  protect_from_forgery with: :exception
+# User factories
+FactoryGirl.define do
+  factory :user do
+    first_name 'John'
+    last_name 'Doe'
+    email 'user@example.com'
+    password 'abcd1234'
+    super_admin false
+  end
 
-  # Make sure the user is authenticated by default
-  before_action :authenticate_user!
+  factory :admin, class: User do
+    first_name 'Admin'
+    last_name 'User'
+    email 'admin@example.com'
+    password 'abcd1234'
+    super_admin true
+  end
 end

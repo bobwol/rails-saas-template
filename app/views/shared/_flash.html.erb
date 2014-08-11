@@ -1,0 +1,23 @@
+﻿
+<% if Rails.env.production? && ENV['SECRET_KEY_BASE'].nil? %>
+ <div class="alert alert-danger"><strong>SECRET_KEY_BASE</strong> environment variable is not set</div>
+<% end %>
+<% if ENV['STRIPE_API_KEY'].nil? %>
+ <div class="alert alert-danger"><strong>STRIPE_API_KEY</strong> environment variable is not set</div>
+<% end %>
+<% if ENV['STRIPE_PUBLISHABLE_KEY'].nil? %>
+ <div class="alert alert-danger"><strong>STRIPE_PUBLISHABLE_KEY</strong> environment variable is not set</div>
+<% end %>
+
+<% if alert %>
+  <div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><%= alert %></div>
+<% end %>
+<% if flash.key?(:alert) %>
+  <div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><%= flash[:alert] %></div>
+<% end %>
+<% if notice %>
+  <div class="alert alert-info alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><%= notice %></div>
+<% end %>
+<% if flash.key?(:notice) %>
+  <div class="alert alert-info alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><%= flash[:notice] %></div>
+<% end %>

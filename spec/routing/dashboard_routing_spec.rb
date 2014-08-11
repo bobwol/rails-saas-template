@@ -28,12 +28,14 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# Base class for all application controllers
-class ApplicationController < ActionController::Base
-  # Prevent CSRF attacks by raising an exception.
-  # For APIs, you may want to use :null_session instead.
-  protect_from_forgery with: :exception
+require 'rails_helper'
 
-  # Make sure the user is authenticated by default
-  before_action :authenticate_user!
+# Tests for dashboard routing
+RSpec.describe 'routing to application homepage', type: :routing do
+  it 'routes http://app.example.com/ to dashboard#index' do
+    expect(get: 'http://app.example.com/').to route_to(
+      controller: 'dashboard',
+      action: 'index'
+    )
+  end
 end

@@ -44,6 +44,9 @@ gem 'bootstrap-sass', '~> 3.2.0.1'
 # Add kaminari for paging results
 gem 'kaminari', '~> 0.15.1'
 
+# Add devise for user authentication
+gem 'devise', '~> 3.2.4'
+
 # Add delayed jobs so we can background tasks that aren't critical
 gem 'daemons', '~> 1.1.9'
 gem 'delayed_job', '~> 4.0.1'
@@ -58,6 +61,8 @@ end
 
 # Testing tools
 group :test, :development do
+  gem 'faker', '~> 1.4.2'
+  gem 'factory_girl_rails', '~> 4.4.1'
   gem 'rspec', '~> 3.0.0'
   gem 'rspec-rails', '~> 3.0.2'
   gem 'cucumber-rails', '~> 1.4.1', :require => false
