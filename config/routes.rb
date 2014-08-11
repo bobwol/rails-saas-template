@@ -2,7 +2,11 @@ Rails.application.routes.draw do
   devise_for :users,
              path_names: { sign_in: 'login',
                            sign_out: 'logout',
-                           sign_up: 'register' }
+                           sign_up: 'register' },
+             controllers: { sessions: 'users/sessions',
+                            passwords: 'users/passwords',
+                            registrations: 'users/registrations',
+                            unlocks: 'users/unlocks' }
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

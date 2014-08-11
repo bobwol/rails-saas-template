@@ -79,7 +79,8 @@ RSpec.describe ApplicationHelper, type: :helper do
     context 'when there is a subheading but no heading or title' do
       it 'uses the default' do
         @subheading = '>Subheading'
-        expect(helper.render_heading).to eq '<h1 class="page-header">Rails-SaaS-Template <small>&gt;Subheading</small></h1>'
+        expect(helper.render_heading).to(
+          eq '<h1 class="page-header">Rails-SaaS-Template <small>&gt;Subheading</small></h1>')
       end
     end
 
@@ -150,24 +151,25 @@ RSpec.describe ApplicationHelper, type: :helper do
       @user = User.new
     end
 
-    context "no errors" do
+    context 'no errors' do
       it 'displays nothing' do
         expect(helper.render_errors(@user)).to eq ''
       end
     end
 
-    context "one error" do
+    context 'one error' do
       it 'displays one error' do
         @user.errors.add :base, '>Something'
         expect(helper.render_errors(@user)).to eq '<div class="alert alert-danger">&gt;Something</div>'
       end
     end
 
-    context "multiple errors" do
+    context 'multiple errors' do
       it 'displays multiple errors' do
         @user.errors.add :base, '>Something'
-        @user.errors.add :base, '>Something else'
-        expect(helper.render_errors(@user)).to eq '<div class="alert alert-danger">&gt;Something</div><div class="alert alert-danger">&gt;Something else</div>'
+        @user.errors.add :base, '>Else'
+        expect(helper.render_errors(@user)).to(
+          eq '<div class="alert alert-danger">&gt;Something</div><div class="alert alert-danger">&gt;Else</div>')
       end
     end
   end

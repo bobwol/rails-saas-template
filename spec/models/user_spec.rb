@@ -40,7 +40,7 @@ RSpec.describe User, type: :model do
     it 'is not required' do
       user = FactoryGirl.build(:user, first_name: '')
       expect(user).to be_valid
-     end
+    end
 
     it 'must be less than 80 characters' do
       user = FactoryGirl.build(:user, first_name: Faker::Lorem.characters(81))

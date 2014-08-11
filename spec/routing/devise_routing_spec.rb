@@ -30,130 +30,130 @@
 
 require 'rails_helper'
 
-# Tests for devise
-RSpec.describe 'routing for the devise', type: :routing do
-  it 'routes GET /users/login to devise/sessions#new' do
+# Tests for customized Devise
+RSpec.describe 'routing for the customize Devise controllers', type: :routing do
+  it 'routes GET /users/login to users/sessions#new' do
     expect(get: '/users/login').to route_to(
-      controller: 'devise/sessions',
+      controller: 'users/sessions',
       action: 'new'
     )
   end
 
-  it 'routes POST /users/login to devise/sessions#create' do
+  it 'routes POST /users/login to users/sessions#create' do
     expect(post: '/users/login').to route_to(
-      controller: 'devise/sessions',
+      controller: 'users/sessions',
       action: 'create'
     )
   end
 
-  it 'routes DELETE /users/logout to devise/sessions#destroy' do
+  it 'routes DELETE /users/logout to users/sessions#destroy' do
     expect(delete: '/users/logout').to route_to(
-      controller: 'devise/sessions',
+      controller: 'users/sessions',
       action: 'destroy'
     )
   end
 
-  it 'routes POST /users/password to devise/passwords#create' do
+  it 'routes POST /users/password to users/passwords#create' do
     expect(post: '/users/password').to route_to(
-      controller: 'devise/passwords',
+      controller: 'users/passwords',
       action: 'create'
     )
   end
 
-  it 'routes GET /users/password/new to devise/passwords#new' do
+  it 'routes GET /users/password/new to users/passwords#new' do
     expect(get: '/users/password/new').to route_to(
-      controller: 'devise/passwords',
+      controller: 'users/passwords',
       action: 'new'
     )
   end
 
-  it 'routes GET /users/password/edit to devise/passwords#edit' do
+  it 'routes GET /users/password/edit to users/passwords#edit' do
     expect(get: '/users/password/edit').to route_to(
-      controller: 'devise/passwords',
+      controller: 'users/passwords',
       action: 'edit'
     )
   end
 
-  it 'routes PATCH /users/password to devise/passwords#update' do
+  it 'routes PATCH /users/password to users/passwords#update' do
     expect(patch: '/users/password').to route_to(
-      controller: 'devise/passwords',
+      controller: 'users/passwords',
       action: 'update'
     )
   end
 
-  it 'routes PUT /users/password to devise/passwords#update' do
+  it 'routes PUT /users/password to users/passwords#update' do
     expect(put: '/users/password').to route_to(
-      controller: 'devise/passwords',
+      controller: 'users/passwords',
       action: 'update'
     )
   end
 
-  it 'routes GET /users/cancel to devise/registrations#cancel' do
+  it 'routes GET /users/cancel to users/registrations#cancel' do
     expect(get: '/users/cancel').to route_to(
-      controller: 'devise/registrations',
+      controller: 'users/registrations',
       action: 'cancel'
     )
   end
 
-  it 'routes POST /users to devise/registrations#create' do
+  it 'routes POST /users to users/registrations#create' do
     expect(post: '/users').to route_to(
-      controller: 'devise/registrations',
+      controller: 'users/registrations',
       action: 'create'
     )
   end
 
-  it 'routes GET /users/register to devise/registrations#new' do
+  it 'routes GET /users/register to users/registrations#new' do
     expect(get: '/users/register').to route_to(
-      controller: 'devise/registrations',
+      controller: 'users/registrations',
       action: 'new'
     )
   end
 
-  it 'routes GET /users/edit to devise/registrations#edit' do
+  it 'routes GET /users/edit to users/registrations#edit' do
     expect(get: '/users/edit').to route_to(
-      controller: 'devise/registrations',
+      controller: 'users/registrations',
       action: 'edit'
     )
   end
 
-  it 'routes PATCH /users to devise/registrations#update' do
+  it 'routes PATCH /users to users/registrations#update' do
     expect(patch: '/users').to route_to(
-      controller: 'devise/registrations',
+      controller: 'users/registrations',
       action: 'update'
     )
   end
 
-  it 'routes PUT /users to devise/registrations#update' do
+  it 'routes PUT /users to users/registrations#update' do
     expect(put: '/users').to route_to(
-      controller: 'devise/registrations',
+      controller: 'users/registrations',
       action: 'update'
     )
   end
 
-  it 'routes DELETE /users to devise/registrations#destroy' do
+  it 'routes DELETE /users to users/registrations#destroy' do
     expect(delete: '/users').to route_to(
-      controller: 'devise/registrations',
+      controller: 'users/registrations',
       action: 'destroy'
     )
   end
 
-  it 'routes POST /users/unlock to devise/unlocks#create' do
+  it 'routes POST /users/unlock to users/unlocks#create' do
     expect(post: '/users/unlock').to route_to(
-      controller: 'devise/unlocks',
+      controller: 'users/unlocks',
       action: 'create'
     )
   end
 
-  it 'routes GET /users/unlock/new to devise/unlocks#new' do
+  it 'routes GET /users/unlock/new to users/unlocks#new' do
     expect(get: '/users/unlock/new').to route_to(
-      controller: 'devise/unlocks',
+      controller: 'users/unlocks',
       action: 'new'
     )
   end
 
-  it 'routes GET /users/unlock to devise/unlocks#show' do
+  it 'routes GET /users/unlock to users/unlocks#show' do
     expect(get: '/users/unlock').to route_to(
-      controller: 'devise/unlocks',
+      controller: 'users/unlocks',
       action: 'show'
     )
   end
