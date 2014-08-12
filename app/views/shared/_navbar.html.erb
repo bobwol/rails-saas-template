@@ -8,13 +8,52 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-	  <%= link_to "Rails-SaaS-Template", root_path, class: "navbar-brand" %>
+    <%= link_to "Rails-SaaS-Template", root_path, class: "navbar-brand" %>
     </div>
 
-  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-    <ul class="nav navbar-nav navbar-right">
-    </ul>
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+<% if user_signed_in? %>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome <%= current_user %> <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li>
+              <div class="navbar-content">
+                <div class="row">
+                  <div class="col-md-5">
+                    <img src="http://lh5.googleusercontent.com/-b0-k99FZlyE/AAAAAAAAAAI/AAAAAAAAAAA/twDq00QDud4/s120-c/photo.jpg"
+                       alt="Alternate Text" class="img-responsive" />
+                    <p class="text-center small"><%= link_to 'Change Photo', edit_user_registration_path %></p>
+                  </div>
+                  <div class="col-md-7">
+                    <span><%= current_user %></span>
+                    <p class="text-muted small"><%= current_user.email %></p>
+                    <div class="divider"></div>
+                    <%= link_to 'View Profile', edit_user_registration_path, class: 'btn btn-primary btn-sm active' %>
+                  </div>
+                </div>
+              </div>
+              <div class="navbar-footer">
+                <div class="navbar-footer-content">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <%= link_to 'Change Password', edit_user_registration_path, class: 'btn btn-default btn-sm active' %>
+                    </div>
+                    <div class="col-md-6">
+                      <%= link_to '<span class="glyphicon glyphicon-off"></span> Sign Out'.html_safe, destroy_user_session_path, method: :delete, class: 'btn btn-danger btn-sm pull-right' %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </li>
+<% else %>
+        <li><a href="#">Plans & Pricing</a></li>
+        <li><a href="#">Sign Up</a></li>
+        <li><%= link_to "Sign In", new_user_session_path %></li>
+<% end %>
+      </ul>
+    </div>
   </div>
-
-  </div><!-- /.container-fluid -->
 </nav>

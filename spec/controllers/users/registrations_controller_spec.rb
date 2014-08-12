@@ -32,5 +32,32 @@ require 'rails_helper'
 
 # Test for customized Devise registrations controller
 RSpec.describe Users::RegistrationsController, type: :controller do
+  before(:each) do
+    @request.env['devise.mapping'] = Devise.mappings[:user]
+  end
 
+  describe 'GET #new' do
+    it 'responds successfully with an HTTP 200 status code' do
+      get :new
+      expect(response).to be_success
+      expect(response).to have_http_status(200)
+    end
+
+    it 'renders the registration form' do
+      get :new
+      expect(response).to render_template('new')
+    end
+  end
+
+  describe 'POST #create' do
+    it 'responds successfully with an HTTP 200 status code' do
+      post :create, user: { email: 'john@example.com',
+                            first_name: 'John',
+                            last_name: 'Doe',
+                            password: 'abcd1234',
+                            password_confirmation: 'abc12345' }
+      expect(response).to be_success
+      expect(response).to have_http_status(200)
+    end
+  end
 end

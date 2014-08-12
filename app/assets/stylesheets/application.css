@@ -13,3 +13,27 @@
  *= require_tree .
  *= require_self
  */
+
+/*** BEGIN: Styling for user box in navbar. Based on http://bootsnipp.com/snippets/featured/nav-account-manager ***/
+.navbar-content
+{
+    width:320px;
+    padding: 15px;
+    padding-bottom:0px;
+}
+.navbar-content:before, .navbar-content:after
+{
+    display: table;
+    content: "";
+    line-height: 0;
+}
+.navbar-footer 
+{
+    background-color:#DDD;
+}
+.navbar-footer-content { padding:15px 15px 15px 15px; }
+.dropdown-menu {
+padding: 0px;
+overflow: hidden;
+}
+/*** END: Styling for user box in navbar. Based on http://bootsnipp.com/snippets/featured/nav-account-manager ***/

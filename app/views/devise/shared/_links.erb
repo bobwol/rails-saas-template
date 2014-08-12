@@ -26,5 +26,9 @@ if devise_mapping.omniauthable?
     links << link_to("Sign in with #{provider.to_s.titleize}", omniauth_authorize_path(resource_name, provider))
   end
 end
+
+if user_signed_in?
+  links << link_to("Cancel account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete)
+end
 %>
 <p><%= links.join(" | ").html_safe %></p>
