@@ -30,4 +30,6 @@
 
 # Customize the Devise unlocks controller
 class Users::UnlocksController < Devise::UnlocksController
+  # Don't require authorization for Devise controllers
+  skip_authorization_check
 end

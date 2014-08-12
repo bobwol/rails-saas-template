@@ -30,6 +30,9 @@
 
 # Customize the Devise registrations controller
 class Users::RegistrationsController < Devise::RegistrationsController
+  # Don't require authorization for Devise controllers
+  skip_authorization_check
+
   private
 
   def sign_up_params

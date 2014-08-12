@@ -36,4 +36,25 @@ class ApplicationController < ActionController::Base
 
   # Make sure the user is authenticated by default
   before_action :authenticate_user!
+
+  # Lock down the controllers with cancancan
+  check_authorization
+
+  # Handle when access is denied by cancancan
+  # TODO: Missing RSpec test
+  rescue_from CanCan::AccessDenied do
+    render 'errors/forbidden', layout: 'errors', status: :forbidden
+  end
+
+  # Handle when we can't find a record
+  # TODO: Missing RSpec test
+  rescue_from ActiveRecord::RecordNotFound do
+    render 'errors/not_found', layout: 'errors', status: :not_found
+  end
+
+  # Handle every other errror
+  # TODO: Missing RSpec test
+  rescue_from RuntimeError do
+    render 'errors/internal_error', layout: 'errors', status: :internal_server_error
+  end
 end

@@ -41,6 +41,25 @@ RSpec.describe DashboardController, type: :controller do
       end
     end
 
+    context 'as unauthorized users' do
+      pending 'These tests cannot be implemented until accounts are working'
+      # before(:each) do
+      #   user = FactoryGirl.create(:user)
+      #   sign_in :user, user
+      # end
+
+      # it 'responds with forbidden' do
+      #   get :index
+      #   expect(response).to be_forbidden
+      # end
+
+      # it 'renders the forbidden' do
+      #  get :index
+      #  expect(response).to render_template('errors/forbidden')
+      #  expect(response).to render_template('layouts/errors')
+      # end
+    end
+
     context 'as super admin user' do
       before(:each) do
         admin = FactoryGirl.create(:admin)

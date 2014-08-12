@@ -30,4 +30,6 @@
 
 # Customize the Devise sessions controller
 class Users::SessionsController < Devise::SessionsController
+  # Don't require authorization for Devise controllers
+  skip_authorization_check
 end

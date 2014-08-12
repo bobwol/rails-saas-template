@@ -47,6 +47,9 @@ gem 'kaminari', '~> 0.15.1'
 # Add devise for user authentication
 gem 'devise', '~> 3.2.4'
 
+# Add cancancan for authorization
+gem 'cancancan', '~> 1.9.2'
+
 # Add delayed jobs so we can background tasks that aren't critical
 gem 'daemons', '~> 1.1.9'
 gem 'delayed_job', '~> 4.0.1'

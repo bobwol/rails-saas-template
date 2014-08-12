@@ -30,4 +30,7 @@
 
 # The Application controller to show the dashboard for the logged in account
 class DashboardController < ApplicationController
+  def index
+    authorize! :index, :dashboard
+  end
 end
