@@ -28,40 +28,54 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# The users abilities
-class Ability
-  include CanCan::Ability
+require 'rails_helper'
 
-  def initialize(user)
-    # Define abilities for the passed in user here. For example:
-    #
-    #   user ||= User.new # guest user (not logged in)
-    #   if user.admin?
-    #     can :manage, :all
-    #   else
-    #     can :read, :all
-    #   end
-    #
-    # The first argument to `can` is the action you are giving the user
-    # permission to do.
-    # If you pass :manage it will apply to every action. Other common actions
-    # here are :read, :create, :update and :destroy.
-    #
-    # The second argument is the resource the user can perform the action on.
-    # If you pass :all it will apply to every resource. Otherwise pass a Ruby
-    # class of the resource.
-    #
-    # The third argument is an optional hash of conditions to further filter the
-    # objects.
-    # For example, here the user can only update published articles.
-    #
-    #   can :update, Article, :published => true
-    #
-    # See the wiki for details:
-    # https://github.com/CanCanCommunity/cancancan/wiki/Defining-Abilities
-    unless user.nil?
-      can :index, :dashboard
-      can :index, :admin_dashboard if user.super_admin?
+# Tests for the admin dashboard
+RSpec.describe Admin::DashboardController, type: :controller do
+  # Requesting http://www.[your-domain]/admin should show the admin dashboard
+  describe 'GET #index' do
+    context 'as anonymous user' do
+      it 'redirect to login page' do
+        get :index
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+
+    context 'as unauthorized users' do
+      before(:each) do
+        user = FactoryGirl.create(:user)
+        sign_in :user, user
+      end
+
+      it 'responds with forbidden' do
+        get :index
+        expect(response).to be_forbidden
+      end
+
+      it 'renders the forbidden' do
+        get :index
+        expect(response).to render_template('errors/forbidden')
+        expect(response).to render_template('layouts/errors')
+      end
+    end
+
+    context 'as super admin user' do
+      before(:each) do
+        admin = FactoryGirl.create(:admin)
+        sign_in :user, admin
+      end
+
+      it 'responds successfully with an HTTP 200 status code' do
+        get :index
+        expect(response).to be_success
+        expect(response).to have_http_status(200)
+      end
+
+      it 'renders the index template' do
+        get :index
+        expect(response).to render_template('index')
+        expect(response).to render_template('layouts/admin')
+      end
     end
   end
 end
