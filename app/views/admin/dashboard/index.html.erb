@@ -3,3 +3,242 @@
 @heading = 'Dashboard'
 @subheading = 'Administration'
 %>
+
+<div class="row">
+	<div class="col-md-6">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">MRR Added per Week</h3>
+			</div>
+			<div class="panel-body">
+				<div id="per-week-mrr-added" style="width: 100%; height: 300px"></div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-6">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">Ramp of Death</h3>
+			</div>
+			<div class="panel-body">
+				<div id="ramp-of-death" style="width: 100%; height: 300px"></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-6">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">Revenue per Plan</h3>
+			</div>
+			<div class="panel-body">
+				<div id="revenue-per-plan" style="width: 100%; height: 300px"></div>
+			</div>
+			<div class="panel-footer">
+				(active accounts only)
+			</div>
+		</div>
+	</div>
+	<div class="col-md-6">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">Accounts per Plan</h3>
+			</div>
+			<div class="panel-body">
+				<div id="accounts-per-plan" style="width: 100%; height: 300px"></div>
+			</div>
+			<div class="panel-footer">
+				(active accounts only)
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-6">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">Accounts</h3>
+			</div>
+			<div class="panel-body">
+				<div id="total-accounts" style="width: 100%; height: 300px"></div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-6">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">Average LTV</h3>
+			</div>
+			<div class="panel-body">
+				<div id="total-ltv" style="width: 100%; height: 300px"></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-3">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">Total MRR</h3>
+			</div>
+			<div class="panel-body">
+				$ {{ amount }} / da
+			</div>
+			<div class="panel-footer">
+				Total MRR
+			</div>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">Average MRR</h3>
+			</div>
+			<div class="panel-body">
+				# Jobs {{ jobs }}
+			</div>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">30 Day MRR</h3>
+			</div>
+			<div class="panel-body">
+				# Jobs {{ jobs }}
+			</div>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">7 Day MRR</h3>
+			</div>
+			<div class="panel-body">
+				$ {amount}/
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-4">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">Delayed Jobs</h3>
+			</div>
+			<div class="panel-body">
+				# Jobs {{ jobs }}
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	google.load("visualization", "1", {packages:["corechart"]});
+	google.setOnLoadCallback(drawChart);
+	function drawChart() {
+		var data = google.visualization.arrayToDataTable([
+			['Week', 'Small', 'Medium', 'Large'],
+			['01/01', 10, 24, 20],
+			['08/01', 16, 22, 23],
+			['15/01', 28, 19, 29],
+			['22/01', 10, 24, 20],
+			['29/01', 16, 22, 23],
+			['05/02', 28, 19, 29]
+		]);
+
+		var options = {
+			bar: { groupWidth: '75%' },
+			isStacked: true,
+		};
+	  
+		var chart = new google.visualization.ColumnChart(document.getElementById('per-week-mrr-added'));
+
+		chart.draw(data, options);
+
+		var data = google.visualization.arrayToDataTable([
+			['Week', 'Revenue'],
+			['01/01',  1000],
+			['08/01',  1170],
+			['15/01',  660],
+			['22/01',  1030],
+			['29/01',  1000],
+			['05/02',  1170]
+		]);
+
+		var options = {
+		};
+
+		var chart = new google.visualization.AreaChart(document.getElementById('ramp-of-death'));
+		chart.draw(data, options);
+
+		var data = google.visualization.arrayToDataTable([
+			['Plan', 'Revenue'],
+			['Small 10',  1100],
+			['Small 20',  200],
+			['Medium 40', 200],
+			['Large 60',  350],
+			['Large 99',  697],
+			['Other',     700]
+		]);
+
+		var options = {
+		};
+
+		var chart = new google.visualization.PieChart(document.getElementById('revenue-per-plan'));
+		chart.draw(data, options);
+
+		var data = google.visualization.arrayToDataTable([
+			['Plan', 'Accounts'],
+			['Small 10',  11],
+			['Small 20',  2],
+			['Medium 40', 2],
+			['Large 60',  2],
+			['Large 99',  7],
+			['Other',     7]
+		]);
+
+		var options = {
+		};
+
+		var chart = new google.visualization.PieChart(document.getElementById('accounts-per-plan'));
+		chart.draw(data, options);
+
+		var data = google.visualization.arrayToDataTable([
+			['Plan', 'Accounts'],
+			['01/01',  1000],
+			['08/01',  1170],
+			['15/01',  660],
+			['22/01',  1030],
+			['29/01',  1000],
+			['05/02',  1170]
+		]);
+
+		var options = {
+		};
+
+		var chart = new google.visualization.AreaChart(document.getElementById('total-accounts'));
+		chart.draw(data, options);
+
+		var data = google.visualization.arrayToDataTable([
+			['Week', 'Avg LTV'],
+			['01/01',  1000],
+			['08/01',  1170],
+			['15/01',  660],
+			['22/01',  1030],
+			['29/01',  1000],
+			['05/02',  1170]
+		]);
+
+		var options = {
+		};
+
+		var chart = new google.visualization.AreaChart(document.getElementById('total-ltv'));
+		chart.draw(data, options);
+	}
+</script>
