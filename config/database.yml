@@ -28,6 +28,3 @@ test: &test
 production:
   <<: *default
   database: saas2_prod
-
-cucumber:
-  <<: *test
