@@ -1,0 +1,35 @@
+﻿<%
+@title = 'Users'
+@heading = 'Users'
+@subheading = 'Lists'
+%>
+
+<div style="text-align: right; padding: 10px 0px;">
+  <% if can? :new, User %><%= link_to "New User", new_admin_user_path, class: "btn btn-primary" %><% end %>
+</div>
+
+<% if @users.empty? then %>
+<p>No users found</p>
+<% else %>
+<table class="table table-condensed table-striped">
+	<thead>
+		<tr>
+			<th>First Name</th>
+			<th>Last Name</th>
+			<th>Email</th>
+			<th>Flags</th>
+		</tr>
+	</thead>
+	<tbody>
+<% @users.each do |user| %>
+		<tr>
+			<td><%= link_to_if can?(:show, user), user.first_name, admin_user_path(user) %></td>
+			<td><%= link_to_if can?(:show, user), user.last_name, admin_user_path(user) %></td>
+			<td><%= user.email %> <a href="mailto:<%= user.email %>"><span class="glyphicon glyphicon-envelope"></span></a></td>
+			<td><% if user.super_admin %><span class="label label-success">Super</span><% end %></td>
+		</tr>
+<% end %>
+	</tbody>
+</table>
+<%= paginate @users %>
+<% end %>

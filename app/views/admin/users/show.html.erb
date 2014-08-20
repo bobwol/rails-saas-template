@@ -1,0 +1,21 @@
+﻿<%
+@title = 'Users'
+@heading = 'Users'
+@subheading = @user
+%>
+
+<div style="text-align: right; padding: 10px 0px;">
+  <% if can? :edit, @user %><%= link_to "Edit User", edit_admin_user_path(@user), class: "btn btn-primary" %><% end %>
+  <% if can? :destroy, @user %><%= link_to "Delete User", admin_user_path(@user), method: :delete, class: "btn btn-danger" %><% end %>
+</div>
+
+<dl class="dl-horizontal">
+  <dt>First Name</dt>
+  <dd><%= @user.first_name %></dd>
+  <dt>Last Name</dt>
+  <dd><%= @user.last_name %></dd>
+  <dt>Email</dt>
+  <dd><%= @user.email %></dd>
+  <dt>Super Admin</dt>
+  <dd><%if @user.super_admin %><span class="label label-success">Yes</span><% end %></dd>
+</dl>
