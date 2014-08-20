@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140807232912) do
+ActiveRecord::Schema.define(version: 20140816092845) do
 
   create_table "delayed_jobs", force: true do |t|
     t.integer  "priority",   default: 0, null: false
@@ -28,6 +28,26 @@ ActiveRecord::Schema.define(version: 20140807232912) do
   end
 
   add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
+
+  create_table "plans", force: true do |t|
+    t.string   "stripe_id",             limit: 80
+    t.string   "name",                  limit: 80,                    null: false
+    t.string   "statement_description", limit: 150
+    t.boolean  "active",                            default: true,    null: false
+    t.boolean  "public",                            default: true,    null: false
+    t.integer  "paused_plan_id"
+    t.string   "currency",              limit: 3,   default: "USD",   null: false
+    t.integer  "interval_count",                    default: 1,       null: false
+    t.string   "interval",              limit: 5,   default: "month", null: false
+    t.integer  "amount",                            default: 0,       null: false
+    t.integer  "trial_period_days",                 default: 30,      null: false
+    t.integer  "max_users",                         default: 1,       null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "plans", ["paused_plan_id"], name: "index_plans_on_paused_plan_id", using: :btree
+  add_index "plans", ["stripe_id"], name: "index_plans_on_stripe_id", unique: true, using: :btree
 
   create_table "users", force: true do |t|
     t.string   "first_name",             limit: 60

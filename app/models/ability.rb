@@ -59,9 +59,10 @@ class Ability
     #
     # See the wiki for details:
     # https://github.com/CanCanCommunity/cancancan/wiki/Defining-Abilities
-    unless user.nil?
-      can :index, :dashboard
-      can :index, :admin_dashboard if user.super_admin?
-    end
+    return if user.nil?
+
+    can :index, :dashboard
+    can :index, :admin_dashboard if user.super_admin?
+    can :manage, Plan if user.super_admin?
   end
 end

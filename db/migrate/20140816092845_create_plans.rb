@@ -28,16 +28,27 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# Base class for all application controllers
-class Admin::ApplicationController < ApplicationController
-  # Switch to the admin layout for all admin controllers
-  layout 'admin'
+# Migration to add plans model to database
+class CreatePlans < ActiveRecord::Migration
+  def change
+    create_table :plans do |t|
+      t.string :stripe_id, limit: 80
+      t.string :name, limit: 80, null: false
+      t.string :statement_description, limit: 150
+      t.boolean :active, default: true, null: false
+      t.boolean :public, default: true, null: false
+      t.integer :paused_plan_id
+      t.string :currency, limit: 3, default: 'USD', null: false
+      t.integer :interval_count, default: 1, null: false
+      t.string :interval, limit: 5, default: 'month', null: false
+      t.integer :amount, default: 0, null: false
+      t.integer :trial_period_days, default: 30, null: false
+      t.integer :max_users, default: 1, null: false
 
-  before_action :set_nav_item
+      t.timestamps
+    end
 
-  private
-
-  def set_nav_item
-    @nav_item = 'dashboard'
+    add_index :plans, [:paused_plan_id], unique: false
+    add_index :plans, [:stripe_id], unique: true
   end
 end

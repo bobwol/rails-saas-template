@@ -35,7 +35,7 @@ RSpec.describe Admin::DashboardController, type: :controller do
   # Requesting http://www.[your-domain]/admin should show the admin dashboard
   describe 'GET #index' do
     context 'as anonymous user' do
-      it 'redirect to login page' do
+      it 'redirects to login page' do
         get :index
         expect(response).to redirect_to(new_user_session_path)
       end
@@ -69,6 +69,11 @@ RSpec.describe Admin::DashboardController, type: :controller do
         get :index
         expect(response).to be_success
         expect(response).to have_http_status(200)
+      end
+
+      it 'sets the nav_item to dashboard' do
+        get :index
+        expect(assigns(:nav_item)).to eq 'dashboard'
       end
 
       it 'renders the index template' do

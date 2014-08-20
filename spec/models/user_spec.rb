@@ -45,7 +45,7 @@ RSpec.describe User, type: :model do
     it 'must be less than 80 characters' do
       user = FactoryGirl.build(:user, first_name: Faker::Lorem.characters(81))
       expect(user).to_not be_valid
-      expect(user.errors[:first_name]).to include('is too long (maximum is 80 characters)')
+      expect(user.errors[:first_name]).to include 'is too long (maximum is 80 characters)'
     end
   end
 
@@ -53,13 +53,13 @@ RSpec.describe User, type: :model do
     it 'is required' do
       user = FactoryGirl.build(:user, last_name: '')
       expect(user).to_not be_valid
-      expect(user.errors[:last_name]).to include('can\'t be blank')
+      expect(user.errors[:last_name]).to include 'can\'t be blank'
     end
 
     it 'must be less than 80 characters' do
       user = FactoryGirl.build(:user, last_name: Faker::Lorem.characters(81))
       expect(user).to_not be_valid
-      expect(user.errors[:last_name]).to include('is too long (maximum is 80 characters)')
+      expect(user.errors[:last_name]).to include 'is too long (maximum is 80 characters)'
     end
   end
 
@@ -68,13 +68,13 @@ RSpec.describe User, type: :model do
       it 'cannot be blank' do
         user = FactoryGirl.build(:user, password: '')
         expect(user).to_not be_valid
-        expect(user.errors[:password]).to include('can\'t be blank')
+        expect(user.errors[:password]).to include 'can\'t be blank'
       end
 
       it 'must be confirmed' do
         user = FactoryGirl.build(:user, password: 'abcd1234', password_confirmation: '')
         expect(user).to_not be_valid
-        expect(user.errors[:password_confirmation]).to include('doesn\'t match Password')
+        expect(user.errors[:password_confirmation]).to include 'doesn\'t match Password'
       end
 
       it 'confirmation must match' do
@@ -91,14 +91,14 @@ RSpec.describe User, type: :model do
       it 'can be blank' do
         @user.password = ''
         expect(@user).to_not be_valid
-        expect(@user.errors[:password]).to include('can\'t be blank')
+        expect(@user.errors[:password]).to include 'can\'t be blank'
       end
 
       it 'must be confirmed' do
         @user.password = 'abcd1234'
         @user.password_confirmation = ''
         expect(@user).to_not be_valid
-        expect(@user.errors[:password_confirmation]).to include('doesn\'t match Password')
+        expect(@user.errors[:password_confirmation]).to include 'doesn\'t match Password'
       end
 
       it 'confirmation must match' do

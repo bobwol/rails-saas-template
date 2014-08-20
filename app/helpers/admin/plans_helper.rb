@@ -28,16 +28,6 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# Base class for all application controllers
-class Admin::ApplicationController < ApplicationController
-  # Switch to the admin layout for all admin controllers
-  layout 'admin'
-
-  before_action :set_nav_item
-
-  private
-
-  def set_nav_item
-    @nav_item = 'dashboard'
-  end
+# Plans helpers for the admin plans controller
+module Admin::PlansHelper
 end

@@ -1,0 +1,83 @@
+﻿<%= render_errors plan %>
+
+<%= form_for [:admin, plan] do |f| %>
+  <div class="form-group">
+	<%= f.label :name, class: "control-label" %>
+	<%= f.text_field :name, class: "form-control" %>
+  </div>
+  <div class="form-group">
+    <%= f.label :statement_description, class: "control-label" %>
+	<%= f.text_field :statement_description, class: "form-control" %>
+  </div>
+  <div class="form-group">
+	<%= f.label :active, class: "control-label" %>
+	<%= f.check_box :active %>
+  </div>
+  <div class="form-group">
+	<%= f.label :public, class: "control-label" %>
+	<%= f.check_box :public %>
+  </div>
+  <div class="form-group">
+    <%= f.label :paused_plan_id, class: "control-label" %>
+    <%= f.collection_select :paused_plan_id, Plan.all, :id, :name, {include_blank: true}, { class: "form-control" } %>
+  </div>
+  <h2>Pricing</h2>
+<% if plan.new_record? %>
+  <div class="form-group">
+	<%= f.label :currency, class: "control-label" %>
+	<%= f.select :currency, ['AUD', 'CAD', 'EUR', 'GBP', 'NZD', 'USD'], {}, { class: "form-control" } %>
+  </div>
+  <div class="form-group">
+	<%= f.label :amount, class: "control-label" %>
+	<%= f.text_field :amount, class: "form-control" %>
+  </div>
+  <div class="form-group">
+	<%= f.label :interval_count, class: "control-label" %>
+	<%= f.text_field :interval_count, class: "form-control" %>
+  </div>
+  <div class="form-group">
+	<%= f.label :interval, class: "control-label" %>
+	<%= f.select :interval, [['Day', 'day'], ['Week', 'week'], ['Month', 'month'], ['Year', 'year']], {}, { class: "form-control" } %>
+  </div>
+  <div class="form-group">
+	<%= f.label :trial_period_days, class: "control-label" %>
+	<%= f.text_field :trial_period_days, class: "form-control" %>
+  </div>
+<% else %>
+  <div class="form-group">
+	<%= f.label :stripe_id, class: "control-label" %>
+	<p class="form-control-static"><%= plan.stripe_id %></p>
+  </div>
+  <div class="form-group">
+	<%= f.label :currency, class: "control-label" %>
+	<p class="form-control-static"><%= plan.currency %></p>
+  </div>
+  <div class="form-group">
+	<%= f.label :amount, class: "control-label" %>
+	<p class="form-control-static"><%= plan.amount %>
+  </div>
+  <div class="form-group">
+	<%= f.label :interval_count, class: "control-label" %>
+	<p class="form-control-static"><%= plan.interval_count %></p>
+  </div>
+  <div class="form-group">
+	<%= f.label :interval, class: "control-label" %>
+	<p class="form-control-static"><%= plan.interval %></p>
+  </div>
+  <div class="form-group">
+	<%= f.label :trial_period_days, class: "control-label" %>
+	<p class="form-control-static"><%= plan.trial_period_days %></p>
+  </div>
+<% end %>
+  <h2>Features</h2>
+  <div class="form-group">
+	<%= f.label :max_users, class: "control-label" %>
+	<%= f.text_field :max_users, class: "form-control" %>
+  </div>
+		<%= f.submit "Save", class: "btn btn-primary" %>
+<% if plan.new_record? %>
+		<%= link_to "Discard Changes", admin_plans_path %>
+<% else %>
+		<%= link_to "Discard Changes", admin_plan_path(plan) %>
+<% end %>
+<% end %>

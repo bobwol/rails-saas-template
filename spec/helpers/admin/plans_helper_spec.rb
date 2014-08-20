@@ -28,16 +28,17 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# Base class for all application controllers
-class Admin::ApplicationController < ApplicationController
-  # Switch to the admin layout for all admin controllers
-  layout 'admin'
+require 'rails_helper'
 
-  before_action :set_nav_item
-
-  private
-
-  def set_nav_item
-    @nav_item = 'dashboard'
-  end
+# Specs in this file have access to a helper object that includes
+# the Admin::PlansHelper. For example:
+#
+# describe Admin::PlansHelper do
+#   describe "string concat" do
+#     it "concats two strings with spaces" do
+#       expect(helper.concat_strings("this","that")).to eq("this that")
+#     end
+#   end
+# end
+RSpec.describe Admin::PlansHelper, type: :helper do
 end

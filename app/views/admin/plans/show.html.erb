@@ -1,0 +1,44 @@
+﻿<%
+@title = 'Plans'
+@heading = 'Plans'
+@subheading = @plan
+@nav_item = 'plans'
+%>
+
+<ul class="nav nav-tabs">
+  <li class="active"><%= link_to_if can?(:index, Plan), "Plan", admin_plan_path(@plan) %></li>
+</ul>
+
+<div style="text-align: right; padding: 10px 0px;">
+  <% if can? :edit, @plan %><%= link_to "Edit Plan", edit_admin_plan_path(@plan), class: "btn btn-primary" %><% end %>
+  <% if can? :destroy, @plan %><%= link_to "Delete Plan", admin_plan_path(@plan), method: :delete, class: "btn btn-danger" %><% end %>
+</div>
+
+<dl class="dl-horizontal">
+  <dt>Name</dt>
+  <dd><%= @plan.name %></dd>
+  <dt>Statement Description</dt>
+  <dd><%= @plan.statement_description %></dd>
+  <dt>Active</dt>
+  <dd><%= @plan.active %></dd>
+  <dt>Is Public?</dt>
+  <dd><%= @plan.public %></dd>
+  <dt>Paused Plan</dt>
+  <dd><%= @plan.paused_plan %></dd>
+</dl>
+
+<h3>Pricing</h3>
+<dl class="dl-horizontal">
+  <dt>Currency</dt>
+  <dd><%= @plan.currency %></dd>
+  <dt>Amount</dt>
+  <dd><%= number_with_precision(@plan.amount, :precision => 2) %> / <%= number_with_precision(@plan.interval_count, :precision => 0) %> <%= @plan.interval %></dd>
+  <dt>Trial Period Days</dt>
+  <dd><%= @plan.trial_period_days %></dd>
+</dl>
+
+<h3>Features</h3>
+<dl class="dl-horizontal">
+  <dt>Max Users</dt>
+  <dd><%= @plan.max_users %>
+</dl>

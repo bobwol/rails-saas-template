@@ -65,6 +65,7 @@ Rails.application.routes.draw do
 
   constraints :subdomain => 'www' do
     namespace :admin do
+      resources :plans
       root to: 'dashboard#index'
     end
     root to: 'marketing#index', as: :marketing_root

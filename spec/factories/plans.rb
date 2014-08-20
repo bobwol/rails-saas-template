@@ -28,16 +28,20 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# Base class for all application controllers
-class Admin::ApplicationController < ApplicationController
-  # Switch to the admin layout for all admin controllers
-  layout 'admin'
-
-  before_action :set_nav_item
-
-  private
-
-  def set_nav_item
-    @nav_item = 'dashboard'
+# User factories
+FactoryGirl.define do
+  factory :plan do
+    stripe_id 'plan_1'
+    name 'Basic Plan'
+    statement_description ''
+    active true
+    public true
+    paused_plan_id nil
+    currency 'USD'
+    interval_count 1
+    interval 'month'
+    amount 1999
+    trial_period_days 30
+    max_users 10
   end
 end
