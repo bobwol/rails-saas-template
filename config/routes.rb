@@ -63,12 +63,12 @@ Rails.application.routes.draw do
   #     resources :products
   #   end
 
+  namespace :admin do
+    resources :plans
+    resources :users
+    root to: 'dashboard#index'
+  end
   constraints :subdomain => 'www' do
-    namespace :admin do
-      resources :plans
-      resources :users
-      root to: 'dashboard#index'
-    end
     root to: 'marketing#index', as: :marketing_root
   end
   root to: 'dashboard#index'

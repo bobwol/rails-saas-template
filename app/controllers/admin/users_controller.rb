@@ -42,8 +42,7 @@ class Admin::UsersController < Admin::ApplicationController
     @user = User.new(users_create_params)
     if @user.save
       # StripeGateway.delay.plan_create(@plan.id)
-      redirect_to admin_user_path(@user),
-                  notice: 'User was successfully created.'
+      redirect_to admin_user_path(@user), notice: 'User was successfully created.'
     else
       render 'new'
     end
@@ -67,21 +66,24 @@ class Admin::UsersController < Admin::ApplicationController
     end
     if @user.update_attributes(p)
       # StripeGateway.delay.plan_update(@plan.id)
-      redirect_to admin_user_path(@user),
-                  notice: 'User was successfully updated.'
+      redirect_to admin_user_path(@user), notice: 'User was successfully updated.'
     else
       render 'edit'
     end
   end
 
   def destroy
+    # Prevent the user from deleting themselves
+    if @user.id == current_user.id
+      redirect_to admin_user_path(@user), alert: 'You cannot delete yourself.'
+      return
+    end
+
     if @user.destroy
       # StripeGateway.delay.plan_delete(@plan.stripe_id)
-      redirect_to admin_users_path,
-                  notice: 'User was successfully removed.'
+      redirect_to admin_users_path, notice: 'User was successfully removed.'
     else
-      redirect_to admin_user_path(@user),
-                  alert: 'User could not be removed.'
+      redirect_to admin_user_path(@user), alert: 'User could not be removed.'
     end
   end
 

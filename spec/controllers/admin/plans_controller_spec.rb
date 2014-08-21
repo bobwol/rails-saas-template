@@ -36,6 +36,7 @@ RSpec.describe Admin::PlansController, type: :controller do
     context 'as anonymous user' do
       it 'redirects to login page' do
         post :create, plan: FactoryGirl.attributes_for(:plan)
+        expect(response).to be_redirect
         expect(response).to redirect_to(new_user_session_path)
       end
     end
@@ -73,7 +74,13 @@ RSpec.describe Admin::PlansController, type: :controller do
         it 'it redirects to plan' do
           post :create, plan: FactoryGirl.attributes_for(:plan)
           plan = assigns(:plan)
+          expect(response).to be_redirect
           expect(response).to redirect_to(admin_plan_path(plan))
+        end
+
+        it 'sets a notice' do
+          post :create, plan: FactoryGirl.attributes_for(:plan)
+          expect(request.flash[:notice]).to eq 'Plan was successfully created.'
         end
       end
 
@@ -99,6 +106,56 @@ RSpec.describe Admin::PlansController, type: :controller do
     end
   end
 
+  describe 'DELETE #destroy' do
+    before(:each) do
+      @plan = FactoryGirl.create(:plan)
+    end
+
+    context 'as anonymous user' do
+      it 'redirects to login page' do
+        delete :destroy, id: @plan.id
+        expect(response).to be_redirect
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+
+    context 'as unauthorized users' do
+      before(:each) do
+        @user = FactoryGirl.create(:user)
+        sign_in :user, @user
+      end
+
+      it 'responds with forbidden' do
+        delete :destroy, id: @plan.id
+        expect(response).to be_forbidden
+      end
+
+      it 'renders the forbidden' do
+        delete :destroy, id: @plan.id
+        expect(response).to render_template('errors/forbidden')
+        expect(response).to render_template('layouts/errors')
+      end
+    end
+
+    context 'as super admin user' do
+      before(:each) do
+        @admin = FactoryGirl.create(:admin)
+        sign_in :user, @admin
+      end
+
+      it 'it redirects to users' do
+        delete :destroy, id: @plan.id
+        expect(response).to be_redirect
+        expect(response).to redirect_to(admin_plans_path)
+      end
+
+      it 'sets a notice' do
+        delete :destroy, id: @plan.id
+        expect(request.flash[:notice]).to eq 'Plan was successfully removed.'
+      end
+    end
+  end
+
   describe 'GET #edit' do
     before(:each) do
       @plan = FactoryGirl.create(:plan)
@@ -107,6 +164,7 @@ RSpec.describe Admin::PlansController, type: :controller do
     context 'as anonymous user' do
       it 'redirects to login page' do
         get :edit, id: @plan.id
+        expect(response).to be_redirect
         expect(response).to redirect_to(new_user_session_path)
       end
     end
@@ -138,7 +196,7 @@ RSpec.describe Admin::PlansController, type: :controller do
       it 'responds successfully with an HTTP 200 status code' do
         get :edit, id: @plan.id
         expect(response).to be_success
-        expect(response).to have_http_status(200)
+        expect(response).to have_http_status(:success)
       end
 
       it 'sets the nav_item to plans' do
@@ -165,6 +223,7 @@ RSpec.describe Admin::PlansController, type: :controller do
     context 'as anonymous user' do
       it 'redirects to login page' do
         get :index
+        expect(response).to be_redirect
         expect(response).to redirect_to(new_user_session_path)
       end
     end
@@ -228,6 +287,7 @@ RSpec.describe Admin::PlansController, type: :controller do
     context 'as anonymous user' do
       it 'redirects to login page' do
         get :new
+        expect(response).to be_redirect
         expect(response).to redirect_to(new_user_session_path)
       end
     end
@@ -290,6 +350,7 @@ RSpec.describe Admin::PlansController, type: :controller do
     context 'as anonymous user' do
       it 'redirects to login page' do
         get :show, id: @plan.id
+        expect(response).to be_redirect
         expect(response).to redirect_to(new_user_session_path)
       end
     end
@@ -352,6 +413,7 @@ RSpec.describe Admin::PlansController, type: :controller do
     context 'as anonymous user' do
       it 'redirects to login page' do
         patch :update, id: @plan.id, plan: FactoryGirl.attributes_for(:plan)
+        expect(response).to be_redirect
         expect(response).to redirect_to(new_user_session_path)
       end
     end
@@ -389,7 +451,13 @@ RSpec.describe Admin::PlansController, type: :controller do
         it 'it redirects to plan' do
           patch :update, id: @plan.id, plan: FactoryGirl.attributes_for(:plan)
           plan = assigns(:plan)
+          expect(response).to be_redirect
           expect(response).to redirect_to(admin_plan_path(plan))
+        end
+
+        it 'sets a notice' do
+          post :update, id: @plan.id, plan: FactoryGirl.attributes_for(:plan)
+          expect(request.flash[:notice]).to eq 'Plan was successfully updated.'
         end
       end
 

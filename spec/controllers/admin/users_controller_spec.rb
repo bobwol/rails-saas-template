@@ -36,6 +36,7 @@ RSpec.describe Admin::UsersController, type: :controller do
     context 'as anonymous user' do
       it 'redirects to login page' do
         post :create, user: FactoryGirl.attributes_for(:user)
+        expect(response).to be_redirect
         expect(response).to redirect_to(new_user_session_path)
       end
     end
@@ -73,7 +74,13 @@ RSpec.describe Admin::UsersController, type: :controller do
         it 'it redirects to user' do
           post :create, user: FactoryGirl.attributes_for(:user)
           user = assigns(:user)
+          expect(response).to be_redirect
           expect(response).to redirect_to(admin_user_path(user))
+        end
+
+        it 'sets a notice' do
+          post :create, user: FactoryGirl.attributes_for(:user)
+          expect(request.flash[:notice]).to eq 'User was successfully created.'
         end
       end
 
@@ -99,6 +106,70 @@ RSpec.describe Admin::UsersController, type: :controller do
     end
   end
 
+  describe 'DELETE #destroy' do
+    before(:each) do
+      @user = FactoryGirl.create(:user)
+    end
+
+    context 'as anonymous user' do
+      it 'redirects to login page' do
+        delete :destroy, id: @user.id
+        expect(response).to be_redirect
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+
+    context 'as unauthorized users' do
+      before(:each) do
+        sign_in :user, @user
+      end
+
+      it 'responds with forbidden' do
+        delete :destroy, id: @user.id
+        expect(response).to be_forbidden
+      end
+
+      it 'renders the forbidden' do
+        delete :destroy, id: @user.id
+        expect(response).to render_template('errors/forbidden')
+        expect(response).to render_template('layouts/errors')
+      end
+    end
+
+    context 'as super admin user' do
+      before(:each) do
+        @admin = FactoryGirl.create(:admin)
+        sign_in :user, @admin
+      end
+
+      context 'deleting another user' do
+        it 'it redirects to users' do
+          delete :destroy, id: @user.id
+          expect(response).to be_redirect
+          expect(response).to redirect_to(admin_users_path)
+        end
+
+        it 'sets a notice' do
+          delete :destroy, id: @user.id
+          expect(request.flash[:notice]).to eq 'User was successfully removed.'
+        end
+      end
+
+      context 'deleting yourself' do
+        it 'it redirects to users' do
+          delete :destroy, id: @admin.id
+          expect(response).to be_redirect
+          expect(response).to redirect_to(admin_user_path(@admin))
+        end
+
+        it 'sets a notice' do
+          delete :destroy, id: @admin.id
+          expect(request.flash[:alert]).to eq 'You cannot delete yourself.'
+        end
+      end
+    end
+  end
+
   describe 'GET #edit' do
     before(:each) do
       @user = FactoryGirl.create(:user)
@@ -107,6 +178,7 @@ RSpec.describe Admin::UsersController, type: :controller do
     context 'as anonymous user' do
       it 'redirects to login page' do
         get :edit, id: @user.id
+        expect(response).to be_redirect
         expect(response).to redirect_to(new_user_session_path)
       end
     end
@@ -137,7 +209,7 @@ RSpec.describe Admin::UsersController, type: :controller do
       it 'responds successfully with an HTTP 200 status code' do
         get :edit, id: @user.id
         expect(response).to be_success
-        expect(response).to have_http_status(200)
+        expect(response).to have_http_status(:success)
       end
 
       it 'sets the nav_item to users' do
@@ -228,6 +300,7 @@ RSpec.describe Admin::UsersController, type: :controller do
     context 'as anonymous user' do
       it 'redirects to login page' do
         get :new
+        expect(response).to be_redirect
         expect(response).to redirect_to(new_user_session_path)
       end
     end
@@ -290,6 +363,7 @@ RSpec.describe Admin::UsersController, type: :controller do
     context 'as anonymous user' do
       it 'redirects to login page' do
         get :show, id: @user.id
+        expect(response).to be_redirect
         expect(response).to redirect_to(new_user_session_path)
       end
     end
@@ -351,6 +425,7 @@ RSpec.describe Admin::UsersController, type: :controller do
     context 'as anonymous user' do
       it 'redirects to login page' do
         patch :update, id: @user.id, user: FactoryGirl.attributes_for(:user)
+        expect(response).to be_redirect
         expect(response).to redirect_to(new_user_session_path)
       end
     end
@@ -387,7 +462,13 @@ RSpec.describe Admin::UsersController, type: :controller do
         it 'it redirects to user' do
           patch :update, id: @user.id, user: FactoryGirl.attributes_for(:user)
           user = assigns(:user)
+          expect(response).to be_redirect
           expect(response).to redirect_to(admin_user_path(user))
+        end
+
+        it 'sets a notice' do
+          patch :update, id: @user.id, user: FactoryGirl.attributes_for(:user)
+          expect(request.flash[:notice]).to eq 'User was successfully updated.'
         end
       end
 
