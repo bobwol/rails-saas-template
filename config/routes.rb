@@ -64,6 +64,12 @@ Rails.application.routes.draw do
   #   end
 
   namespace :admin do
+    resources :accounts do
+      get 'cancel' => 'accounts#confirm_cancel'
+      patch 'cancel' => 'accounts#cancel'
+      get 'restore' => 'accounts#confirm_restore'
+      patch 'restore' => 'accounts#restore'
+    end
     resources :plans
     resources :users
     root to: 'dashboard#index'

@@ -31,17 +31,17 @@
 # User factories
 FactoryGirl.define do
   factory :user do
-    first_name 'John'
-    last_name 'Doe'
-    email 'user@example.com'
+    first_name { Faker::Name.first_name }
+    last_name { Faker::Name.last_name }
+    email { Faker::Internet.safe_email }
     password 'abcd1234'
     super_admin false
   end
 
   factory :admin, class: User do
-    first_name 'Admin'
-    last_name 'User'
-    email 'admin@example.com'
+    first_name { Faker::Name.first_name }
+    last_name { Faker::Name.last_name }
+    email { Faker::Internet.safe_email }
     password 'abcd1234'
     super_admin true
   end

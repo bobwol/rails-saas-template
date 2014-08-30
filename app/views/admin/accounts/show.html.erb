@@ -1,0 +1,60 @@
+﻿<%
+@title = 'Accounts'
+@heading = 'Accounts'
+@subheading = @account
+@nav_item = 'accounts'
+%>
+
+<ul class="nav nav-tabs">
+  <li class="active"><%= link_to_if can?(:index, Account), "Account", admin_account_path(@account) %></li>
+  <li><a href="#">Users</a></li>
+  <li><a href="#">Events</a></li>
+</ul>
+
+<div style="text-align: right; padding: 10px 0px;">
+  <% if can? :edit, @account %><%= link_to "Edit Account", edit_admin_account_path(@account), class: "btn btn-primary" %><% end %>
+<% if @account.status == :active %>
+  <% if can? :destroy, @account %><%= link_to "Cancel Account", admin_account_cancel_path(@account), class: "btn btn-danger" %><% end %>
+<% end %>
+<% if @account.status == :cancelled || @account.status == :cancel_pending %>
+  <% if can? :edit, @account %><%= link_to "Enabled Account", admin_account_restore_path(@account), class: "btn btn-success" %><% end %>
+<% end %>
+</div>
+
+
+<dl class="dl-horizontal">
+  <dt>Company Name</dt>
+  <dd><%= @account.company_name %></dd>
+  <dt>Active</dt>
+  <dd><%= account_status(@account) %></dd>
+  <dt>Expires At</dt>
+  <dd><%= @account.expires_at %></dd>
+  <dt>Plan</dt>
+  <dd><%= link_to_if can?(:show, @account.plan), @account.plan, admin_plan_path(@account.plan) %></dd>
+<% if !@account.paused_plan.nil? %>
+  <dt>Paused</dt>
+  <dd><%= link_to_if can?(:show, @account.paused_plan), @account.paused_plan, admin_plan_path(@account.paused_plan) %></dd>
+<% end %>
+  <dt>Email</dt>
+  <dd><%= @account.email %></dd>
+  <dt>Address Line 1</dt>
+  <dd><%= @account.address_line1 %></dd>
+  <dt>Address Line 2</dt>
+  <dd><%= @account.address_line2 %></dd>
+  <dt>Address City</dt>
+  <dd><%= @account.address_city %></dd>
+  <dt>Address Zip</dt>
+  <dd><%= @account.address_zip %></dd>
+  <dt>Address State</dt>
+  <dd><%= @account.address_state %></dd>
+  <dt>Address Country</dt>
+  <dd><%= @account.address_country_name %></dd>
+  <dt>Card Token</dt>
+  <dd><%= @account.card_token%></dd>
+  <dt>Cancellation Reason</dt>
+  <dd><%= @account.cancellation_reason %></dd>
+  <dt>Cancellation Message</dt>
+  <dd><%= @account.cancellation_message %></dd>
+  <dt>Cancelled At</dt>
+  <dd><%= @account.cancelled_at %></dd>
+</dl>

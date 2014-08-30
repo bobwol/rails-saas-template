@@ -28,52 +28,36 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-require 'rails_helper'
+# Migration to add accounts model to database
+class CreateAccounts < ActiveRecord::Migration
+  def change
+    create_table :accounts do |t|
+      t.string :company_name, limit: 255, null: false
+      t.string :email, limit: 255, null: false
+      t.references :plan, null: false
+      t.references :paused_plan
+      t.boolean :active, default: true, null: false
+      t.string :address_line1, limit: 120
+      t.string :address_line2, limit: 120
+      t.string :address_city, limit: 120
+      t.string :address_zip, limit: 20
+      t.string :address_state, limit: 60
+      t.string :address_country, limit: 2
+      t.string :card_token, limit: 60
+      t.string :stripe_customer_id, limit: 60
+      t.string :stripe_subscription_id, limit: 60
+      t.string :cancellation_category
+      t.string :cancellation_reason
+      t.string :cancellation_message
+      t.datetime :cancelled_at
+      t.datetime :expires_at, null: false
+      t.timestamps
+    end
 
-# Tests for admin/users routing
-RSpec.describe 'routing for the admin users', type: :routing do
-  it 'routes GET /admin/users to admin/users#index' do
-    expect(get: '/admin/users').to route_to(
-      controller: 'admin/users',
-      action: 'index'
-    )
-  end
-
-  it 'routes GET /admin/users/1 to admin/users#show' do
-    expect(get: '/admin/users/1').to route_to(
-      controller: 'admin/users',
-      action: 'show',
-      id: '1'
-    )
-  end
-
-  it 'routes GET /admin/users/1/edit to admin/users#edit' do
-    expect(get: '/admin/users/1/edit').to route_to(
-      controller: 'admin/users',
-      action: 'edit',
-      id: '1'
-    )
-  end
-
-  it 'routes GET /admin/users/new to admin/users#new' do
-    expect(get: '/admin/users/new').to route_to(
-      controller: 'admin/users',
-      action: 'new'
-    )
-  end
-
-  it 'routes PATCH /admin/users/1 to admin/users#update' do
-    expect(patch: '/admin/users/1').to route_to(
-      controller: 'admin/users',
-      action: 'update',
-      id: '1'
-    )
-  end
-
-  it 'routes POST /admin/users to admin/users#create' do
-    expect(post: '/admin/users').to route_to(
-      controller: 'admin/users',
-      action: 'create'
-    )
+    add_index :accounts, [:email], unique: false
+    add_index :accounts, [:paused_plan_id], unique: false
+    add_index :accounts, [:plan_id], unique: false
+    add_index :accounts, [:stripe_customer_id], unique: true
+    add_index :accounts, [:stripe_subscription_id], unique: true
   end
 end

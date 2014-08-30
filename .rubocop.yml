@@ -186,7 +186,7 @@ Style/CommentAnnotation:
 
 # Avoid complex methods.
 Style/CyclomaticComplexity:
-  Max: 6
+  Max: 7
 
 # Multi-line method chaining should be done with leading dots.
 Style/DotPosition:
@@ -297,7 +297,7 @@ Style/MethodDefParentheses:
 
 Style/MethodLength:
   CountComments: false  # count full line comments?
-  Max: 25
+  Max: 30
 
 Style/MethodName:
   EnforcedStyle: snake_case

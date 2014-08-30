@@ -1,0 +1,41 @@
+﻿<%
+@title = 'Accounts'
+@heading = 'Accounts'
+@subheading = 'Events'
+@nav_item = 'accounts'
+%>
+
+<ul class="nav nav-tabs">
+  <li><%= link_to_if can?(:index, Account), "Account", admin_account_path(@account) %></li>
+  <li><%= link_to_if can?(:index, User), "Users", admin_account_users_path(@account) %></li>
+  <li class="active"><%= link_to_if can?(:log_event, Account), "Events", admin_account_log_events_path(@account) %></li>
+</ul>
+
+
+<% if @log_events.empty? then %>
+<p>No events found</p>
+<% else %>
+<table class="table table-condensed table-striped">
+	<thead>
+		<tr>
+			<th>Date</th>
+			<th>Account</th>
+			<th>User</th>
+			<th>Level</th>
+			<th>Message</th>
+		</tr>
+	</thead>
+	<tbody>
+<% @log_events.each do |log_event| %>
+		<tr>
+			<td><%= log_event.created_at %></td>
+			<td><% if log_event.account != nil %><%= link_to log_event.account, admin_account_path(log_event.account) %><% end %></td>
+			<td><% if log_event.user != nil %><%= link_to log_event.user, admin_account_user_path(log_event.user.account, log_event.user) %><% end %></td>
+			<td><%= log_level(log_event) %></td>
+			<td><%= log_event.message %></td>
+		</tr>
+<% end %>
+	</tbody>
+</table>
+<%= paginate @log_events %>
+<% end %>

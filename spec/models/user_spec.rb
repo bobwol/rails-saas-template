@@ -120,21 +120,22 @@ RSpec.describe User, type: :model do
     context 'first name only' do
       it 'uses the first name' do
         user = FactoryGirl.build(:user, last_name: '')
-        expect(user.to_s).to eq 'John'
+        expect(user.to_s).to eq user.first_name
       end
     end
 
     context 'last name only' do
       it 'uses the last name' do
         user = FactoryGirl.build(:user, first_name: '')
-        expect(user.to_s).to eq 'Doe'
+        expect(user.to_s).to eq user.last_name
       end
     end
 
     context 'first and last name' do
       it 'uses both names' do
         user = FactoryGirl.build(:user)
-        expect(user.to_s).to eq 'John Doe'
+        name = user.first_name + ' ' + user.last_name
+        expect(user.to_s).to eq name
       end
     end
   end

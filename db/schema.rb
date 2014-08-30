@@ -11,7 +11,37 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140816092845) do
+ActiveRecord::Schema.define(version: 20140822113010) do
+
+  create_table "accounts", force: true do |t|
+    t.string   "company_name",                                      null: false
+    t.string   "email",                                             null: false
+    t.integer  "plan_id",                                           null: false
+    t.integer  "paused_plan_id"
+    t.boolean  "active",                             default: true, null: false
+    t.string   "address_line1",          limit: 120
+    t.string   "address_line2",          limit: 120
+    t.string   "address_city",           limit: 120
+    t.string   "address_zip",            limit: 20
+    t.string   "address_state",          limit: 60
+    t.string   "address_country",        limit: 2
+    t.string   "card_token",             limit: 60
+    t.string   "stripe_customer_id",     limit: 60
+    t.string   "stripe_subscription_id", limit: 60
+    t.string   "cancellation_category"
+    t.string   "cancellation_reason"
+    t.string   "cancellation_message"
+    t.datetime "cancelled_at"
+    t.datetime "expires_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "accounts", ["email"], name: "index_accounts_on_email", using: :btree
+  add_index "accounts", ["paused_plan_id"], name: "index_accounts_on_paused_plan_id", using: :btree
+  add_index "accounts", ["plan_id"], name: "index_accounts_on_plan_id", using: :btree
+  add_index "accounts", ["stripe_customer_id"], name: "index_accounts_on_stripe_customer_id", unique: true, using: :btree
+  add_index "accounts", ["stripe_subscription_id"], name: "index_accounts_on_stripe_subscription_id", unique: true, using: :btree
 
   create_table "delayed_jobs", force: true do |t|
     t.integer  "priority",   default: 0, null: false

@@ -62,6 +62,21 @@ RSpec.describe Plan, type: :model do
     end
   end
 
+  describe '.available' do
+    it 'returns active plans' do
+      # Three inactive plans
+      FactoryGirl.create(:plan, active: false)
+      FactoryGirl.create(:plan, public: false)
+      FactoryGirl.create(:plan, stripe_id: nil)
+      # On active plan
+      plan = FactoryGirl.create(:plan)
+
+      plans = Plan.available
+      expect(plans.count).to eq 1
+      expect(plans).to include plan
+    end
+  end
+
   describe '.currency' do
     it 'is required' do
       plan = FactoryGirl.build(:plan, currency: '')
@@ -205,7 +220,7 @@ RSpec.describe Plan, type: :model do
       expect(plan.errors[:name]).to include 'can\'t be blank'
     end
 
-    it 'must be less than 150 characters' do
+    it 'must be 150 characters or less' do
       plan = FactoryGirl.build(:plan, name: Faker::Lorem.characters(151))
       expect(plan).to_not be_valid
       expect(plan.errors[:name]).to include 'is too long (maximum is 150 characters)'
@@ -226,7 +241,7 @@ RSpec.describe Plan, type: :model do
       expect(plan).to be_valid
     end
 
-    it 'must be less than 150 characters' do
+    it 'must be 150 characters or less' do
       plan = FactoryGirl.build(:plan, statement_description: Faker::Lorem.characters(151))
       expect(plan).to_not be_valid
       expect(plan.errors[:statement_description]).to include 'is too long (maximum is 150 characters)'
@@ -239,10 +254,17 @@ RSpec.describe Plan, type: :model do
       expect(plan).to be_valid
     end
 
-    it 'must be less than 150 characters' do
+    it 'must be 150 characters or less' do
       plan = FactoryGirl.build(:plan, stripe_id: Faker::Lorem.characters(81))
       expect(plan).to_not be_valid
       expect(plan.errors[:stripe_id]).to include 'is too long (maximum is 80 characters)'
+    end
+  end
+
+  describe '.to_s' do
+    it 'is the name' do
+      plan = FactoryGirl.build(:plan)
+      expect(plan.to_s).to eq plan.name
     end
   end
 
@@ -269,13 +291,6 @@ RSpec.describe Plan, type: :model do
       plan = FactoryGirl.create(:plan, trial_period_days: 30)
       expect(plan.update(trial_period_days: 15)).to eq false
       expect(plan.errors[:trial_period_days]).to include 'cannot change the trial period days'
-    end
-  end
-
-  describe '.to_s' do
-    it 'is the name' do
-      plan = FactoryGirl.build(:plan)
-      expect(plan.to_s).to eq plan.name
     end
   end
 end

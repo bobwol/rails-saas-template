@@ -30,8 +30,8 @@
 
 # Plan model
 class Plan < ActiveRecord::Base
-  # has_many :accounts
-  # has_many :paused_accounts, class_name: 'Account', foreign_key: :paused_plan_id
+  has_many :accounts
+  has_many :paused_accounts, class_name: 'Account', foreign_key: :paused_plan_id
   has_many :paused_plans, class_name: 'Plan', foreign_key: :paused_plan_id
 
   before_update do |plan|
@@ -58,11 +58,11 @@ class Plan < ActiveRecord::Base
   belongs_to :paused_plan, class_name: 'Plan'
 
   # default_scope { order('name ASC, amount ASC') }
-  # scope :available,
-  #       lambda {
-  #         where('active = ? AND public = ? AND stripe_id IS NOT NULL', true, true)
-  #           .order('amount DESC, name ASC')
-  #       }
+  scope :available,
+        lambda {
+          where('active = ? AND public = ? AND stripe_id IS NOT NULL', true, true)
+            .order('amount DESC, name ASC')
+        }
   # scope :available_for_currency,
   #       lambda { |for_currency|
   #         where('active = ? AND public = ? AND currency = ? AND stripe_id IS NOT NULL',

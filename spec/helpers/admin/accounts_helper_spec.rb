@@ -30,50 +30,15 @@
 
 require 'rails_helper'
 
-# Tests for admin/users routing
-RSpec.describe 'routing for the admin users', type: :routing do
-  it 'routes GET /admin/users to admin/users#index' do
-    expect(get: '/admin/users').to route_to(
-      controller: 'admin/users',
-      action: 'index'
-    )
-  end
-
-  it 'routes GET /admin/users/1 to admin/users#show' do
-    expect(get: '/admin/users/1').to route_to(
-      controller: 'admin/users',
-      action: 'show',
-      id: '1'
-    )
-  end
-
-  it 'routes GET /admin/users/1/edit to admin/users#edit' do
-    expect(get: '/admin/users/1/edit').to route_to(
-      controller: 'admin/users',
-      action: 'edit',
-      id: '1'
-    )
-  end
-
-  it 'routes GET /admin/users/new to admin/users#new' do
-    expect(get: '/admin/users/new').to route_to(
-      controller: 'admin/users',
-      action: 'new'
-    )
-  end
-
-  it 'routes PATCH /admin/users/1 to admin/users#update' do
-    expect(patch: '/admin/users/1').to route_to(
-      controller: 'admin/users',
-      action: 'update',
-      id: '1'
-    )
-  end
-
-  it 'routes POST /admin/users to admin/users#create' do
-    expect(post: '/admin/users').to route_to(
-      controller: 'admin/users',
-      action: 'create'
-    )
-  end
+# Specs in this file have access to a helper object that includes
+# the Admin::AccountsHelper. For example:
+#
+# describe Admin::AccountsHelper do
+#   describe "string concat" do
+#     it "concats two strings with spaces" do
+#       expect(helper.concat_strings("this","that")).to eq("this that")
+#     end
+#   end
+# end
+RSpec.describe Admin::AccountsHelper, type: :helper do
 end

@@ -28,52 +28,23 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-require 'rails_helper'
+# View helpers for the admin accounts controller
+module Admin::AccountsHelper
+  # Render the status of the account
+  def account_status(account)
+    return '<span class="label label-default">Unknown</span>'.html_safe if account.nil?
 
-# Tests for admin/users routing
-RSpec.describe 'routing for the admin users', type: :routing do
-  it 'routes GET /admin/users to admin/users#index' do
-    expect(get: '/admin/users').to route_to(
-      controller: 'admin/users',
-      action: 'index'
-    )
-  end
-
-  it 'routes GET /admin/users/1 to admin/users#show' do
-    expect(get: '/admin/users/1').to route_to(
-      controller: 'admin/users',
-      action: 'show',
-      id: '1'
-    )
-  end
-
-  it 'routes GET /admin/users/1/edit to admin/users#edit' do
-    expect(get: '/admin/users/1/edit').to route_to(
-      controller: 'admin/users',
-      action: 'edit',
-      id: '1'
-    )
-  end
-
-  it 'routes GET /admin/users/new to admin/users#new' do
-    expect(get: '/admin/users/new').to route_to(
-      controller: 'admin/users',
-      action: 'new'
-    )
-  end
-
-  it 'routes PATCH /admin/users/1 to admin/users#update' do
-    expect(patch: '/admin/users/1').to route_to(
-      controller: 'admin/users',
-      action: 'update',
-      id: '1'
-    )
-  end
-
-  it 'routes POST /admin/users to admin/users#create' do
-    expect(post: '/admin/users').to route_to(
-      controller: 'admin/users',
-      action: 'create'
-    )
+    case account.status
+    when :active
+      '<span class="label label-success">Active</span>'.html_safe
+    when :cancel_pending
+      '<span class="label label-warning">Cancel Pending</span>'.html_safe
+    when :cancelled
+      '<span class="label label-danger">Cancelled</span>'.html_safe
+    when :expired
+      '<span class="label label-warning">Expired</span>'.html_safe
+    when :paused
+      '<span class="label label-warning">Paused</span>'.html_safe
+    end
   end
 end

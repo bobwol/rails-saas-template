@@ -1,0 +1,58 @@
+﻿<%= render_errors @account %>
+
+<%= form_for [:admin, @account] do |f| %>
+  <div class="form-group">
+    <%= f.label :company_name, class: "control-label" %>
+    <%= f.text_field :company_name, class: "form-control" %>
+  </div>
+  <div class="form-group">
+    <%= f.label :plan, class: "control-label" %>
+    <%= f.collection_select :plan_id, Plan.available, :id, :name, {}, { class: "form-control" } %>
+  </div>
+  <div class="form-group">
+    <%= f.label :paused_plan_id, class: "control-label" %>
+    <%= f.collection_select :paused_plan_id, Plan.available, :id, :name, {include_blank: true}, { class: "form-control" } %>
+  </div>
+  <div class="form-group">
+    <%= f.label :active, class: "control-label" %>
+    <%= f.check_box :active %>
+  </div>
+  <div class="form-group">
+    <%= f.label :expires_at, class: "control-label" %>
+    <%= f.date_field :expires_at, class: "form-control" %>
+  </div>
+  <div class="form-group">
+    <%= f.label :email, class: "control-label" %>
+    <%= f.text_field :email, class: "form-control" %>
+  </div>
+  <div class="form-group">
+    <%= f.label :address_line1, class: "control-label" %>
+    <%= f.text_field :address_line1, class: "form-control" %>
+  </div>
+  <div class="form-group">
+    <%= f.label :address_line2, class: "control-label" %>
+    <%= f.text_field :address_line2, class: "form-control" %>
+  </div>
+  <div class="form-group">
+    <%= f.label :address_city, class: "control-label" %>
+    <%= f.text_field :address_city, class: "form-control" %>
+  </div>
+  <div class="form-group">
+    <%= f.label :address_zip, class: "control-label" %>
+    <%= f.text_field :address_zip, class: "form-control" %>
+  </div>
+  <div class="form-group">
+    <%= f.label :address_state, class: "control-label" %>
+    <%= f.text_field :address_state, class: "form-control" %>
+  </div>
+  <div class="form-group">
+    <%= f.label :address_country, class: "control-label" %>
+    <%= f.country_select :address_country, ["AU", "CA", "NZ", "GB", "US"], { iso_codes: true}, { class: "form-control" } %>
+  </div>
+  <%= f.submit "Save", class: "btn btn-primary" %>
+<% if @account.new_record? %>
+  <%= link_to "Discard Changes", admin_accounts_path %>
+<% else %>
+  <%= link_to "Discard Changes", admin_account_path(@account) %>
+<% end %>
+<% end %>

@@ -86,7 +86,7 @@ RSpec.describe Admin::PlansController, type: :controller do
 
       context 'with invalid attributes' do
         it 'sets the nav_item to plans' do
-          post :create, plan: FactoryGirl.attributes_for(:plan)
+          post :create, plan: FactoryGirl.attributes_for(:plan, name: '')
           expect(assigns(:nav_item)).to eq 'plans'
         end
 

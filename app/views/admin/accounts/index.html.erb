@@ -1,0 +1,42 @@
+﻿<%
+@title = 'Accounts'
+@heading = 'Accounts'
+@subheading = 'List'
+@nav_item = 'accounts'
+%>
+
+<div style="text-align: right; padding: 10px 0px;">
+  <% if can? :new, Account %><%= link_to "New Account", new_admin_account_path, class: "btn btn-primary" %><% end %>
+</div>
+
+<% if @accounts.empty? then %>
+<p>No accounts found</p>
+<% else %>
+<table class="table table-condensed table-striped">
+	<thead>
+		<tr>
+			<th>Company Name</th>
+			<th>Active</th>
+			<th>Plan</th>
+			<th>City</th>
+			<th>Zip</th>
+			<th>State</th>
+			<th>Country</th>
+		</tr>
+	</thead>
+	<tbody>
+<% @accounts.each do |account| %>
+		<tr>
+			<td><%= link_to_if can?(:show, account), account.company_name, admin_account_path(account) %></td>
+			<td><%= account_status(account) %></td>
+			<td><%= account.plan %></td>
+			<td><%= account.address_city %></td>
+			<td><%= account.address_zip %></td>
+			<td><%= account.address_state %></td>
+			<td><%= account.address_country %></td>
+		</tr>
+<% end %>
+	</tbody>
+</table>
+<%= paginate @accounts %>
+<% end %>

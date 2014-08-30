@@ -30,7 +30,7 @@
 
 require 'rails_helper'
 
-# Tests for customized Devise
+# Tests for admin/plans routing
 RSpec.describe 'routing for the admin plans', type: :routing do
   it 'routes GET /admin/plans to admin/plans#index' do
     expect(get: '/admin/plans').to route_to(

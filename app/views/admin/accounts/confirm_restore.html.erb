@@ -1,0 +1,22 @@
+﻿<%
+@title = 'Account'
+@heading = 'Account'
+@subheading = 'Restore'
+@nav_item = 'accounts'
+%>
+
+<h2 class="text-danger">Yippie!! They're back.</h2>
+
+<p>But be warned that restoring an account means that the customer may be invoiced again.</p>
+
+<h3><%= @account %></h3>
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+<%= form_for [:admin, @account], url: admin_account_restore_path(@account), method: :patch do |f| %>
+  <%= f.submit "Restore Account", class: "btn btn-success" %>
+  <%= link_to "Keep account", admin_accounts_path, class: "btn btn-primary" %>
+<% end %>
+    </div>
+  </div>
+</div>

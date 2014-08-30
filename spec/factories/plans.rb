@@ -31,8 +31,8 @@
 # User factories
 FactoryGirl.define do
   factory :plan do
-    stripe_id 'plan_1'
-    name 'Basic Plan'
+    stripe_id { Faker::Lorem.characters(20) }
+    name { Faker::Lorem.word }
     statement_description ''
     active true
     public true

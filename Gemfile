@@ -50,6 +50,9 @@ gem 'devise', '~> 3.2.4'
 # Add cancancan for authorization
 gem 'cancancan', '~> 1.9.2'
 
+# Add country_select to provide a list of countries
+gem 'country_select', '~> 1.3.1'
+
 # Add delayed jobs so we can background tasks that aren't critical
 gem 'daemons', '~> 1.1.9'
 gem 'delayed_job', '~> 4.0.1'

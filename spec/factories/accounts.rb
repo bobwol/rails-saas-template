@@ -28,52 +28,14 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-require 'rails_helper'
-
-# Tests for admin/users routing
-RSpec.describe 'routing for the admin users', type: :routing do
-  it 'routes GET /admin/users to admin/users#index' do
-    expect(get: '/admin/users').to route_to(
-      controller: 'admin/users',
-      action: 'index'
-    )
-  end
-
-  it 'routes GET /admin/users/1 to admin/users#show' do
-    expect(get: '/admin/users/1').to route_to(
-      controller: 'admin/users',
-      action: 'show',
-      id: '1'
-    )
-  end
-
-  it 'routes GET /admin/users/1/edit to admin/users#edit' do
-    expect(get: '/admin/users/1/edit').to route_to(
-      controller: 'admin/users',
-      action: 'edit',
-      id: '1'
-    )
-  end
-
-  it 'routes GET /admin/users/new to admin/users#new' do
-    expect(get: '/admin/users/new').to route_to(
-      controller: 'admin/users',
-      action: 'new'
-    )
-  end
-
-  it 'routes PATCH /admin/users/1 to admin/users#update' do
-    expect(patch: '/admin/users/1').to route_to(
-      controller: 'admin/users',
-      action: 'update',
-      id: '1'
-    )
-  end
-
-  it 'routes POST /admin/users to admin/users#create' do
-    expect(post: '/admin/users').to route_to(
-      controller: 'admin/users',
-      action: 'create'
-    )
+# Account factories
+FactoryGirl.define do
+  factory :account do
+    company_name { Faker::Company.name }
+    email { Faker::Internet.safe_email }
+    association :plan, factory: :plan
+    active true
+    expires_at Time.now + 30.days
+    card_token { Faker::Lorem.characters(10) }
   end
 end

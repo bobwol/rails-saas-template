@@ -1,0 +1,35 @@
+﻿<%
+@title = 'Account'
+@heading = 'Account'
+@subheading = 'Cancel'
+@nav_item = 'accounts'
+%>
+
+<h2 class="text-danger">Danger Zone!!</h2>
+
+<p>We're really sorry that want to leave. By clicking on the cancel account button you will disable your account.</p>
+
+<h3><%= @account %></h3>
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+<%= form_for [:admin, @account], url: admin_account_cancel_path(@account), method: :patch do |f| %>
+      <div class="form-group">
+      <%= f.label :cancellation_category, class: "control-label" %>
+      <%= f.select :cancellation_category, [['Found a better solution'], ['Too expensive'], ['No longer need it'], ['Other']], { class: "form-control" } %>
+      </div>
+      <div class="form-group">
+      <%= f.label :cancellation_reason, class: "control-label" %>
+      <%= f.select :cancellation_reason, [['Found a better solution'], ['Too expensive'], ['No longer need it'], ['Other']], { class: "form-control" } %>
+      </div>
+      <div class="form-group">
+      <%= f.label :cancellation_message, class: "control-label" %>
+      <%= f.text_field :cancellation_message, class: "form-control" %>
+      </div>
+
+      <%= f.submit "Cancel Account", class: "btn btn-danger" %>
+      <%= link_to "Keep account", admin_account_path(@account), class: "btn btn-primary" %>
+<% end %>
+    </div>
+  </div>
+</div>

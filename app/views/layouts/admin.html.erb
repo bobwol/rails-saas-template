@@ -30,6 +30,7 @@
     <div class="col-sm-3 col-md-2 sidebar">
       <ul class="nav nav-sidebar">
         <li<%if @nav_item == 'dashboard' %> class="active"<% end %>><%= link_to 'Dashboard', admin_root_path %></li>
+        <li<%if @nav_item == 'accounts' %> class="active"<% end %>><%= link_to 'Accounts', admin_accounts_path %></li>
         <li<%if @nav_item == 'plans' %> class="active"<% end %>><%= link_to 'Plans', admin_plans_path %></li>
         <li<%if @nav_item == 'users' %> class="active"<% end %>><%= link_to 'Users', admin_users_path %></li>
       <ul>
