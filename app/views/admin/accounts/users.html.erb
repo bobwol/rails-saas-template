@@ -7,6 +7,7 @@
 <ul class="nav nav-tabs">
   <% if can?(:index, @account) %><li><%= link_to "Account", admin_account_path(@account) %></li><% end %>
   <li class="active"><%= link_to "Users", admin_account_users_path(@account) %></li>
+  <% if can?(:events, @account) %><li><%= link_to "Events", admin_account_events_path(@account) %></li><% end %>
 </ul>
 
 <% if @user_permissions.empty? then %>

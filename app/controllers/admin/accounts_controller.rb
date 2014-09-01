@@ -34,10 +34,10 @@ class Admin::AccountsController < Admin::ApplicationController
                                       :edit,
                                       :show,
                                       :update,
-                                      :log_events,
                                       :cancel,
                                       :confirm_cancel,
                                       :confirm_restore,
+                                      :events,
                                       :restore,
                                       :users]
 
@@ -88,9 +88,9 @@ class Admin::AccountsController < Admin::ApplicationController
     end
   end
 
-  # def log_events
-  #   @log_events = @account.log_events.page(params[:page])
-  # end
+  def events
+    @app_events = @account.app_events.page(params[:page])
+  end
 
   def cancel
     if @account.cancel(cancel_params)

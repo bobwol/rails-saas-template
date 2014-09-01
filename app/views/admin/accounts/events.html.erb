@@ -1,0 +1,39 @@
+﻿<%
+@title = 'Accounts'
+@heading = 'Accounts'
+@subheading = 'Events'
+%>
+
+<ul class="nav nav-tabs">
+  <% if can?(:index, @account) %><li><%= link_to "Account", admin_account_path(@account) %></li><% end %>
+  <% if can?(:users, @account) %><li><%= link_to "Users", admin_account_users_path(@account) %></li><% end %>
+  <li class="active"><%= link_to "Events", admin_account_events_path(@account) %></li>
+</ul>
+
+<% if @app_events.empty? then %>
+<p>No events found</p>
+<% else %>
+<table class="table table-condensed table-striped">
+	<thead>
+		<tr>
+			<th>Date</th>
+			<th>Account</th>
+			<th>User</th>
+			<th>Level</th>
+			<th>Message</th>
+		</tr>
+	</thead>
+	<tbody>
+<% @app_events.each do |app_event| %>
+		<tr>
+			<td><%= app_event.created_at %></td>
+			<td><% if app_event.account != nil %><%= link_to app_event.account, admin_account_path(app_event.account) %><% end %></td>
+			<td><% if app_event.user != nil %><%= link_to app_event.user, admin_user_path(app_event.user) %><% end %></td>
+			<td><%= log_level(app_event) %></td>
+			<td><%= app_event.message %></td>
+		</tr>
+<% end %>
+	</tbody>
+</table>
+<%= paginate @app_events %>
+<% end %>

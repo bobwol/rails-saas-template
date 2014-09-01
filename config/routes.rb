@@ -67,6 +67,7 @@ Rails.application.routes.draw do
     resources :accounts do
       get 'cancel' => 'accounts#confirm_cancel'
       patch 'cancel' => 'accounts#cancel'
+      get 'events' => 'accounts#events'
       get 'restore' => 'accounts#confirm_restore'
       patch 'restore' => 'accounts#restore'
       get 'users' => 'accounts#users'
