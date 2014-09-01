@@ -69,9 +69,12 @@ Rails.application.routes.draw do
       patch 'cancel' => 'accounts#cancel'
       get 'restore' => 'accounts#confirm_restore'
       patch 'restore' => 'accounts#restore'
+      get 'users' => 'accounts#users'
     end
     resources :plans
-    resources :users
+    resources :users do
+      get 'accounts' => 'users#accounts'
+    end
     get 'events' => 'dashboard#events'
     get 'jobs' => 'dashboard#jobs'
     root to: 'dashboard#index'

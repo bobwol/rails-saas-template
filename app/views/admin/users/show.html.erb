@@ -4,6 +4,11 @@
 @subheading = @user
 %>
 
+<ul class="nav nav-tabs">
+  <li class="active"><%= link_to "User", admin_user_path(@user) %></li>
+  <% if can?(:accounts, @user) %><li><%= link_to "Accounts", admin_user_accounts_path(@user) %></li><% end %>
+</ul>
+
 <div style="text-align: right; padding: 10px 0px;">
   <% if can? :edit, @user %><%= link_to "Edit User", edit_admin_user_path(@user), class: "btn btn-primary" %><% end %>
   <% if can? :destroy, @user %><%= link_to "Delete User", admin_user_path(@user), method: :delete, class: "btn btn-danger" %><% end %>

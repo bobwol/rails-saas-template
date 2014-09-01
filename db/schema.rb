@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140901080307) do
+ActiveRecord::Schema.define(version: 20140901113639) do
 
   create_table "accounts", force: true do |t|
     t.string   "company_name",                                      null: false
@@ -90,6 +90,18 @@ ActiveRecord::Schema.define(version: 20140901080307) do
 
   add_index "plans", ["paused_plan_id"], name: "index_plans_on_paused_plan_id", using: :btree
   add_index "plans", ["stripe_id"], name: "index_plans_on_stripe_id", unique: true, using: :btree
+
+  create_table "user_permissions", force: true do |t|
+    t.integer  "user_id",                       null: false
+    t.integer  "account_id",                    null: false
+    t.boolean  "account_admin", default: false, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "user_permissions", ["account_id"], name: "index_user_permissions_on_account_id", using: :btree
+  add_index "user_permissions", ["user_id", "account_id"], name: "index_user_permissions_on_user_id_and_account_id", unique: true, using: :btree
+  add_index "user_permissions", ["user_id"], name: "index_user_permissions_on_user_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "first_name",             limit: 60

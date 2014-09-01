@@ -30,6 +30,10 @@
 
 # User model
 class User < ActiveRecord::Base
+  has_many :app_events
+  has_many :user_permissions
+  has_many :accounts, through: :user_permissions
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :lockable, :registerable,

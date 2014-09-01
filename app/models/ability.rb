@@ -61,7 +61,6 @@ class Ability
     # https://github.com/CanCanCommunity/cancancan/wiki/Defining-Abilities
     return if user.nil?
 
-    can :index, :dashboard
     if user.super_admin?
       can :index, :admin_dashboard
       can :events, :admin_dashboard
@@ -70,5 +69,6 @@ class Ability
       can :manage, Plan
       can :manage, User
     end
+    can :index, :dashboard
   end
 end

@@ -1,0 +1,94 @@
+# Encoding: utf-8
+
+# Copyright (c) 2014, Richard Buggy
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#
+# 1. Redistributions of source code must retain the above copyright notice, this
+#    list of conditions and the following disclaimer.
+#
+# 2. Redistributions in binary form must reproduce the above copyright notice,
+#    this list of conditions and the following disclaimer in the documentation
+#    and/or other materials provided with the distribution.
+#
+# 3. Neither the name of the copyright holder nor the names of its contributors
+#    may be used to endorse or promote products derived from this software
+#    without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+# FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+require 'rails_helper'
+
+# Tests for the plan model
+RSpec.describe UserPermission, type: :model do
+  it 'should have valid factory' do
+    expect(FactoryGirl.build(:user_permission)).to be_valid
+  end
+
+  describe '.account' do
+    it 'connects to Account' do
+      account = FactoryGirl.create(:account)
+      user_permission = FactoryGirl.create(:user_permission, account_id: account.id)
+      expect(user_permission).to be_valid
+      expect(user_permission.account).to eq account
+    end
+  end
+
+  describe '.account_id' do
+    it 'is required' do
+      user_permission = FactoryGirl.build(:user_permission, account_id: '')
+      expect(user_permission).to_not be_valid
+      expect(user_permission.errors[:account_id]).to include 'can\'t be blank'
+    end
+  end
+
+  describe '.account_admin' do
+    it 'can be false' do
+      user_permission = FactoryGirl.build(:user_permission, account_admin: false)
+      expect(user_permission).to be_valid
+    end
+
+    it 'can be true' do
+      user_permission = FactoryGirl.build(:user_permission, account_admin: true)
+      expect(user_permission).to be_valid
+    end
+  end
+
+  describe '.user' do
+    it 'connects to User' do
+      user = FactoryGirl.create(:user)
+      user_permission = FactoryGirl.create(:user_permission, user_id: user.id)
+      expect(user_permission).to be_valid
+      expect(user_permission.user).to eq user
+    end
+  end
+
+  describe '.user_id' do
+    it 'is required' do
+      user_permission = FactoryGirl.build(:user_permission, user_id: '')
+      expect(user_permission).to_not be_valid
+      expect(user_permission.errors[:user_id]).to include 'can\'t be blank'
+    end
+
+    it 'must be unique to an account' do
+      user = FactoryGirl.create(:user)
+      account = FactoryGirl.create(:account)
+      user_permission1 = FactoryGirl.create(:user_permission, account_id: account.id, user_id: user.id)
+      expect(user_permission1).to be_valid
+      user_permission2 = FactoryGirl.build(:user_permission, account_id: account.id, user_id: user.id)
+      expect(user_permission2).to_not be_valid
+      expect(user_permission2.errors[:user_id]).to include 'has already been taken'
+    end
+  end
+end

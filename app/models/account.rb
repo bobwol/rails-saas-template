@@ -56,11 +56,9 @@ class Account < ActiveRecord::Base
 
   default_scope { order('company_name ASC') }
 
-  # has_many :invoices
-  # has_many :log_events
-  # has_many :users
-
-  # accepts_nested_attributes_for :users
+  has_many :app_events
+  has_many :users, through: :user_permissions
+  has_many :user_permissions
 
   validates :address_city, length: { maximum: 120 }
   validates :address_country, length: { maximum: 2 }

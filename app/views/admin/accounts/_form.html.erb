@@ -1,6 +1,6 @@
-﻿<%= render_errors @account %>
+﻿<%= render_errors account %>
 
-<%= form_for [:admin, @account] do |f| %>
+<%= form_for [:admin, account] do |f| %>
   <div class="form-group">
     <%= f.label :company_name, class: "control-label" %>
     <%= f.text_field :company_name, class: "form-control" %>
@@ -50,9 +50,9 @@
     <%= f.country_select :address_country, ["AU", "CA", "NZ", "GB", "US"], { iso_codes: true}, { class: "form-control" } %>
   </div>
   <%= f.submit "Save", class: "btn btn-primary" %>
-<% if @account.new_record? %>
+<% if account.new_record? %>
   <%= link_to "Discard Changes", admin_accounts_path %>
 <% else %>
-  <%= link_to "Discard Changes", admin_account_path(@account) %>
+  <%= link_to "Discard Changes", admin_account_path(account) %>
 <% end %>
 <% end %>

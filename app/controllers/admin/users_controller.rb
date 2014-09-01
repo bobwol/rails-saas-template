@@ -30,7 +30,7 @@
 
 # Provides plans administration in the admin section
 class Admin::UsersController < Admin::ApplicationController
-  before_action :find_user, only: [:destroy, :edit, :show, :update]
+  before_action :find_user, only: [:destroy, :edit, :show, :update, :accounts]
 
   authorize_resource
 
@@ -87,10 +87,18 @@ class Admin::UsersController < Admin::ApplicationController
     end
   end
 
+  def accounts
+    @user_permissions = @user.user_permissions.includes(:account).page(params[:page])
+  end
+
   private
 
   def find_user
-    @user = User.find(params[:id])
+    if params[:user_id]
+      @user = User.find(params[:user_id])
+    else
+      @user = User.find(params[:id])
+    end
   end
 
   def users_create_params

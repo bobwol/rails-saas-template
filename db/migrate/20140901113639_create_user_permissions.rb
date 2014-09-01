@@ -28,28 +28,15 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-require 'rails_helper'
-
-# Tests for dashboard routing
-RSpec.describe 'routing to admin dashboard', type: :routing do
-  it 'routes GET /admin/ to admin/dashboard#index' do
-    expect(get: '/admin/').to route_to(
-      controller: 'admin/dashboard',
-      action: 'index'
-    )
-  end
-
-  it 'routes GET /admin/events to admin/dashboard#events' do
-    expect(get: '/admin/events').to route_to(
-      controller: 'admin/dashboard',
-      action: 'events'
-    )
-  end
-
-  it 'routes GET /admin/jobs to admin/dashboard#jobs' do
-    expect(get: '/admin/jobs').to route_to(
-      controller: 'admin/dashboard',
-      action: 'jobs'
-    )
+# Migration to add user persmissions model to database
+class CreateUserPermissions < ActiveRecord::Migration
+  def change
+    create_table :user_permissions do |t|
+      t.references :user, null: false, index: true
+      t.references :account, null: false, index: true
+      t.boolean :account_admin, null: false, default: false
+      t.timestamps
+    end
+    add_index :user_permissions, [:user_id, :account_id], unique: true
   end
 end

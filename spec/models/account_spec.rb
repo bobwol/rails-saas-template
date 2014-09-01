@@ -104,6 +104,17 @@ RSpec.describe Account, type: :model do
     end
   end
 
+  describe '.app_events' do
+    it 'connects to AppEvent' do
+      account = FactoryGirl.create(:account)
+      app_event1 = FactoryGirl.create(:app_event, account: account)
+      app_event2 = FactoryGirl.create(:app_event, account: account)
+      expect(account.app_events.count).to eq 2
+      expect(account.app_events).to include app_event1
+      expect(account.app_events).to include app_event2
+    end
+  end
+
   describe '.cancel' do
   end
 
@@ -292,6 +303,32 @@ RSpec.describe Account, type: :model do
     it 'uses the company name' do
       account = FactoryGirl.build(:account)
       expect(account.to_s).to eq account.company_name
+    end
+  end
+
+  describe '.user_permissions' do
+    it 'connects to User Permission' do
+      user1 = FactoryGirl.create(:user)
+      user2 = FactoryGirl.create(:user)
+      account = FactoryGirl.create(:account)
+      user_permission1 = FactoryGirl.create(:user_permission, account: account, user: user1)
+      user_permission2 = FactoryGirl.create(:user_permission, account: account, user: user2)
+      expect(account.user_permissions.count).to eq 2
+      expect(account.user_permissions).to include user_permission1
+      expect(account.user_permissions).to include user_permission2
+    end
+  end
+
+  describe '.users' do
+    it 'connects to Users' do
+      user1 = FactoryGirl.create(:user)
+      user2 = FactoryGirl.create(:user)
+      account = FactoryGirl.create(:account)
+      FactoryGirl.create(:user_permission, account: account, user: user1)
+      FactoryGirl.create(:user_permission, account: account, user: user2)
+      expect(account.users.count).to eq 2
+      expect(account.users).to include user1
+      expect(account.users).to include user2
     end
   end
 end

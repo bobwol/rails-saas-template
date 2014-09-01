@@ -1,0 +1,32 @@
+<%
+@title = 'Users'
+@heading = 'Users'
+@subheading = 'Accounts'
+%>
+
+<ul class="nav nav-tabs">
+  <% if can?(:index, @user) %><li><%= link_to "User", admin_user_path(@user) %></li><% end %>
+  <li class="active"><%= link_to "Accounts", admin_user_accounts_path(@user) %></li>
+</ul>
+
+<% if @user_permissions.empty? then %>
+<p>No accounts found</p>
+<% else %>
+<table class="table table-condensed table-striped">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Admin</th>
+		</tr>
+	</thead>
+	<tbody>
+<% @user_permissions.each do |user_permission| %>
+		<tr>
+			<td><%= link_to_if can?(:show, user_permission.account), user_permission.account.to_s, admin_account_path(user_permission.account) %></td>
+			<td><%= user_permission.account_admin %></td>
+		</tr>
+<% end %>
+	</tbody>
+</table>
+<%= paginate @user_permissions %>
+<% end %>

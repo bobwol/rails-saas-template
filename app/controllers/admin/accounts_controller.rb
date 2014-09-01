@@ -38,7 +38,8 @@ class Admin::AccountsController < Admin::ApplicationController
                                       :cancel,
                                       :confirm_cancel,
                                       :confirm_restore,
-                                      :restore]
+                                      :restore,
+                                      :users]
 
   authorize_resource
 
@@ -121,6 +122,10 @@ class Admin::AccountsController < Admin::ApplicationController
     else
       render 'confirm_restore', notice: 'Unable to restore the account.'
     end
+  end
+
+  def users
+    @user_permissions = @account.user_permissions.includes(:user).page(params[:page])
   end
 
   private

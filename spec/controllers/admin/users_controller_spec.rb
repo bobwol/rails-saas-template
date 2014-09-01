@@ -170,6 +170,61 @@ RSpec.describe Admin::UsersController, type: :controller do
     end
   end
 
+  describe 'GET #accounts' do
+    before(:each) do
+      @user = FactoryGirl.create(:user)
+    end
+
+    context 'as anonymous user' do
+      it 'redirects to login page' do
+        get :accounts, user_id: @user.id
+        expect(response).to be_redirect
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+
+    context 'as unauthorized users' do
+      before(:each) do
+        sign_in :user, @user
+      end
+
+      it 'responds with forbidden' do
+        get :accounts, user_id: @user.id
+        expect(response).to be_forbidden
+      end
+
+      it 'renders the forbidden' do
+        get :accounts, user_id: @user.id
+        expect(response).to render_template('errors/forbidden')
+        expect(response).to render_template('layouts/errors')
+      end
+    end
+
+    context 'as super admin user' do
+      before(:each) do
+        admin = FactoryGirl.create(:admin)
+        sign_in :user, admin
+      end
+
+      it 'responds successfully with an HTTP 200 status code' do
+        get :accounts, user_id: @user.id
+        expect(response).to be_success
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'sets the nav_item to users' do
+        get :accounts, user_id: @user.id
+        expect(assigns(:nav_item)).to eq 'users'
+      end
+
+      it 'renders the accounts template' do
+        get :accounts, user_id: @user.id
+        expect(response).to render_template('accounts')
+        expect(response).to render_template('layouts/admin')
+      end
+    end
+  end
+
   describe 'GET #edit' do
     before(:each) do
       @user = FactoryGirl.create(:user)

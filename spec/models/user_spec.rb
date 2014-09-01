@@ -36,6 +36,30 @@ RSpec.describe User, type: :model do
     expect(FactoryGirl.build(:user)).to be_valid
   end
 
+  describe '.accounts' do
+    it 'connects to Account' do
+      account1 = FactoryGirl.create(:account)
+      account2 = FactoryGirl.create(:account)
+      user = FactoryGirl.create(:user)
+      FactoryGirl.create(:user_permission, account: account1, user: user)
+      FactoryGirl.create(:user_permission, account: account2, user: user)
+      expect(user.accounts.count).to eq 2
+      expect(user.accounts).to include account1
+      expect(user.accounts).to include account2
+    end
+  end
+
+  describe '.app_events' do
+    it 'connects to AppEvent' do
+      user = FactoryGirl.create(:user)
+      app_event1 = FactoryGirl.create(:app_event, user: user)
+      app_event2 = FactoryGirl.create(:app_event, user: user)
+      expect(user.app_events.count).to eq 2
+      expect(user.app_events).to include app_event1
+      expect(user.app_events).to include app_event2
+    end
+  end
+
   describe '.first_name' do
     it 'is not required' do
       user = FactoryGirl.build(:user, first_name: '')
@@ -137,6 +161,19 @@ RSpec.describe User, type: :model do
         name = user.first_name + ' ' + user.last_name
         expect(user.to_s).to eq name
       end
+    end
+  end
+
+  describe '.user_permissions' do
+    it 'connects to UserPermission' do
+      account1 = FactoryGirl.create(:account)
+      account2 = FactoryGirl.create(:account)
+      user = FactoryGirl.create(:user)
+      user_permission1 = FactoryGirl.create(:user_permission, account: account1, user: user)
+      user_permission2 = FactoryGirl.create(:user_permission, account: account2, user: user)
+      expect(user.user_permissions.count).to eq 2
+      expect(user.user_permissions).to include user_permission1
+      expect(user.user_permissions).to include user_permission2
     end
   end
 end
