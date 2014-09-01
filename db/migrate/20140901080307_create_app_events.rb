@@ -28,13 +28,19 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# View helpers for the admin dashboard controller
-module Admin::DashboardHelper
-  def log_level(log_event)
-    if log_event.level == 'alert'
-      '<span class="label label-danger">alert</span>'.html_safe
-    else
-      ('<span class="label label-' + log_event.level + '">' + log_event.level + '</span>').html_safe
+# Migration to add app events model to database
+class CreateAppEvents < ActiveRecord::Migration
+  def change
+    create_table :app_events do |t|
+      t.integer :account_id
+      t.integer :user_id
+      t.string :level, limit: 10, default: 'info', null: false
+      t.string :message
+
+      t.timestamps
     end
+
+    add_index :app_events, [:account_id], unique: false
+    add_index :app_events, [:user_id], unique: false
   end
 end

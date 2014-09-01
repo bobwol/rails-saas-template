@@ -28,13 +28,10 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# View helpers for the admin dashboard controller
-module Admin::DashboardHelper
-  def log_level(log_event)
-    if log_event.level == 'alert'
-      '<span class="label label-danger">alert</span>'.html_safe
-    else
-      ('<span class="label label-' + log_event.level + '">' + log_event.level + '</span>').html_safe
-    end
+# AppEvent factories
+FactoryGirl.define do
+  factory :app_event do
+    level 'info'
+    message { Faker::Lorem.word }
   end
 end

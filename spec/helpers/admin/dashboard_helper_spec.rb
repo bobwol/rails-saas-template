@@ -41,4 +41,33 @@ require 'rails_helper'
 #   end
 # end
 RSpec.describe Admin::DashboardHelper, type: :helper do
+  describe '.log_level' do
+    context 'event level is alert' do
+      it 'use label-danger' do
+        app_event = FactoryGirl.build(:app_event, level: 'alert')
+        expect(helper.log_level(app_event)).to eq '<span class="label label-danger">alert</span>'
+      end
+    end
+
+    context 'event level is info' do
+      it 'use label-info' do
+        app_event = FactoryGirl.build(:app_event, level: 'info')
+        expect(helper.log_level(app_event)).to eq '<span class="label label-info">info</span>'
+      end
+    end
+
+    context 'event level is success' do
+      it 'use label-success' do
+        app_event = FactoryGirl.build(:app_event, level: 'success')
+        expect(helper.log_level(app_event)).to eq '<span class="label label-success">success</span>'
+      end
+    end
+
+    context 'event level is warning' do
+      it 'use label-warning' do
+        app_event = FactoryGirl.build(:app_event, level: 'warning')
+        expect(helper.log_level(app_event)).to eq '<span class="label label-warning">warning</span>'
+      end
+    end
+  end
 end

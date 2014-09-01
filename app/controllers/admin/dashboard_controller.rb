@@ -33,4 +33,10 @@ class Admin::DashboardController < Admin::ApplicationController
   def index
     authorize! :index, :admin_dashboard
   end
+
+  def events
+    authorize! :events, :admin_dashboard
+    @app_events = AppEvent.page(params[:page])
+    @nav_item = 'events'
+  end
 end

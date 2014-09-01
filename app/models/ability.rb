@@ -63,6 +63,7 @@ class Ability
 
     can :index, :dashboard
     can :index, :admin_dashboard if user.super_admin?
+    can :events, :admin_dashboard if user.super_admin?
     can :manage, Account if user.super_admin?
     can :manage, Plan if user.super_admin?
     can :manage, User if user.super_admin?

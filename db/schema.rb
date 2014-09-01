@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140822113010) do
+ActiveRecord::Schema.define(version: 20140901080307) do
 
   create_table "accounts", force: true do |t|
     t.string   "company_name",                                      null: false
@@ -42,6 +42,18 @@ ActiveRecord::Schema.define(version: 20140822113010) do
   add_index "accounts", ["plan_id"], name: "index_accounts_on_plan_id", using: :btree
   add_index "accounts", ["stripe_customer_id"], name: "index_accounts_on_stripe_customer_id", unique: true, using: :btree
   add_index "accounts", ["stripe_subscription_id"], name: "index_accounts_on_stripe_subscription_id", unique: true, using: :btree
+
+  create_table "app_events", force: true do |t|
+    t.integer  "account_id"
+    t.integer  "user_id"
+    t.string   "level",      limit: 10, default: "info", null: false
+    t.string   "message"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "app_events", ["account_id"], name: "index_app_events_on_account_id", using: :btree
+  add_index "app_events", ["user_id"], name: "index_app_events_on_user_id", using: :btree
 
   create_table "delayed_jobs", force: true do |t|
     t.integer  "priority",   default: 0, null: false
