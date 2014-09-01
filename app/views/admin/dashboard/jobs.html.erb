@@ -1,0 +1,44 @@
+﻿<%
+@title = 'Jobs'
+@heading = 'Jobs'
+@subheading = 'List'
+%>
+
+
+<% if @jobs.empty? then %>
+<p>No jobs found</p>
+<% else %>
+<table class="table table-condensed table-striped">
+	<thead>
+		<tr>
+			<th>ID</th>
+			<th>Queue</th>
+			<th>Priority</th>
+			<th>Handler</th>
+			<th>Attempts</th>
+			<th>Last Error</th>
+			<th>Run At</th>
+			<th>Failed At</th>
+			<th>Locked At</th>
+			<th>Locked By</th>
+		</tr>
+	</thead>
+	<tbody>
+<% @jobs.each do |job| %>
+		<tr>
+			<td><%= job.id %></td>
+			<td><%= job.queue %></td>
+			<td><%= job.priority %></td>
+			<td><%= job.handler %></td>
+			<td><%= job.attempts %></td>
+			<td><%= job.last_error %></td>
+			<td><%= job.run_at %></td>
+			<td><%= job.failed_at %></td>
+			<td><%= job.locked_at %></td>
+			<td><%= job.locked_by %></td>
+		</tr>
+<% end %>
+	</tbody>
+</table>
+<%= paginate @jobs %>
+<% end %>

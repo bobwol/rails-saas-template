@@ -73,6 +73,7 @@ Rails.application.routes.draw do
     resources :plans
     resources :users
     get 'events' => 'dashboard#events'
+    get 'jobs' => 'dashboard#jobs'
     root to: 'dashboard#index'
   end
   constraints :subdomain => 'www' do

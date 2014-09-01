@@ -62,10 +62,13 @@ class Ability
     return if user.nil?
 
     can :index, :dashboard
-    can :index, :admin_dashboard if user.super_admin?
-    can :events, :admin_dashboard if user.super_admin?
-    can :manage, Account if user.super_admin?
-    can :manage, Plan if user.super_admin?
-    can :manage, User if user.super_admin?
+    if user.super_admin?
+      can :index, :admin_dashboard
+      can :events, :admin_dashboard
+      can :jobs, :admin_dashboard
+      can :manage, Account
+      can :manage, Plan
+      can :manage, User
+    end
   end
 end

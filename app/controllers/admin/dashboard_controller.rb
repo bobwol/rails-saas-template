@@ -39,4 +39,10 @@ class Admin::DashboardController < Admin::ApplicationController
     @app_events = AppEvent.page(params[:page])
     @nav_item = 'events'
   end
+
+  def jobs
+    authorize! :jobs, :admin_dashboard
+    @jobs = Delayed::Backend::ActiveRecord::Job.page(params[:page])
+    @nav_item = 'jobs'
+  end
 end
