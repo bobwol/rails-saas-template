@@ -64,7 +64,7 @@ Rails.application.routes.draw do
   #   end
 
   namespace :admin do
-    resources :accounts do
+    resources :accounts, except: [:destroy] do
       get 'cancel' => 'accounts#confirm_cancel'
       patch 'cancel' => 'accounts#cancel'
       get 'events' => 'accounts#events'

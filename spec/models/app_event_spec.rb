@@ -113,4 +113,196 @@ RSpec.describe AppEvent, type: :model do
       expect(app_event.user).to eq user
     end
   end
+
+  describe '.success' do
+    before :each do
+      @message = Faker::Lorem.characters(50)
+      @account = FactoryGirl.create(:account)
+      @user = FactoryGirl.create(:user)
+    end
+
+    context 'no account or user' do
+      it 'should save correctly' do
+        event = AppEvent.success(@message)
+        expect(event.level).to eq 'success'
+        expect(event.message).to eq @message
+        expect(event.account).to be_nil
+        expect(event.user).to be_nil
+      end
+    end
+
+    context 'account but no user' do
+      it 'should save correctly' do
+        event = AppEvent.success(@message, @account)
+        expect(event.level).to eq 'success'
+        expect(event.message).to eq @message
+        expect(event.account).to eq @account
+        expect(event.user).to be_nil
+      end
+    end
+
+    context 'user but no account' do
+      it 'should save correctly' do
+        event = AppEvent.success(@message, nil, @user)
+        expect(event.level).to eq 'success'
+        expect(event.message).to eq @message
+        expect(event.account).to be_nil
+        expect(event.user).to eq @user
+      end
+    end
+
+    context 'user and account' do
+      it 'should save correctly' do
+        event = AppEvent.success(@message, @account, @user)
+        expect(event.level).to eq 'success'
+        expect(event.message).to eq @message
+        expect(event.account).to eq @account
+        expect(event.user).to eq @user
+      end
+    end
+  end
+
+  describe '.info' do
+    before :each do
+      @message = Faker::Lorem.characters(50)
+      @account = FactoryGirl.create(:account)
+      @user = FactoryGirl.create(:user)
+    end
+
+    context 'no account or user' do
+      it 'should save correctly' do
+        event = AppEvent.info(@message)
+        expect(event.level).to eq 'info'
+        expect(event.message).to eq @message
+        expect(event.account).to be_nil
+        expect(event.user).to be_nil
+      end
+    end
+
+    context 'account but no user' do
+      it 'should save correctly' do
+        event = AppEvent.info(@message, @account)
+        expect(event.level).to eq 'info'
+        expect(event.message).to eq @message
+        expect(event.account).to eq @account
+        expect(event.user).to be_nil
+      end
+    end
+
+    context 'user but no account' do
+      it 'should save correctly' do
+        event = AppEvent.info(@message, nil, @user)
+        expect(event.level).to eq 'info'
+        expect(event.message).to eq @message
+        expect(event.account).to be_nil
+        expect(event.user).to eq @user
+      end
+    end
+
+    context 'user and account' do
+      it 'should save correctly' do
+        event = AppEvent.info(@message, @account, @user)
+        expect(event.level).to eq 'info'
+        expect(event.message).to eq @message
+        expect(event.account).to eq @account
+        expect(event.user).to eq @user
+      end
+    end
+  end
+
+  describe '.warning' do
+    before :each do
+      @message = Faker::Lorem.characters(50)
+      @account = FactoryGirl.create(:account)
+      @user = FactoryGirl.create(:user)
+    end
+
+    context 'no account or user' do
+      it 'should save correctly' do
+        event = AppEvent.warning(@message)
+        expect(event.level).to eq 'warning'
+        expect(event.message).to eq @message
+        expect(event.account).to be_nil
+        expect(event.user).to be_nil
+      end
+    end
+
+    context 'account but no user' do
+      it 'should save correctly' do
+        event = AppEvent.warning(@message, @account)
+        expect(event.level).to eq 'warning'
+        expect(event.message).to eq @message
+        expect(event.account).to eq @account
+        expect(event.user).to be_nil
+      end
+    end
+
+    context 'user but no account' do
+      it 'should save correctly' do
+        event = AppEvent.warning(@message, nil, @user)
+        expect(event.level).to eq 'warning'
+        expect(event.message).to eq @message
+        expect(event.account).to be_nil
+        expect(event.user).to eq @user
+      end
+    end
+
+    context 'user and account' do
+      it 'should save correctly' do
+        event = AppEvent.warning(@message, @account, @user)
+        expect(event.level).to eq 'warning'
+        expect(event.message).to eq @message
+        expect(event.account).to eq @account
+        expect(event.user).to eq @user
+      end
+    end
+  end
+
+  describe '.alert' do
+    before :each do
+      @message = Faker::Lorem.characters(50)
+      @account = FactoryGirl.create(:account)
+      @user = FactoryGirl.create(:user)
+    end
+
+    context 'no account or user' do
+      it 'should save correctly' do
+        event = AppEvent.alert(@message)
+        expect(event.level).to eq 'alert'
+        expect(event.message).to eq @message
+        expect(event.account).to be_nil
+        expect(event.user).to be_nil
+      end
+    end
+
+    context 'account but no user' do
+      it 'should save correctly' do
+        event = AppEvent.alert(@message, @account)
+        expect(event.level).to eq 'alert'
+        expect(event.message).to eq @message
+        expect(event.account).to eq @account
+        expect(event.user).to be_nil
+      end
+    end
+
+    context 'user but no account' do
+      it 'should save correctly' do
+        event = AppEvent.alert(@message, nil, @user)
+        expect(event.level).to eq 'alert'
+        expect(event.message).to eq @message
+        expect(event.account).to be_nil
+        expect(event.user).to eq @user
+      end
+    end
+
+    context 'user and account' do
+      it 'should save correctly' do
+        event = AppEvent.alert(@message, @account, @user)
+        expect(event.level).to eq 'alert'
+        expect(event.message).to eq @message
+        expect(event.account).to eq @account
+        expect(event.user).to eq @user
+      end
+    end
+  end
 end

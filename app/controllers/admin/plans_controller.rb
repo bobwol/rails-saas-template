@@ -47,6 +47,7 @@ class Admin::PlansController < Admin::ApplicationController
     @plan = Plan.new(plans_create_params)
     if @plan.save
       # StripeGateway.delay.plan_create(@plan.id)
+      AppEvent.success("Created plan #{@plan}", nil, current_user)
       redirect_to admin_plan_path(@plan),
                   notice: 'Plan was successfully created.'
     else
@@ -67,6 +68,7 @@ class Admin::PlansController < Admin::ApplicationController
   def update
     if @plan.update_attributes(plans_update_params)
       # StripeGateway.delay.plan_update(@plan.id)
+      AppEvent.success("Updated plan #{@plan}", nil, current_user)
       redirect_to admin_plan_path(@plan),
                   notice: 'Plan was successfully updated.'
     else
@@ -77,6 +79,7 @@ class Admin::PlansController < Admin::ApplicationController
   def destroy
     if @plan.destroy
       # StripeGateway.delay.plan_delete(@plan.stripe_id)
+      AppEvent.info("Deleted plan #{@plan}", nil, current_user)
       redirect_to admin_plans_path,
                   notice: 'Plan was successfully removed.'
     else

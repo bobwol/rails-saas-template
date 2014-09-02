@@ -42,6 +42,7 @@ class Admin::UsersController < Admin::ApplicationController
     @user = User.new(users_create_params)
     if @user.save
       # StripeGateway.delay.plan_create(@plan.id)
+      AppEvent.success("Created user #{@user}", nil, current_user)
       redirect_to admin_user_path(@user), notice: 'User was successfully created.'
     else
       render 'new'
@@ -66,6 +67,7 @@ class Admin::UsersController < Admin::ApplicationController
     end
     if @user.update_attributes(p)
       # StripeGateway.delay.plan_update(@plan.id)
+      AppEvent.success("Updated user #{@user}", nil, current_user)
       redirect_to admin_user_path(@user), notice: 'User was successfully updated.'
     else
       render 'edit'
@@ -81,6 +83,7 @@ class Admin::UsersController < Admin::ApplicationController
 
     if @user.destroy
       # StripeGateway.delay.plan_delete(@plan.stripe_id)
+      AppEvent.info("Deleted user #{@user}", nil, current_user)
       redirect_to admin_users_path, notice: 'User was successfully removed.'
     else
       redirect_to admin_user_path(@user), alert: 'User could not be removed.'

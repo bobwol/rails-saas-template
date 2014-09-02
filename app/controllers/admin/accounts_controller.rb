@@ -30,8 +30,7 @@
 
 # Provides acounts administration in the admin section
 class Admin::AccountsController < Admin::ApplicationController
-  before_action :find_account, only: [:destroy,
-                                      :edit,
+  before_action :find_account, only: [:edit,
                                       :show,
                                       :update,
                                       :cancel,
@@ -52,10 +51,7 @@ class Admin::AccountsController < Admin::ApplicationController
     @account.card_token = 'dummy'
     if @account.save
       # StripeGateway.delay.customer_create(@account.id)
-      # LogEvent.create(account: @account,
-      #                 user: current_user,
-      #                 level: 'success',
-      #                 message: '[Admin] Added account')
+      AppEvent.success("Created account #{@account}", @account, current_user)
       redirect_to admin_account_path(@account),
                   notice: 'Account was successfully created.'
     else
@@ -77,10 +73,7 @@ class Admin::AccountsController < Admin::ApplicationController
     if @account.update_attributes(accounts_params)
       # StripeGateway.delay.customer_update(@account.id)
       # StripeGateway.delay.subscription_update(@account.id)
-      # LogEvent.create(account: @account,
-      #                 user: current_user,
-      #                 level: 'success',
-      #                 message: '[Admin] Updated account details')
+      AppEvent.success("Updated account #{@account}", @account, current_user)
       redirect_to admin_account_path(@account),
                   notice: 'Account was successfully updated.'
     else
@@ -95,10 +88,7 @@ class Admin::AccountsController < Admin::ApplicationController
   def cancel
     if @account.cancel(cancel_params)
       # StripeGateway.delay.customer_update(@account.id)
-      # LogEvent.create(account: @account,
-      #                 user: current_user,
-      #                 level: 'success',
-      #                 message: '[Admin] Cancelled account')
+      AppEvent.info("Cancelled account #{@account}", @account, current_user)
       redirect_to admin_account_path(@account), notice: 'Account was successfully cancelled.'
     else
       render 'confirm_cancel', notice: 'Unable to cancel the account.'
@@ -114,10 +104,7 @@ class Admin::AccountsController < Admin::ApplicationController
   def restore
     if @account.restore
       # StripeGateway.delay.customer_update(@account.id)
-      # LogEvent.create(account: @account,
-      #                 user: current_user,
-      #                 level: 'success',
-      #                 message: '[Admin] Restored account')
+      AppEvent.success("Restored account #{@account}", @account, current_user)
       redirect_to admin_account_path(@account), notice: 'Account was successfully restored.'
     else
       render 'confirm_restore', notice: 'Unable to restore the account.'
