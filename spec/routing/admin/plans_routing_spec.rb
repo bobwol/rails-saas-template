@@ -47,6 +47,14 @@ RSpec.describe 'routing for the admin plans', type: :routing do
     )
   end
 
+  it 'routes GET /admin/plans/1/accounts to admin/plans#accounts' do
+    expect(get: '/admin/plans/1/accounts').to route_to(
+      controller: 'admin/plans',
+      action: 'accounts',
+      plan_id: '1'
+    )
+  end
+
   it 'routes GET /admin/plans/1/edit to admin/plans#edit' do
     expect(get: '/admin/plans/1/edit').to route_to(
       controller: 'admin/plans',

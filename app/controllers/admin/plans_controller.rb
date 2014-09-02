@@ -30,7 +30,8 @@
 
 # Provides plans administration in the admin section
 class Admin::PlansController < Admin::ApplicationController
-  before_action :find_plan, only: [:destroy,
+  before_action :find_plan, only: [:account,
+                                   :destroy,
                                    :edit,
                                    :show,
                                    :update,
@@ -41,6 +42,10 @@ class Admin::PlansController < Admin::ApplicationController
 
   def index
     @plans = Plan.page(params[:page])
+  end
+
+  def accounts
+    @accounts = Account.where('plan_id = ? or paused_plan_id = ?', @plan.id, @plan.id).page(params[:page])
   end
 
   def create
@@ -86,15 +91,6 @@ class Admin::PlansController < Admin::ApplicationController
       redirect_to admin_plan_path(@plan),
                   alert: 'Plan could not be removed.'
     end
-  end
-
-  def accounts
-    @accounts =
-      Account.where('plan_id = ? OR paused_plan_id = ?', @plan.id, @plan.id).page(params[:page])
-  end
-
-  def paused_plans
-    @plans = @plan.paused_plans.page(params[:page])
   end
 
   private

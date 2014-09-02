@@ -156,6 +156,74 @@ RSpec.describe Admin::PlansController, type: :controller do
     end
   end
 
+  describe 'GET #accounts' do
+    before :each do
+      @plan = FactoryGirl.create(:plan)
+    end
+
+    context 'as anonymous user' do
+      it 'redirects to login page' do
+        get :accounts, plan_id: @plan.id
+        expect(response).to be_redirect
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+
+    context 'as unauthorized users' do
+      before(:each) do
+        user = FactoryGirl.create(:user)
+        sign_in :user, user
+      end
+
+      it 'responds with forbidden' do
+        get :accounts, plan_id: @plan.id
+        expect(response).to be_forbidden
+      end
+
+      it 'renders the forbidden' do
+        get :accounts, plan_id: @plan.id
+        expect(response).to render_template('errors/forbidden')
+        expect(response).to render_template('layouts/errors')
+      end
+    end
+
+    context 'as super admin user' do
+      before(:each) do
+        admin = FactoryGirl.create(:admin)
+        sign_in :user, admin
+      end
+
+      it 'responds successfully with an HTTP 200 status code' do
+        get :accounts, plan_id: @plan.id
+        expect(response).to be_success
+        expect(response).to have_http_status(200)
+      end
+
+      it 'sets the nav_item to plans' do
+        get :accounts, plan_id: @plan.id
+        expect(assigns(:nav_item)).to eq 'plans'
+      end
+
+      it 'renders the accounts template' do
+        get :accounts, plan_id: @plan.id
+        expect(response).to render_template('accounts')
+        expect(response).to render_template('layouts/admin')
+      end
+
+      it 'assigns plans correctly' do
+        account1 = FactoryGirl.create(:account, plan: @plan)
+        account2 = FactoryGirl.create(:account, paused_plan: @plan)
+
+        get :accounts, plan_id: @plan.id
+        accounts = assigns(:accounts)
+        expect(accounts).to_not be_nil
+        expect(accounts.count).to eq 2
+        expect(accounts).to include account1
+        expect(accounts).to include account2
+      end
+    end
+  end
+
   describe 'GET #edit' do
     before(:each) do
       @plan = FactoryGirl.create(:plan)

@@ -72,7 +72,9 @@ Rails.application.routes.draw do
       patch 'restore' => 'accounts#restore'
       get 'users' => 'accounts#users'
     end
-    resources :plans
+    resources :plans do
+      get 'accounts' => 'plans#accounts'
+    end
     resources :users do
       get 'accounts' => 'users#accounts'
     end

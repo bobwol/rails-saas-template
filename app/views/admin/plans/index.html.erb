@@ -30,7 +30,7 @@
 			<td><%= plan.active %></td>
 			<td><%= plan.public %></td>
 			<td><%= plan.currency %></td>
-			<td><%= plan.amount %> / <%= number_with_precision(plan.interval_count, :precision => 0) %> <%= plan.interval %></td>
+			<td><%= plan.amount %> / <% if plan.interval_count > 1 %><%= number_with_precision(plan.interval_count, :precision => 0) %> <% end %><%= plan.interval %></td>
 			<td><%= number_with_precision(plan.trial_period_days, :precision => 0) %></td>
 		</tr>
 <% end %>

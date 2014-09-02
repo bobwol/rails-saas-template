@@ -6,7 +6,8 @@
 %>
 
 <ul class="nav nav-tabs">
-  <li class="active"><%= link_to_if can?(:index, Plan), "Plan", admin_plan_path(@plan) %></li>
+  <li class="active"><%= link_to "Plan", admin_plan_path(@plan) %></li>
+  <% if can?(:accounts, @plan) %><li><%= link_to "Accounts", admin_plan_accounts_path(@plan) %></li><% end %>
 </ul>
 
 <div style="text-align: right; padding: 10px 0px;">
