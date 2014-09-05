@@ -41,7 +41,7 @@ require 'rails_helper'
 #   end
 # end
 RSpec.describe ApplicationHelper, type: :helper do
-  describe '#render_heading' do
+  describe '.render_heading' do
     before(:each) do
       @title = nil
       @heading = nil
@@ -110,7 +110,7 @@ RSpec.describe ApplicationHelper, type: :helper do
     end
   end
 
-  describe '#render_title' do
+  describe '.render_title' do
     before(:each) do
       @title = nil
       @heading = nil
@@ -146,7 +146,7 @@ RSpec.describe ApplicationHelper, type: :helper do
     end
   end
 
-  describe '#render_errors' do
+  describe '.render_errors' do
     before(:each) do
       @user = User.new
     end

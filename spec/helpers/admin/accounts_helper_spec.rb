@@ -57,7 +57,7 @@ RSpec.describe Admin::AccountsHelper, type: :helper do
 
     context 'account is cancel pending' do
       it 'returns cancel_pending' do
-        account = FactoryGirl.build(:account, cancelled_at: Time.now )
+        account = FactoryGirl.build(:account, cancelled_at: Time.now)
         expect(helper.account_status(account)).to eq '<span class="label label-warning">Cancel Pending</span>'
       end
     end
