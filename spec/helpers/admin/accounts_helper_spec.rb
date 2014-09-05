@@ -41,4 +41,47 @@ require 'rails_helper'
 #   end
 # end
 RSpec.describe Admin::AccountsHelper, type: :helper do
+  describe '.account_status' do
+    context 'account is nil' do
+      it 'returns unknown' do
+        expect(helper.account_status(nil)).to eq '<span class="label label-default">Unknown</span>'
+      end
+    end
+
+    context 'account is active' do
+      it 'returns active' do
+        account = FactoryGirl.build(:account)
+        expect(helper.account_status(account)).to eq '<span class="label label-success">Active</span>'
+      end
+    end
+
+    context 'account is cancel pending' do
+      it 'returns cancel_pending' do
+        account = FactoryGirl.build(:account, cancelled_at: Time.now )
+        expect(helper.account_status(account)).to eq '<span class="label label-warning">Cancel Pending</span>'
+      end
+    end
+
+    context 'account is cancelled' do
+      it 'returns cancelled' do
+        account = FactoryGirl.build(:account, active: false)
+        expect(helper.account_status(account)).to eq '<span class="label label-danger">Cancelled</span>'
+      end
+    end
+
+    context 'account is expired' do
+      it 'returns expired' do
+        account = FactoryGirl.build(:account, expires_at: Time.now - 3.days)
+        expect(helper.account_status(account)).to eq '<span class="label label-warning">Expired</span>'
+      end
+    end
+
+    context 'account is paused' do
+      it 'returns paused' do
+        plan = FactoryGirl.create(:plan)
+        account = FactoryGirl.build(:account, paused_plan: plan)
+        expect(helper.account_status(account)).to eq '<span class="label label-warning">Paused</span>'
+      end
+    end
+  end
 end
