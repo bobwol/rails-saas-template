@@ -140,8 +140,10 @@ class Admin::AccountsController < Admin::ApplicationController
                                     :company_name,
                                     :email,
                                     :expires_at,
+                                    :hostname,
                                     :plan_id,
-                                    :paused_plan_id)
+                                    :paused_plan_id,
+                                    :subdomain)
   end
 
   def set_nav_item

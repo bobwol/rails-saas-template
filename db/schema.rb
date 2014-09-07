@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140901113639) do
+ActiveRecord::Schema.define(version: 20140907061711) do
 
   create_table "accounts", force: true do |t|
     t.string   "company_name",                                      null: false
@@ -19,6 +19,8 @@ ActiveRecord::Schema.define(version: 20140901113639) do
     t.integer  "plan_id",                                           null: false
     t.integer  "paused_plan_id"
     t.boolean  "active",                             default: true, null: false
+    t.string   "hostname"
+    t.string   "subdomain",              limit: 64
     t.string   "address_line1",          limit: 120
     t.string   "address_line2",          limit: 120
     t.string   "address_city",           limit: 120
@@ -38,10 +40,12 @@ ActiveRecord::Schema.define(version: 20140901113639) do
   end
 
   add_index "accounts", ["email"], name: "index_accounts_on_email", using: :btree
+  add_index "accounts", ["hostname"], name: "index_accounts_on_hostname", unique: true, using: :btree
   add_index "accounts", ["paused_plan_id"], name: "index_accounts_on_paused_plan_id", using: :btree
   add_index "accounts", ["plan_id"], name: "index_accounts_on_plan_id", using: :btree
   add_index "accounts", ["stripe_customer_id"], name: "index_accounts_on_stripe_customer_id", unique: true, using: :btree
   add_index "accounts", ["stripe_subscription_id"], name: "index_accounts_on_stripe_subscription_id", unique: true, using: :btree
+  add_index "accounts", ["subdomain"], name: "index_accounts_on_subdomain", unique: true, using: :btree
 
   create_table "app_events", force: true do |t|
     t.integer  "account_id"
@@ -84,6 +88,8 @@ ActiveRecord::Schema.define(version: 20140901113639) do
     t.integer  "amount",                            default: 0,       null: false
     t.integer  "trial_period_days",                 default: 30,      null: false
     t.integer  "max_users",                         default: 1,       null: false
+    t.boolean  "allow_hostname",                    default: false,   null: false
+    t.boolean  "allow_subdomain",                   default: false,   null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

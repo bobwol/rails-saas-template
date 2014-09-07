@@ -74,6 +74,14 @@
 	<%= f.label :max_users, class: "control-label" %>
 	<%= f.text_field :max_users, class: "form-control" %>
   </div>
+  <div class="form-group">
+	<%= f.label :allow_hostname, class: "control-label" %>
+	<%= f.check_box :allow_hostname %>
+  </div>
+  <div class="form-group">
+	<%= f.label :allow_subdomain, class: "control-label" %>
+	<%= f.check_box :allow_subdomain %>
+  </div>
 		<%= f.submit "Save", class: "btn btn-primary" %>
 <% if plan.new_record? %>
 		<%= link_to "Discard Changes", admin_plans_path %>

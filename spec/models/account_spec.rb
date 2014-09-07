@@ -258,6 +258,47 @@ RSpec.describe Account, type: :model do
     # validates :expires_at, presence: true
   end
 
+  describe '.hostname' do
+    it 'must be 255 characters or less' do
+      account = FactoryGirl.build(:account, hostname: Faker::Lorem.characters(256))
+      expect(account).to_not be_valid
+      expect(account.errors[:hostname]).to include 'is too long (maximum is 255 characters)'
+    end
+
+    it 'is required' do
+      account = FactoryGirl.build(:account, hostname: nil)
+      expect(account).to be_valid
+    end
+
+    it 'can be a domain name' do
+      account = FactoryGirl.build(:account, hostname: 'my-app.example.com')
+      expect(account).to be_valid
+    end
+
+    it 'must be unique if not nil' do
+      account1 = FactoryGirl.create(:account, hostname: 'www.example.com')
+      expect(account1).to be_valid
+
+      account2 = FactoryGirl.build(:account, hostname: 'www.example.com')
+      expect(account2).to_not be_valid
+      expect(account2.errors[:hostname]).to include 'has already been taken'
+    end
+
+    it 'can be nil if others are' do
+      account1 = FactoryGirl.create(:account, hostname: nil)
+      expect(account1).to be_valid
+
+      account2 = FactoryGirl.build(:account, hostname: nil)
+      expect(account2).to be_valid
+    end
+
+    it 'cannot contain illegal characters' do
+      account = FactoryGirl.build(:account, hostname: 'www&example.com')
+      expect(account).to_not be_valid
+      expect(account.errors[:hostname]).to include 'is invalid'
+    end
+  end
+
   describe '.pause' do
   end
 
@@ -296,6 +337,47 @@ RSpec.describe Account, type: :model do
       account = FactoryGirl.build(:account, stripe_subscription_id: Faker::Lorem.characters(61))
       expect(account).to_not be_valid
       expect(account.errors[:stripe_subscription_id]).to include 'is too long (maximum is 60 characters)'
+    end
+  end
+
+  describe '.subdomain' do
+    it 'must be 64 characters or less' do
+      account = FactoryGirl.build(:account, subdomain: Faker::Lorem.characters(65))
+      expect(account).to_not be_valid
+      expect(account.errors[:subdomain]).to include 'is too long (maximum is 64 characters)'
+    end
+
+    it 'is required' do
+      account = FactoryGirl.build(:account, subdomain: nil)
+      expect(account).to be_valid
+    end
+
+    it 'can be a subdomain name' do
+      account = FactoryGirl.build(:account, subdomain: 'my-app')
+      expect(account).to be_valid
+    end
+
+    it 'must be unique if not nil' do
+      account1 = FactoryGirl.create(:account, subdomain: 'www')
+      expect(account1).to be_valid
+
+      account2 = FactoryGirl.build(:account, subdomain: 'www')
+      expect(account2).to_not be_valid
+      expect(account2.errors[:subdomain]).to include 'has already been taken'
+    end
+
+    it 'can be nil if others are' do
+      account1 = FactoryGirl.create(:account, subdomain: nil)
+      expect(account1).to be_valid
+
+      account2 = FactoryGirl.build(:account, subdomain: nil)
+      expect(account2).to be_valid
+    end
+
+    it 'cannot contain illegal characters' do
+      account = FactoryGirl.build(:account, subdomain: 'www.example.com')
+      expect(account).to_not be_valid
+      expect(account.errors[:subdomain]).to include 'is invalid'
     end
   end
 

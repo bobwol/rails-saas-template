@@ -36,6 +36,14 @@ RSpec.describe Plan, type: :model do
     expect(FactoryGirl.build(:plan)).to be_valid
   end
 
+  describe '.allow_hostname' do
+    # t.boolean :allow_hostname, default: true, null: false
+  end
+
+  describe '.allow_subdomain' do
+    # t.boolean :allow_subdomain, default: true, null: false
+  end
+
   describe '.amount' do
     it 'is required' do
       plan = FactoryGirl.build(:plan, amount: '')

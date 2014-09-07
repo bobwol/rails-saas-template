@@ -76,10 +76,14 @@ class Account < ActiveRecord::Base
   validates :company_name, length: { maximum: 255 }, presence: true
   validates :email, length: { maximum: 255 }, presence: true
   validates :expires_at, presence: true
+  validates :hostname, length: { maximum: 255 }, presence: false
+  validates :hostname, format: { with: /\A([a-z0-9]+[a-z0-9\-]*)((\.([a-z0-9]+[a-z0-9\-]*))+)\Z/i }, uniqueness: true, unless: 'hostname.nil?'
   validates :paused_plan_id, numericality: { integer_only: true }, allow_nil: true
   validates :plan_id, numericality: { integer_only: true }, presence: true
   validates :stripe_customer_id, length: { maximum: 60 }
   validates :stripe_subscription_id, length: { maximum: 60 }
+  validates :subdomain, length: { maximum: 64 }, presence: false
+  validates :subdomain, format: { with: /\A([a-z0-9]+[a-z0-9\-]*)\Z/i }, uniqueness: true, unless: 'subdomain.nil?'
 
   def to_s
     company_name

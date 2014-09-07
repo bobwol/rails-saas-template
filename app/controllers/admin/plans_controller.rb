@@ -113,6 +113,8 @@ class Admin::PlansController < Admin::ApplicationController
                                  :paused_plan_id,
                                  :public,
                                  :max_users,
+                                 :allow_hostname,
+                                 :allow_subdomain,
                                  :statement_description,
                                  :trial_period_days)
   end
@@ -123,6 +125,8 @@ class Admin::PlansController < Admin::ApplicationController
                                  :paused_plan_id,
                                  :public,
                                  :max_users,
+                                 :allow_hostname,
+                                 :allow_subdomain,
                                  :statement_description)
   end
 
