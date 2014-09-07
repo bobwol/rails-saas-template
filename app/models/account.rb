@@ -77,7 +77,10 @@ class Account < ActiveRecord::Base
   validates :email, length: { maximum: 255 }, presence: true
   validates :expires_at, presence: true
   validates :hostname, length: { maximum: 255 }, presence: false
-  validates :hostname, format: { with: /\A([a-z0-9]+[a-z0-9\-]*)((\.([a-z0-9]+[a-z0-9\-]*))+)\Z/i }, uniqueness: true, unless: 'hostname.nil?'
+  validates :hostname,
+            format: { with: /\A([a-z0-9]+[a-z0-9\-]*)((\.([a-z0-9]+[a-z0-9\-]*))+)\Z/i },
+            uniqueness: true,
+            unless: 'hostname.nil?'
   validates :paused_plan_id, numericality: { integer_only: true }, allow_nil: true
   validates :plan_id, numericality: { integer_only: true }, presence: true
   validates :stripe_customer_id, length: { maximum: 60 }
@@ -103,6 +106,18 @@ class Account < ActiveRecord::Base
     params[:cancelled_at] = time.strftime('%Y-%m-%d %H:%M:%S')
     params[:active] = false
     update_attributes(params)
+  end
+
+  def self.find_by_hostname(hostname)
+    Account.joins(:plan).where(plans: { allow_hostname: true }, active: true, hostname: hostname).first
+  end
+
+  def self.find_by_path(path)
+    Account.where(active: true, id: path).first
+  end
+
+  def self.find_by_subdomain(subdomain)
+    Account.joins(:plan).where(plans: { allow_subdomain: true }, active: true, subdomain: subdomain).first
   end
 
   # def pause

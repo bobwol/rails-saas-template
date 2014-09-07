@@ -82,6 +82,35 @@ Rails.application.routes.draw do
     get 'jobs' => 'dashboard#jobs'
     root to: 'dashboard#index'
   end
+
+# To use path based multi-tenant routing you need to wrap the application routes in scope that defines :path and define
+# the root_path inside that. For example:
+#
+# scope ':path' do
+#   namespace :settings do
+#     resource :account, only: [:show, :edit, :update]
+#     // More setting paths here...
+#   end
+#   // Your application specific paths here
+#   root to: 'dashboard#index', as: :root
+# end
+#
+# You will probably also want to remove the constraints around the marketing controller that restrict it to just the
+# marketing website. Once that's done you will then need to fix the tests. There is already code in the
+# ApplicationController to use params[:path] to identify the account if it's found
+
+  namespace :settings do
+    resource :account, only: [:show, :edit, :update]
+#    resource :plan, only: [:show, :update, :destroy] do
+#      get 'cancel'
+#      patch 'pause'
+#      get ':id' => 'plans#edit', as: :edit
+#    end
+#    resource :card, only: [:show, :update]
+#    resources :users
+    root to: 'accounts#home'
+  end
+
   constraints :subdomain => 'www' do
     root to: 'marketing#index', as: :marketing_root
   end

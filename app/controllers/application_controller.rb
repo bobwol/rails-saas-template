@@ -57,4 +57,35 @@ class ApplicationController < ActionController::Base
   rescue_from RuntimeError do
     render 'errors/internal_error', layout: 'errors', status: :internal_server_error
   end
+
+  # Return the ability model. It needs to know about the user and the account.
+  def current_ability
+    Ability.new(current_user, current_account)
+  end
+
+  # This is only required for path based multi-tenant support but having it shouldn't hurt. It makes sure that the :path
+  # is available when building paths
+  def url_options
+    if params[:path]
+      { path: params[:path] }.merge(super)
+    else
+      super
+    end
+  end
+
+  # Find the current account, returning it or nil if there is no current account
+  def current_account
+    return @current_accout unless @current_account.nil?
+
+    if params[:path]
+      # Assume that they're using http://www.example.com/ACCOUNT
+      @current_account = Account.find_by_path(params[:path])
+    else
+      # Try http://ACCOUNT/ then http://ACCOUNT.example.com/
+      @current_account = Account.find_by_hostname(request.host)
+      @current_account = Account.find_by_subdomain(request.subdomains.last) if @current_account.nil?
+    end
+
+    @current_account
+  end
 end

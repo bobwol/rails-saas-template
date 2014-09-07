@@ -299,6 +299,116 @@ RSpec.describe Account, type: :model do
     end
   end
 
+  describe '.find_by_hostname' do
+    context 'plan that allows hostname' do
+      before :each do
+        @plan = FactoryGirl.create(:plan, allow_hostname: true)
+      end
+
+      it 'finds active accounts' do
+        account = FactoryGirl.create(:account, active: true, hostname: 'my-app.example.com', plan: @plan)
+        expect(account).to be_valid
+
+        a = Account.find_by_hostname('my-app.example.com')
+        expect(a).to eq account
+      end
+
+      it 'does not find inactive accounts' do
+        account = FactoryGirl.create(:account, active: false, hostname: 'my-app.example.com', plan: @plan)
+        expect(account).to be_valid
+
+        a = Account.find_by_hostname('my-app.example.com')
+        expect(a).to be_nil
+      end
+    end
+
+    context 'plan that does not allows hostname' do
+      before :each do
+        @plan = FactoryGirl.create(:plan, allow_hostname: false)
+      end
+
+      it 'does not find active accounts' do
+        account = FactoryGirl.create(:account, active: true, hostname: 'my-app.example.com', plan: @plan)
+        expect(account).to be_valid
+
+        a = Account.find_by_hostname('my-app.example.com')
+        expect(a).to be_nil
+      end
+
+      it 'does not find inactive accounts' do
+        account = FactoryGirl.create(:account, active: false, hostname: 'my-app.example.com', plan: @plan)
+        expect(account).to be_valid
+
+        a = Account.find_by_hostname('my-app.example.com')
+        expect(a).to be_nil
+      end
+    end
+  end
+
+  describe '.find_by_path' do
+    it 'finds active accounts' do
+      account = FactoryGirl.create(:account, active: true)
+      expect(account).to be_valid
+
+      a = Account.find_by_path(account.id)
+      expect(a).to eq account
+    end
+
+    it 'does not find inactive accounts' do
+      account = FactoryGirl.create(:account, active: false)
+      expect(account).to be_valid
+
+      a = Account.find_by_path(account.id)
+      expect(a).to be_nil
+    end
+  end
+
+  describe '.find_by_subdomain' do
+    context 'plan that allows subdomain' do
+      before :each do
+        @plan = FactoryGirl.create(:plan, allow_subdomain: true)
+      end
+
+      it 'finds active accounts' do
+        account = FactoryGirl.create(:account, active: true, subdomain: 'my-app', plan: @plan)
+        expect(account).to be_valid
+
+        a = Account.find_by_subdomain('my-app')
+        expect(a).to eq account
+      end
+
+      it 'does not find inactive accounts' do
+        account = FactoryGirl.create(:account, active: false, subdomain: 'my-app', plan: @plan)
+        expect(account).to be_valid
+
+        a = Account.find_by_subdomain('my-app')
+        expect(a).to be_nil
+      end
+    end
+
+    context 'plan that does not allows subdomain' do
+      before :each do
+        @plan = FactoryGirl.create(:plan, allow_subdomain: false)
+      end
+
+      it 'does not find active accounts' do
+        account = FactoryGirl.create(:account, active: true, subdomain: 'my-app', plan: @plan)
+        expect(account).to be_valid
+
+        a = Account.find_by_subdomain('my-app')
+        expect(a).to be_nil
+      end
+
+      it 'does not find inactive accounts' do
+        account = FactoryGirl.create(:account, active: false, subdomain: 'my-app', plan: @plan)
+        expect(account).to be_valid
+
+        a = Account.find_by_subdomain('my-app')
+        expect(a).to be_nil
+      end
+    end
+  end
+
   describe '.pause' do
   end
 
