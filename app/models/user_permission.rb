@@ -33,6 +33,8 @@ class UserPermission < ActiveRecord::Base
   belongs_to :user
   belongs_to :account
 
+  delegate :email, to: :user, prefix: true
+
   validates :account_admin, presence: false, allow_nil: false
   validates :account_id, presence: true
   validates :user_id, uniqueness: { scope: :account_id }, presence: true

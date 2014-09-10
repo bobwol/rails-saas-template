@@ -54,11 +54,13 @@ class Account < ActiveRecord::Base
   belongs_to :plan
   belongs_to :paused_plan, class_name: 'Plan'
 
-  default_scope { order('company_name ASC') }
-
   has_many :app_events
   has_many :users, through: :user_permissions
   has_many :user_permissions
+
+  delegate :allow_hostname, :allow_subdomain, to: :plan, prefix: true
+
+  default_scope { order('company_name ASC') }
 
   validates :address_city, length: { maximum: 120 }
   validates :address_country, length: { maximum: 2 }

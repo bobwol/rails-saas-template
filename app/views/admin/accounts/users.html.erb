@@ -25,7 +25,7 @@
 <% @user_permissions.each do |user_permission| %>
 		<tr>
 			<td><%= link_to_if can?(:show, user_permission.user), user_permission.user.to_s, admin_user_path(user_permission.user) %></td>
-			<td><%= user_permission.user.email %></td>
+			<td><%= user_permission.user_email %></td>
 			<td><%= user_permission.account_admin %></td>
 		</tr>
 <% end %>

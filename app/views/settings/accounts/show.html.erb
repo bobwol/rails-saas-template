@@ -25,11 +25,11 @@
   <dd><%= @account.address_state %></dd>
   <dt>Address Country</dt>
   <dd><%= @account.address_country_name %></dd>
-<% if @account.plan.allow_hostname %>
+<% if @account.plan_allow_hostname %>
   <dt>Hostname</dt>
   <dd><%= @account.hostname %></dd>
 <% end %>
-<% if @account.plan.allow_subdomain %>
+<% if @account.plan_allow_subdomain %>
   <dt>Subdomain</dt>
   <dd><%= @account.subdomain %></dd>
 <% end %>
