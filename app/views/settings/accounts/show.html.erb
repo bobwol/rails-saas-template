@@ -1,0 +1,36 @@
+﻿<%
+@title = 'Account'
+@heading = 'Account'
+@subheading = 'Settings'
+%>
+
+<div style="text-align: right; padding: 10px 0px;">
+  <% if can? :edit, @account %><%= link_to "Edit Account", edit_settings_account_path, class: "btn btn-primary" %><% end %>
+</div>
+
+<dl class="dl-horizontal">
+  <dt>Company Name</dt>
+  <dd><%= @account.company_name %></dd>
+  <dt>Email</dt>
+  <dd><%= @account.email %></dd>
+  <dt>Address Line 1</dt>
+  <dd><%= @account.address_line1 %></dd>
+  <dt>Address Line 2</dt>
+  <dd><%= @account.address_line2 %></dd>
+  <dt>Address City</dt>
+  <dd><%= @account.address_city %></dd>
+  <dt>Address Zip</dt>
+  <dd><%= @account.address_zip %></dd>
+  <dt>Address State</dt>
+  <dd><%= @account.address_state %></dd>
+  <dt>Address Country</dt>
+  <dd><%= @account.address_country_name %></dd>
+<% if @account.plan.allow_hostname %>
+  <dt>Hostname</dt>
+  <dd><%= @account.hostname %></dd>
+<% end %>
+<% if @account.plan.allow_subdomain %>
+  <dt>Subdomain</dt>
+  <dd><%= @account.subdomain %></dd>
+<% end %>
+</dl>

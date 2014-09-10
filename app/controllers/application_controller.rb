@@ -75,7 +75,7 @@ class ApplicationController < ActionController::Base
 
   # Find the current account, returning it or nil if there is no current account
   def current_account
-    return @current_accout unless @current_account.nil?
+    return @current_account unless @current_account.nil?
 
     if params[:path]
       # Assume that they're using http://www.example.com/ACCOUNT
