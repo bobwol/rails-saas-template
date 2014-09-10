@@ -58,7 +58,7 @@ class Account < ActiveRecord::Base
   has_many :users, through: :user_permissions
   has_many :user_permissions
 
-  delegate :allow_hostname, :allow_subdomain, to: :plan, prefix: true
+  delegate :currency, :allow_hostname, :allow_subdomain, to: :plan, prefix: true
 
   default_scope { order('company_name ASC') }
 

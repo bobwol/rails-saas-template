@@ -30,8 +30,6 @@
 
 # Allows the account admin to manage account details in the settings
 class Settings::AccountsController < Settings::ApplicationController
-  before_action :find_account, only: [:edit, :show, :update]
-
   authorize_resource
 
   def edit
@@ -54,10 +52,6 @@ class Settings::AccountsController < Settings::ApplicationController
 
   def set_nav_item
     @nav_item = 'accounts'
-  end
-
-  def find_account
-    @account = current_account
   end
 
   def accounts_params

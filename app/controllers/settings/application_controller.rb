@@ -30,6 +30,8 @@
 
 # Base class for all settings section controllers that provides common functionality
 class Settings::ApplicationController < ApplicationController
+  before_action :find_account
+
   # before_action :check_account_or_super_admin
 
   before_action :set_nav_item
@@ -38,6 +40,10 @@ class Settings::ApplicationController < ApplicationController
 
   def set_nav_item
     @nav_item = 'dashboard'
+  end
+
+  def find_account
+    @account = current_account
   end
 
   # def check_account_or_super_admin
