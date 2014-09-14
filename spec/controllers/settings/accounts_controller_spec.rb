@@ -64,6 +64,38 @@ RSpec.describe Settings::AccountsController, type: :controller do
       end
     end
 
+    context 'as account admin user' do
+      before(:each) do
+        user = FactoryGirl.create(:user)
+        FactoryGirl.create(:user_permission, account: @account, user: user, account_admin: true)
+        sign_in :user, user
+      end
+
+      it 'responds successfully with an HTTP 200 status code' do
+        get :edit
+        expect(response).to be_success
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'sets the nav_item to accounts' do
+        get :edit
+        expect(assigns(:nav_item)).to eq 'accounts'
+      end
+
+      it 'renders the edit template' do
+        get :edit
+        expect(response).to render_template('edit')
+        expect(response).to render_template('layouts/settings')
+      end
+
+      it 'assigns a edit account' do
+        get :edit
+        a = assigns(:account)
+        expect(a).to_not be_nil
+        expect(a.id).to eq @account.id
+      end
+    end
+
     context 'as super admin user' do
       before(:each) do
         admin = FactoryGirl.create(:admin)
@@ -128,6 +160,38 @@ RSpec.describe Settings::AccountsController, type: :controller do
       end
     end
 
+    context 'as account admin user' do
+      before(:each) do
+        user = FactoryGirl.create(:user)
+        FactoryGirl.create(:user_permission, account: @account, user: user, account_admin: true)
+        sign_in :user, user
+      end
+
+      it 'responds successfully with an HTTP 200 status code' do
+        get :show
+        expect(response).to be_success
+        expect(response).to have_http_status(200)
+      end
+
+      it 'sets the nav_item to accounts' do
+        get :show
+        expect(assigns(:nav_item)).to eq 'accounts'
+      end
+
+      it 'renders the show template' do
+        get :show
+        expect(response).to render_template('show')
+        expect(response).to render_template('layouts/settings')
+      end
+
+      it 'assigns a show account' do
+        get :show
+        a = assigns(:account)
+        expect(a).to_not be_nil
+        expect(a.id).to eq @account.id
+      end
+    end
+
     context 'as super admin user' do
       before(:each) do
         admin = FactoryGirl.create(:admin)
@@ -189,6 +253,52 @@ RSpec.describe Settings::AccountsController, type: :controller do
         patch :update, account: FactoryGirl.attributes_for(:account)
         expect(response).to render_template('errors/forbidden')
         expect(response).to render_template('layouts/errors')
+      end
+    end
+
+    context 'as account admin user' do
+      before(:each) do
+        user = FactoryGirl.create(:user)
+        FactoryGirl.create(:user_permission, account: @account, user: user, account_admin: true)
+        sign_in :user, user
+      end
+
+      context 'with valid attributes' do
+        it 'sets the nav_item to accounts' do
+          patch :update, account: FactoryGirl.attributes_for(:account)
+          expect(assigns(:nav_item)).to eq 'accounts'
+        end
+
+        it 'it redirects to account' do
+          patch :update, account: FactoryGirl.attributes_for(:account)
+          expect(response).to be_redirect
+          expect(response).to redirect_to(settings_account_path)
+        end
+
+        it 'sets a notice' do
+          patch :update, account: FactoryGirl.attributes_for(:account)
+          expect(request.flash[:notice]).to eq 'Account was successfully updated.'
+        end
+      end
+
+      context 'with invalid attributes' do
+        it 'sets the nav_item to accounts' do
+          patch :update, account: FactoryGirl.attributes_for(:account)
+          expect(assigns(:nav_item)).to eq 'accounts'
+        end
+
+        it 'it renders the edit template' do
+          patch :update, account: FactoryGirl.attributes_for(:account, company_name: '')
+          expect(response).to render_template('edit')
+          expect(response).to render_template('layouts/settings')
+        end
+
+        it 'it pass an existing account' do
+          patch :update, account: FactoryGirl.attributes_for(:account, company_name: '')
+          account = assigns(:account)
+          expect(account).to_not be_nil
+          expect(account).to_not be_new_record
+        end
       end
     end
 
