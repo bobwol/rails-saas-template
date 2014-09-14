@@ -9,7 +9,7 @@
 <% @plans.each do |plan| %>
     <div class="col-md-4">
       <div class="panel panel-primary">
-<% unless plan.label.blank? %>
+<% if plan.label? %>
 		<div class="cnrflash">
 			<div class="cnrflash-inner">
 				<span class="cnrflash-label"><%= plan.label %></span>

@@ -72,9 +72,7 @@ class Ability
       can :manage, User
     end
 
-    if !permissions.nil? && permissions.account_admin?
-      can :manage, Account, id: account.id
-    end
+    can :manage, Account, id: account.id if !permissions.nil? && permissions.account_admin?
 
     can :index, :dashboard
   end

@@ -125,13 +125,13 @@ RSpec.describe Account, type: :model do
 
       it 'sets actvie to false' do
         account = FactoryGirl.create(:account)
-        result = account.cancel(cancellation_category: 'xxx', cancellation_reason: 'xxx', cancellation_message: 'xxx')
+        account.cancel(cancellation_category: 'xxx', cancellation_reason: 'xxx', cancellation_message: 'xxx')
         expect(account.active).to eq false
       end
 
       it 'sets cancelled_at' do
         account = FactoryGirl.create(:account)
-        result = account.cancel(cancellation_category: 'xxx', cancellation_reason: 'xxx', cancellation_message: 'xxx')
+        account.cancel(cancellation_category: 'xxx', cancellation_reason: 'xxx', cancellation_message: 'xxx')
         expect(account.cancelled_at).to_not be_nil
       end
     end
