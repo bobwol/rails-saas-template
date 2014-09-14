@@ -1,0 +1,42 @@
+﻿<%
+@title = 'Account'
+@heading = 'Account'
+@subheading = 'Cancel'
+%>
+
+<h2 class="text-danger">Danger Zone!!</h2>
+
+<p>We're really sorry that you want to leave.</p>
+
+<% if !@account.plan.paused_plan.nil? &&  can?(:pause, @account) %>
+<p>Don't need your account right now but don't really want to remove it? Why not pause your account
+instead? Pausing <% if @account.plan.paused_plan.amount == 0 %>is free<% else %>costs
+$<%= number_with_precision(@account.plan.paused_plan.amount/100, :precision => 2) %> / <%if @account.plan.paused_plan.interval_count > 1 %><%= number_with_precision(@account.plan.paused_plan.interval_count, :precision => 0) %>  <% end %><%= @account.plan.paused_plan.interval %><% end %>.</p>
+<p>When you need to your account activated again just email <a href="mailto:support@railssaastemplate.com">support@railssaastemplate.com</a></p>
+<p><%= link_to "Pause account", pause_settings_plan_path, class: "btn btn-success", method: :patch %></p>
+<% end %>
+
+<h3><%= @account %></h3>
+
+<%= render_errors @account %>
+
+<%= form_for [:admin, @account], url: settings_plan_path(@account), method: :delete do |f| %>
+
+  <p>By clicking on the cancel account button you will disable your account.</p>
+
+  <div class="form-group">
+    <%= f.label :cancellation_category, class: "control-label" %>
+	<%= f.select :cancellation_category, [['Found a better solution'], ['Too expensive'], ['No longer need it'], ['Other']], { class: "form-control" } %>
+  </div>
+  <div class="form-group">
+    <%= f.label :cancellation_reason, class: "control-label" %>
+	<%= f.select :cancellation_reason, [['Found a better solution'], ['Too expensive'], ['No longer need it'], ['Other']], { class: "form-control" } %>
+  </div>
+  <div class="form-group">
+	<%= f.label :cancellation_message, class: "control-label" %>
+	<%= f.text_field :cancellation_message, class: "form-control" %>
+  </div>
+
+  <%= f.submit "Cancel Account", class: "btn btn-danger" %>
+  <%= link_to "Keep account", settings_account_path, class: "btn btn-primary" %>
+<% end %>

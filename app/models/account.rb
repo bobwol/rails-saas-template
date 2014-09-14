@@ -122,14 +122,11 @@ class Account < ActiveRecord::Base
     Account.joins(:plan).where(plans: { allow_subdomain: true }, active: true, subdomain: subdomain).first
   end
 
-  # def pause
-  #   ppid = plan.paused_plan_id
-  #   if ppid.nil?
-  #     false
-  #   else
-  #     update_attributes(paused_plan_id: ppid)
-  #   end
-  # end
+  def pause
+    return false if plan.paused_plan_id.nil?
+
+    update_attributes(paused_plan_id: plan.paused_plan_id)
+  end
 
   def restore
     params = { cancellation_reason: nil,

@@ -31,14 +31,14 @@
 require 'rails_helper'
 
 # Specs in this file have access to a helper object that includes
-# the Settings::AccountsHelper. For example:
+# the Settings::PlansHelper. For example:
 #
-# describe Settings::AccountsHelper do
+# describe Settings::PlansHelper do
 #   describe "string concat" do
 #     it "concats two strings with spaces" do
 #       expect(helper.concat_strings("this","that")).to eq("this that")
 #     end
 #   end
 # end
-RSpec.describe Settings::AccountsHelper, type: :helper do
+RSpec.describe Settings::PlansHelper, type: :helper do
 end

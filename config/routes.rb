@@ -101,11 +101,11 @@ Rails.application.routes.draw do
 
   namespace :settings do
     resource :account, only: [:show, :edit, :update]
-#    resource :plan, only: [:show, :update, :destroy] do
-#      get 'cancel'
-#      patch 'pause'
-#      get ':id' => 'plans#edit', as: :edit
-#    end
+    resource :plan, only: [:show, :update, :destroy] do
+      get 'cancel'
+      patch 'pause'
+      get ':id' => 'plans#edit', as: :edit
+    end
 #    resource :card, only: [:show, :update]
 #    resources :users
     root to: 'accounts#home'

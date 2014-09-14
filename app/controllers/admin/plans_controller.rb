@@ -105,28 +105,30 @@ class Admin::PlansController < Admin::ApplicationController
 
   def plans_create_params
     params.require(:plan).permit(:active,
+                                 :allow_hostname,
+                                 :allow_subdomain,
                                  :amount,
                                  :currency,
                                  :interval,
                                  :interval_count,
+                                 :label,
+                                 :max_users,
                                  :name,
                                  :paused_plan_id,
                                  :public,
-                                 :max_users,
-                                 :allow_hostname,
-                                 :allow_subdomain,
                                  :statement_description,
                                  :trial_period_days)
   end
 
   def plans_update_params
     params.require(:plan).permit(:active,
+                                 :allow_hostname,
+                                 :allow_subdomain,
+                                 :max_users,
+                                 :label,
                                  :name,
                                  :paused_plan_id,
                                  :public,
-                                 :max_users,
-                                 :allow_hostname,
-                                 :allow_subdomain,
                                  :statement_description)
   end
 

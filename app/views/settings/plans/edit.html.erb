@@ -1,0 +1,15 @@
+﻿<%
+@title = 'Account'
+@heading = 'Account'
+@subheading = 'Plan'
+%>
+
+<%= render_errors @account %>
+
+<%= form_for [:settings, @account], url: settings_plan_path, method: :patch do |f| %>
+  <h2>Confirm Plan Change</h2>
+  <p>Put a nice message here :).</p>
+  <%= f.hidden_field :plan_id %>
+  <%= f.submit "Change Plan", class: "btn btn-primary" %>
+  <%= link_to "Discard Changes", settings_plan_path %>
+<% end %>

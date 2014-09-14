@@ -222,13 +222,13 @@ RSpec.describe Settings::AccountsController, type: :controller do
           expect(assigns(:nav_item)).to eq 'accounts'
         end
 
-        it 'it renders the new template' do
+        it 'it renders the edit template' do
           patch :update, account: FactoryGirl.attributes_for(:account, company_name: '')
           expect(response).to render_template('edit')
           expect(response).to render_template('layouts/settings')
         end
 
-        it 'it pass a new account' do
+        it 'it pass an existing account' do
           patch :update, account: FactoryGirl.attributes_for(:account, company_name: '')
           account = assigns(:account)
           expect(account).to_not be_nil

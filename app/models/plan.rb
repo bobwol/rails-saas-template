@@ -63,13 +63,10 @@ class Plan < ActiveRecord::Base
           where('active = ? AND public = ? AND stripe_id IS NOT NULL', true, true)
             .order('amount DESC, name ASC')
         }
-  # scope :available_for_currency,
-  #       lambda { |for_currency|
-  #         where('active = ? AND public = ? AND currency = ? AND stripe_id IS NOT NULL',
-  #               true,
-  #               true,
-  #               for_currency).order('amount DESC, name ASC')
-  #       }
+  scope :available_for_currency,
+        lambda { |for_currency|
+          available.where('currency = ?', for_currency).order('amount DESC, name ASC')
+        }
 
   validates :amount,
             presence: true,
@@ -83,6 +80,7 @@ class Plan < ActiveRecord::Base
   validates :interval_count,
             presence: true,
             numericality: { greater_than_or_equal_to: 1, integer_only: true }
+  validates :label, length: { maximum: 30 }, presence: false
   validates :max_users,
             presence: true,
             numericality: { greater_than_or_equal_to: 1, integer_only: true }

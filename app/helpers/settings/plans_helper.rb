@@ -28,17 +28,6 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-require 'rails_helper'
-
-# Specs in this file have access to a helper object that includes
-# the Settings::AccountsHelper. For example:
-#
-# describe Settings::AccountsHelper do
-#   describe "string concat" do
-#     it "concats two strings with spaces" do
-#       expect(helper.concat_strings("this","that")).to eq("this that")
-#     end
-#   end
-# end
-RSpec.describe Settings::AccountsHelper, type: :helper do
+# View helpers for the settings/plans controller
+module Settings::PlansHelper
 end

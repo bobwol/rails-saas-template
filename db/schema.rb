@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140907061711) do
+ActiveRecord::Schema.define(version: 20140913115149) do
 
   create_table "accounts", force: true do |t|
     t.string   "company_name",                                      null: false
@@ -82,6 +82,7 @@ ActiveRecord::Schema.define(version: 20140907061711) do
     t.boolean  "active",                            default: true,    null: false
     t.boolean  "public",                            default: true,    null: false
     t.integer  "paused_plan_id"
+    t.string   "label",                 limit: 30
     t.string   "currency",              limit: 3,   default: "USD",   null: false
     t.integer  "interval_count",                    default: 1,       null: false
     t.string   "interval",              limit: 5,   default: "month", null: false

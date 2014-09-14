@@ -201,6 +201,19 @@ RSpec.describe Plan, type: :model do
     end
   end
 
+  describe '.label' do
+    it 'is not required' do
+      plan = FactoryGirl.build(:plan, label: '')
+      expect(plan).to be_valid
+    end
+
+    it 'must be 30 characters or less' do
+      plan = FactoryGirl.build(:plan, label: Faker::Lorem.characters(31))
+      expect(plan).to_not be_valid
+      expect(plan.errors[:label]).to include 'is too long (maximum is 30 characters)'
+    end
+  end
+
   describe '.max_users' do
     it 'is required' do
       plan = FactoryGirl.build(:plan, max_users: '')

@@ -116,6 +116,31 @@ RSpec.describe Account, type: :model do
   end
 
   describe '.cancel' do
+    context 'on success' do
+      it 'returns true on cancellation' do
+        account = FactoryGirl.create(:account)
+        result = account.cancel(cancellation_category: 'xxx', cancellation_reason: 'xxx', cancellation_message: 'xxx')
+        expect(result).to eq true
+      end
+
+      it 'sets actvie to false' do
+        account = FactoryGirl.create(:account)
+        result = account.cancel(cancellation_category: 'xxx', cancellation_reason: 'xxx', cancellation_message: 'xxx')
+        expect(account.active).to eq false
+      end
+
+      it 'sets cancelled_at' do
+        account = FactoryGirl.create(:account)
+        result = account.cancel(cancellation_category: 'xxx', cancellation_reason: 'xxx', cancellation_message: 'xxx')
+        expect(account.cancelled_at).to_not be_nil
+      end
+    end
+
+    it 'returns false on failure' do
+      account = FactoryGirl.create(:account)
+      result = account.cancel(cancellation_category: '', cancellation_reason: '', cancellation_message: '')
+      expect(result).to eq false
+    end
   end
 
   describe '.cancelled_at' do
@@ -410,6 +435,18 @@ RSpec.describe Account, type: :model do
   end
 
   describe '.pause' do
+    it 'fails if there is no paused plan' do
+      plan = FactoryGirl.create(:plan, paused_plan: nil)
+      account = FactoryGirl.build(:account, plan: plan)
+      expect(account.pause).to eq false
+    end
+
+    it 'succeeds if there is paused plan' do
+      paused_plan = FactoryGirl.create(:plan)
+      plan = FactoryGirl.create(:plan, paused_plan: paused_plan)
+      account = FactoryGirl.build(:account, plan: plan)
+      expect(account.pause).to eq true
+    end
   end
 
   describe '.paused_plan_id' do

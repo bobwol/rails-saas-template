@@ -30,15 +30,48 @@
 
 require 'rails_helper'
 
-# Specs in this file have access to a helper object that includes
-# the Settings::AccountsHelper. For example:
-#
-# describe Settings::AccountsHelper do
-#   describe "string concat" do
-#     it "concats two strings with spaces" do
-#       expect(helper.concat_strings("this","that")).to eq("this that")
-#     end
-#   end
-# end
-RSpec.describe Settings::AccountsHelper, type: :helper do
+# Tests for settings/plans routing
+RSpec.describe 'routing for the settings plans', type: :routing do
+  it 'routes GET /settings/plan to settings/plans#show' do
+    expect(get: '/settings/plan').to route_to(
+      controller: 'settings/plans',
+      action: 'show'
+    )
+  end
+
+  it 'routes GET /settings/plan/1 to settings/plans#edit' do
+    expect(get: '/settings/plan/1').to route_to(
+      controller: 'settings/plans',
+      action: 'edit',
+      id: '1'
+    )
+  end
+
+  it 'routes PATCH /settings/plan to settings/plans#update' do
+    expect(patch: '/settings/plan').to route_to(
+      controller: 'settings/plans',
+      action: 'update'
+    )
+  end
+
+  it 'routes DELETE /settings/plan to settings/plans#destroy' do
+    expect(delete: '/settings/plan').to route_to(
+      controller: 'settings/plans',
+      action: 'destroy'
+    )
+  end
+
+  it 'routes GET /settings/plan/cancel to settings/plans#cancel' do
+    expect(get: '/settings/plan/cancel').to route_to(
+      controller: 'settings/plans',
+      action: 'cancel'
+    )
+  end
+
+  it 'routes PATCH /settings/plans/pause to settings/plans#pause' do
+    expect(patch: '/settings/plan/pause').to route_to(
+      controller: 'settings/plans',
+      action: 'pause'
+    )
+  end
 end

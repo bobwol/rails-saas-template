@@ -21,6 +21,10 @@
     <%= f.label :paused_plan_id, class: "control-label" %>
     <%= f.collection_select :paused_plan_id, Plan.all, :id, :name, {include_blank: true}, { class: "form-control" } %>
   </div>
+  <div class="form-group">
+    <%= f.label :label, class: "control-label" %>
+	<%= f.text_field :label, class: "form-control" %>
+  </div>
   <h2>Pricing</h2>
 <% if plan.new_record? %>
   <div class="form-group">
