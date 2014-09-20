@@ -4,44 +4,12 @@
 @subheading = 'Plan'
 %>
 
-<div class="container pricing-table ">
+<%= render 'shared/pricing_table', plans: @plans, account: @current_account, action: :change  %>
+
+<div class="container">
   <div class="row">
-<% @plans.each do |plan| %>
-    <div class="col-md-4">
-      <div class="panel panel-primary">
-<% if plan.label? %>
-		<div class="cnrflash">
-			<div class="cnrflash-inner">
-				<span class="cnrflash-label"><%= plan.label %></span>
-			</div>
-		</div>
-<% end %>
-		<div class="panel-heading"><h3><%= plan.name %></h3></div>
-		<div class="panel-body">
-			<div class="the-price">
-				<h1>$<%= number_with_precision(plan.amount/100, :precision => 2) %><span class="subscript"> / <%if plan.interval_count > 1 %><%= number_with_precision(plan.interval_count, :precision => 0) %>  <% end %><%= plan.interval %></span></h1>
-<% if plan.trial_period_days > 0 %>
-				<small><%= plan.trial_period_days %> day FREE trial</small>
-<% end %>
-			</div>
-
-			<ul class="list-group text-center" style="margin: 0">
-				<li class="list-group-item"><i class="glyphicon <% if plan.allow_subdomain %>glyphicon-ok<% else %>glyphicon-remove<% end %>"></i> Choose your subdomain</li>
-				<li class="list-group-item"><i class="glyphicon <% if plan.allow_hostname %>glyphicon-ok<% else %>glyphicon-remove<% end %>"></i> Custom domain</li>
-				<li class="list-group-item"><i class="glyphicon glyphicon-user"></i> <%= plan.max_users %> Users</li>
-			</ul>
-		</div>
-	    <div class="panel-footer">
-<% if @current_account.plan.id == plan.id %>
-		<%= link_to "Current Plan", edit_settings_plan_path({id: plan.id}), class: "btn btn-lg btn-block btn-default disabled" %>
-<% else %>
-		<%= link_to "Select", edit_settings_plan_path({id: plan.id}), class: "btn btn-lg btn-block btn-success" %>
-<% end %>
-		</div>
-      </div>
+    <div class="col-md-12">
+      <p><%= link_to "Cancel account", cancel_settings_plan_path, class: "btn btn-danger" %></p>
     </div>
-
-<% end %>
   </div>
-  <p><%= link_to "Cancel account", cancel_settings_plan_path, class: "btn btn-danger" %></p>
 </div>

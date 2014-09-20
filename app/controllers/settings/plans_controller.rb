@@ -50,7 +50,7 @@ class Settings::PlansController < Settings::ApplicationController
   end
 
   def update
-    @plan = Plan.available.find(params[:account][:plan_id])
+    @plan = Plan.available.find(plans_params)
     if @account.update_attributes(plan_id: @plan.id)
       # StripeGateway.delay.subscription_update(@account.id)
       AppEvent.success('Change to plan ' + @plan.to_s, current_account, current_user)
