@@ -30,6 +30,19 @@
 
 # View helpers common across the entire application
 module ApplicationHelper
+  # Render the plan price formatted nicely
+  def formatted_plan_price(plan, free_text = nil)
+    return free_text if plan.amount == 0 && !free_text.nil?
+
+    period = ''
+    period = number_with_precision(plan.interval_count, precision: 0) + ' ' if plan.interval_count > 1
+    period += plan.interval
+
+    amount = number_with_precision(plan.amount / 100, precision: 2)
+
+    "$#{amount} / #{period}"
+  end
+
   # Render the errors for the model
   def render_errors(model)
     html = ''

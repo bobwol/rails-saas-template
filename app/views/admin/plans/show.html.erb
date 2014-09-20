@@ -35,7 +35,7 @@
   <dt>Currency</dt>
   <dd><%= @plan.currency %></dd>
   <dt>Amount</dt>
-  <dd><%= number_with_precision(@plan.amount, :precision => 2) %> / <%= number_with_precision(@plan.interval_count, :precision => 0) %> <%= @plan.interval %></dd>
+  <dd><%=  formatted_plan_price(@plan) %></dd>
   <dt>Trial Period Days</dt>
   <dd><%= @plan.trial_period_days %></dd>
 </dl>

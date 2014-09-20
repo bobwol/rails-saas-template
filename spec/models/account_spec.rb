@@ -555,6 +555,7 @@ RSpec.describe Account, type: :model do
       account = FactoryGirl.create(:account)
       FactoryGirl.create(:user_permission, account: account, user: user1)
       FactoryGirl.create(:user_permission, account: account, user: user2)
+      account.reload
       expect(account.users.count).to eq 2
       expect(account.users).to include user1
       expect(account.users).to include user2

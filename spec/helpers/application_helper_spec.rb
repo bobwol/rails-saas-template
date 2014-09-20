@@ -41,6 +41,29 @@ require 'rails_helper'
 #   end
 # end
 RSpec.describe ApplicationHelper, type: :helper do
+  describe '.formatted_plan_price' do
+    context 'free plans and interval_count of 1' do
+      before(:each) do
+        @plan = FactoryGirl.build(:plan, amount: 0, interval_count: 1, interval: 'month')
+      end
+
+      it 'is $0.00/month without free text' do
+        expect(helper.formatted_plan_price(@plan)).to eq '$0.00 / month'
+      end
+
+      it 'uses the free text free text' do
+        expect(helper.formatted_plan_price(@plan, 'FREE')).to eq 'FREE'
+      end
+    end
+
+    context 'interval_count greater than 1' do
+      it 'renders to N interval' do
+        plan = FactoryGirl.build(:plan, amount: 500, interval_count: 2, interval: 'month')
+        expect(helper.formatted_plan_price(plan)).to eq '$5.00 / 2 month'
+      end
+    end
+  end
+
   describe '.render_heading' do
     before(:each) do
       @title = nil

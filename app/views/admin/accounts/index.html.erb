@@ -29,7 +29,7 @@
 		<tr>
 			<td><%= link_to_if can?(:show, account), account.company_name, admin_account_path(account) %></td>
 			<td><%= account_status(account) %></td>
-			<td><%= account.plan %></td>
+			<td><%= link_to_if can?(:show, account.plan), account.plan, admin_plan_path(account.plan) %></td>
 			<td><%= account.address_city %></td>
 			<td><%= account.address_zip %></td>
 			<td><%= account.address_state %></td>

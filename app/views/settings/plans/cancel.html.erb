@@ -1,4 +1,4 @@
-﻿<%
+<%
 @title = 'Account'
 @heading = 'Account'
 @subheading = 'Cancel'
@@ -8,10 +8,9 @@
 
 <p>We're really sorry that you want to leave.</p>
 
-<% if !@account.plan.paused_plan.nil? &&  can?(:pause, @account) %>
+<% if can?(:pause, @account) %>
 <p>Don't need your account right now but don't really want to remove it? Why not pause your account
-instead? Pausing <% if @account.plan.paused_plan.amount == 0 %>is free<% else %>costs
-$<%= number_with_precision(@account.plan.paused_plan.amount/100, :precision => 2) %> / <%if @account.plan.paused_plan.interval_count > 1 %><%= number_with_precision(@account.plan.paused_plan.interval_count, :precision => 0) %>  <% end %><%= @account.plan.paused_plan.interval %><% end %>.</p>
+instead? Pausing is <%= formatted_plan_price(@account.plan.paused_plan, 'FREE') %>.</p>
 <p>When you need to your account activated again just email <a href="mailto:support@railssaastemplate.com">support@railssaastemplate.com</a></p>
 <p><%= link_to "Pause account", pause_settings_plan_path, class: "btn btn-success", method: :patch %></p>
 <% end %>

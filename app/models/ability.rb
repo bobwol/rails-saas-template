@@ -75,5 +75,7 @@ class Ability
     can :manage, Account, id: account.id if !permissions.nil? && permissions.account_admin?
 
     can :index, :dashboard
+
+    cannot :pause, Account, plan: { paused_plan: nil }
   end
 end

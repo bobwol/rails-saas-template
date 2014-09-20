@@ -50,7 +50,7 @@ class Settings::PlansController < Settings::ApplicationController
   end
 
   def update
-    @plan = Plan.available.find(plans_params)
+    @plan = Plan.available.find(params[:account][:plan_id])
     if @account.update_attributes(plan_id: @plan.id)
       # StripeGateway.delay.subscription_update(@account.id)
       AppEvent.success('Change to plan ' + @plan.to_s, current_account, current_user)
@@ -93,9 +93,5 @@ class Settings::PlansController < Settings::ApplicationController
 
   def cancel_params
     params.require(:account).permit(:cancellation_category, :cancellation_message, :cancellation_reason)
-  end
-
-  def plans_params
-    params.require(:account).permit(:plan_id)
   end
 end
