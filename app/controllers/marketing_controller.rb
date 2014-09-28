@@ -35,7 +35,76 @@ class MarketingController < ApplicationController
   skip_before_action :authenticate_user!
   skip_authorization_check
 
+  layout 'marketing'
+
   def index
     render layout: false
+  end
+
+  def pricing
+    currency = params[:currency] || 'USD'
+    @plans = Plan.available_for_currency(currency)
+  end
+
+  def register
+    @plan = Plan.available.where(id: params[:account][:plan_id]).first
+
+    return redirect_to pricing_path, alert: 'Invalid plan.' if @plan.nil?
+
+    @account = Account.new(accounts_params, active: true)
+
+    # Set the email from the current_user or the first user
+    if user_signed_in? && (@account.users.count == 0)
+      @account.email = current_user.email
+    else
+      @account.email = @account.users[0].email unless @account.users[0].nil?
+    end
+
+    @account.expires_at = '2014-01-01'
+    if @account.save
+      # Add the current_user as an account admin or set all users as an account admin
+      if user_signed_in? && (@account.user_permissions.count == 0)
+        @account.user_permissions.build(user: current_user, account_admin: true)
+      else
+        @account.admin_all_users
+      end
+
+      # StripeGateway.delay.customer_update(@account.id)
+      AppEvent.success("Created account #{@account}", @account, nil)
+      redirect_to new_user_session_path,
+                  notice: 'Success. Please log in to continue.'
+    else
+      render 'signup'
+    end
+  end
+
+  def signup
+    @plan = Plan.available.where(id: params[:plan_id]).first
+    if @plan.nil?
+      redirect_to pricing_path, alert: 'Invalid plan.'
+    else
+      @account = Account.new(plan: @plan,
+                             address_country: 'us')
+      @account.users.build
+    end
+  end
+
+  private
+
+  def accounts_params
+    params.require(:account).permit(:address_city,
+                                    :address_country,
+                                    :address_line1,
+                                    :address_line2,
+                                    :address_state,
+                                    :address_zip,
+                                    :company_name,
+                                    :plan_id,
+                                    :card_token,
+                                    users_attributes: [:first_name,
+                                                       :last_name,
+                                                       :email,
+                                                       :password,
+                                                       :password_confirmation])
   end
 end

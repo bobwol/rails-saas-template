@@ -1,0 +1,253 @@
+﻿<%
+@title = 'Accounts'
+@heading = 'Accounts'
+@subheading = 'New'
+@require_stripe_js = true
+%>
+
+<div id="stripe_errors" class="alert alert-danger" style="display:none"></div>
+
+<%= render_errors @account %>
+
+<%= form_for [@account], url: register_path, method: :post do |f| %>
+  <%= f.hidden_field :plan_id %>
+  <%= f.hidden_field :card_token %>
+
+<% unless user_signed_in? %>
+<%= f.fields_for :users do |u| %>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <%= u.label :first_name, class: "control-label" %>
+        <%= u.text_field :first_name, class: "form-control", placeholder: "First Name" %>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <%= u.label :last_name, class: "control-label" %>
+        <%= u.text_field :last_name, class: "form-control", placeholder: "Last Name" %>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="form-group">
+        <%= u.label :email, class: "control-label" %>
+        <%= u.text_field :email, class: "form-control", placeholder: "Email" %>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <%= u.label :password, class: "control-label" %>
+        <%= u.password_field :password, class: "form-control", placeholder: "Password" %>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <%= u.label :password_confirmation, class: "control-label" %>
+        <%= u.password_field :password_confirmation, class: "form-control", placeholder: "Confirm Password" %>
+      </div>
+    </div>
+  </div>
+<% end %>
+<% end %>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="form-group">
+        <%= f.label :company_name, class: "control-label" %>
+        <%= f.text_field :company_name, class: "form-control", placeholder: "Company Name" %>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="form-group" id="account_address_line1_group" style="display: none">
+        <%= f.label :address_line1, class: "control-label" %>
+        <%= f.text_field :address_line1, class: "form-control", placeholder: "Street Address" %>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="form-group" id="account_address_line2_group" style="display: none">
+        <%= f.label :address_line2, class: "control-label" %>
+        <%= f.text_field :address_line2, class: "form-control" %>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="form-group" id="account_address_city_group" style="display: none">
+        <%= f.label :address_city, class: "control-label" %>
+        <%= f.text_field :address_city, class: "form-control", placeholder: "City/Suburb" %>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="form-group" id="account_address_state_group" style="display: none">
+        <%= f.label :address_state, class: "control-label" %>
+        <%= f.text_field :address_state, class: "form-control", placeholder: "State" %>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="form-group" id="account_address_zip_group" style="display: none">
+        <%= f.label :address_zip, class: "control-label" %>
+        <%= f.text_field :address_zip, class: "form-control", placeholder: "ZIP" %>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="form-group">
+        <%= f.label :address_country, class: "control-label" %>
+        <%= f.country_select :address_country, ["AU", "CA", "NZ", "GB", "US"], { iso_codes: true}, { class: "form-control" } %>
+      </div>
+    </div>
+  </div>
+<% if ! (@account.card_token.nil? || @account.card_token.blank?)  %>
+  <div class="form-group">
+    <label class="control-label">Card</label>
+    <p class="form-control-static">A valid card has been provided.</p>
+  </div>
+<% else %>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="form-group" id="card_name_group">
+        <label class="control-label">Card Name</label>
+        <input type="text" id="cc_name" placeholder="Card Name" class="form-control" data-stripe="name">
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="form-group" id="card_number_group">
+        <label class="control-label">Card Number</label>
+        <div class="input-group">
+          <input type="text" id="cc_number" placeholder="Card Number" class="form-control" data-stripe="number">
+          <span class="input-group-addon"><%= image_tag('cards/credit_small.png', id: 'cc_image') %></span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12 col-md-6">
+      <div class="form-group" id="card_expiry_group">
+        <label class="control-label">Expiry Date</label>
+        <div class="input-group">
+          <div class="col-xs-6 col-md-6" style="padding-left: 0">
+            <input type="cc_expiry_month" placeholder="MM" class="form-control" data-stripe="exp-month">
+          </div>
+          <div class="col-xs-6 col-md-6" style="padding-left: 0">
+            <input type="cc_expiry_year" placeholder="YYYY" class="form-control" data-stripe="exp-year">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-md-6">
+      <div class="form-group" id="card_cvc_group">
+        <label class="control-label">CVC</label>
+        <input type="text" id="cc_cvc" placeholder="CVC" class="form-control" data-stripe="cvc">
+      </div>
+    </div>
+  </div>
+
+<% end %>
+
+  <%= f.submit "Sign Up", class: "btn btn-primary" %>
+<% end %>
+
+<script type="text/javascript">
+  // Handle the response from Stripe
+  function stripeResponseHandler(status, response) {
+    var form = $('form#new_account');
+    if (response.error) {
+      var stripe_errors = $('#stripe_errors');
+      stripe_errors.text(response.error.message);
+	  stripe_errors.show();
+	  if (response.error.code == 'invalid_number' || response.error.code == 'incorrect_number' || response.error.code == 'card_declined') {
+	    form.find('#card_number_group').addClass('has-error');
+	  } else {
+	    form.find('#card_number_group').removeClass('has-error');
+	  }
+	  if (response.error.code == 'invalid_expiry_month' || response.error.code == 'invalid_expiry_year') {
+	    form.find('#card_expiry_group').addClass('has-error');
+	  } else {
+	    form.find('#card_expiry_group').removeClass('has-error');
+	  }
+	  if (response.error.code == 'invalid_cvc') {
+	    form.find('#card_cvc_group').addClass('has-error');
+	  } else {
+	    form.find('#card_cvc_group').removeClass('has-error');
+	  }
+      form.find('input[type=submit]').prop('disabled', false);
+    } else {
+      form.find('#account_card_token').val(response.id);
+      form.get(0).submit();
+    }
+  }
+
+  $(function() {
+    Stripe.setPublishableKey('<%= ENV['STRIPE_PUBLISHABLE_KEY'] %>');
+
+    var form = $('form#new_account');
+
+<% unless @account.card_token? %>
+    // If we have a card_token then someone previously submitted the form with a valid token so
+    // we're re-using the token and didn't ask them for the credit card details this time
+    form.submit(function(e) {
+      e.preventDefault();
+      var form = $(this);
+      form.find('input[type=submit]').prop('disabled', true);
+      Stripe.card.createToken(form, stripeResponseHandler);
+    });
+<% end %>
+
+    // If the person selects Australia then ask for more details so we can generate a GST invoice
+    form.find('#account_address_country').on("change", function(e) {
+      if ($(this).val() == "au") {
+        $('#account_address_line1_group').show();
+        $('#account_address_line2_group').show();
+        $('#account_address_city_group').show();
+        $('#account_address_state_group').show();
+        $('#account_address_zip_group').show();
+      } else {
+        $('#account_address_line1_group').hide();
+        $('#account_address_line2_group').hide();
+        $('#account_address_city_group').hide();
+        $('#account_address_state_group').hide();
+        $('#account_address_zip_group').hide();
+      }
+    });
+
+    // Change the icon in the credit card number based on the credit card presented
+    $('#cc_number').on("keyup", function () {
+      var url = "<%= image_url("cards/credit_small.png") %>";
+      switch(Stripe.card.cardType($('#cc_number').val()).toLowerCase()) {
+        case "american express":
+          url = "<%= image_url("cards/amex_small.png") %>";
+          break;
+        case "diners club":
+          url = "<%= image_url("cards/diners_small.png") %>";
+          break;
+        case "discover":
+          url = "<%= image_url("cards/discover_small.png") %>";
+          break;
+        case "jcb":
+          url = "<%= image_url("cards/jcb_small.png") %>";
+          break;
+        case "mastercard":
+          url = "<%= image_url("cards/mastercard_small.png") %>";
+          break;
+        case "visa":
+          url = "<%= image_url("cards/visa_small.png") %>";
+          break;
+      }
+      $('#cc_image').attr('src', url);
+    });
+  });
+</script>

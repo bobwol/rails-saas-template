@@ -1,13 +1,28 @@
-Rails.application.routes.draw do
-  devise_for :users,
-             path_names: { sign_in: 'login',
-                           sign_out: 'logout',
-                           sign_up: 'register' },
-             controllers: { sessions: 'users/sessions',
-                            passwords: 'users/passwords',
-                            registrations: 'users/registrations',
-                            unlocks: 'users/unlocks' }
+# Encoding: utf-8
 
+# The MIT License (MIT)
+#
+# Copyright (c) 2014 Richard Buggy <rich@buggy.id.au>
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+
+Rails.application.routes.draw do
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
@@ -62,6 +77,14 @@ Rails.application.routes.draw do
   #     # (app/controllers/admin/products_controller.rb)
   #     resources :products
   #   end
+  devise_for :users,
+             path_names: { sign_in: 'login',
+                           sign_out: 'logout',
+                           sign_up: 'register' },
+             controllers: { sessions: 'users/sessions',
+                            passwords: 'users/passwords',
+                            registrations: 'users/registrations',
+                            unlocks: 'users/unlocks' }
 
   namespace :admin do
     resources :accounts, except: [:destroy] do
@@ -112,6 +135,9 @@ Rails.application.routes.draw do
   end
 
   constraints :subdomain => 'www' do
+    get 'pricing' => 'marketing#pricing'
+    get 'signup/:plan_id' => 'marketing#signup', as: :signup
+    post 'signup' => 'marketing#register', as: :register
     root to: 'marketing#index', as: :marketing_root
   end
   root to: 'dashboard#index'

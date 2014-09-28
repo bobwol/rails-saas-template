@@ -45,4 +45,293 @@ RSpec.describe MarketingController, type: :controller do
       expect(response).to render_template('index')
     end
   end
+
+  describe 'GET #pricing' do
+    before :each do
+      @usd_plan0 = FactoryGirl.create(:plan, currency: 'USD')
+      @usd_plan1 = FactoryGirl.create(:plan, currency: 'USD')
+      @usd_plan2 = FactoryGirl.create(:plan, currency: 'USD')
+      @aud_plan0 = FactoryGirl.create(:plan, currency: 'AUD')
+      @aud_plan1 = FactoryGirl.create(:plan, currency: 'AUD')
+      @aud_plan2 = FactoryGirl.create(:plan, currency: 'AUD')
+    end
+
+    it 'responds successfully with an HTTP 200 status code' do
+      get :pricing
+      expect(response).to be_success
+      expect(response).to have_http_status(200)
+    end
+
+    it 'renders the pricing template' do
+      get :pricing
+      expect(response).to render_template('marketing')
+      expect(response).to render_template('pricing')
+    end
+
+    context 'without a currency' do
+      it 'returns USD plans' do
+        get :pricing
+        plans = assigns(:plans)
+        expect(plans).to_not be_nil
+        expect(plans.count).to eq 3
+        expect(plans).to include @usd_plan0
+        expect(plans).to include @usd_plan1
+        expect(plans).to include @usd_plan2
+      end
+    end
+
+    context 'with a currency' do
+      it 'returns AUD plans' do
+        get :pricing, currency: 'AUD'
+        plans = assigns(:plans)
+        expect(plans).to_not be_nil
+        expect(plans.count).to eq 3
+        expect(plans).to include @aud_plan0
+        expect(plans).to include @aud_plan1
+        expect(plans).to include @aud_plan2
+      end
+    end
+  end
+
+  describe 'GET #signup' do
+    context 'valid plan_id' do
+      before :each do
+        plan = FactoryGirl.create(:plan, currency: 'USD')
+        get :signup, plan_id: plan.id
+      end
+
+      it 'responds successfully with an HTTP 200 status code' do
+        expect(response).to be_success
+        expect(response).to have_http_status(200)
+      end
+
+      it 'renders the signup template' do
+        expect(response).to render_template('marketing')
+        expect(response).to render_template('signup')
+      end
+
+      it 'assigns an account' do
+        account = assigns(:account)
+        expect(account).to_not be_nil
+        expect(account).to be_new_record
+      end
+    end
+
+    context 'without a valid plan_id' do
+      before :each do
+        get :signup, plan_id: 0
+      end
+
+      it 'to redirect to the pricing page' do
+        expect(response).to be_redirect
+        expect(response).to redirect_to(pricing_path)
+      end
+
+      it 'sets a alert' do
+        expect(request.flash[:alert]).to eq 'Invalid plan.'
+      end
+    end
+  end
+
+  describe 'POST #register' do
+    context 'without a valid plan_id' do
+      before :each do
+        post :register, account: FactoryGirl.attributes_for(:account, plan_id: 0)
+      end
+
+      it 'to redirect to the pricing page' do
+        expect(response).to be_redirect
+        expect(response).to redirect_to(pricing_path)
+      end
+
+      it 'sets a alert' do
+        expect(request.flash[:alert]).to eq 'Invalid plan.'
+      end
+    end
+
+    context 'there is an error' do
+      before :each do
+        plan = FactoryGirl.create(:plan)
+        post :register, account: FactoryGirl.attributes_for(:account, plan_id: plan.id)
+      end
+
+      it 'responds successfully with an HTTP 200 status code' do
+        expect(response).to be_success
+        expect(response).to have_http_status(200)
+      end
+
+      it 'renders the signup form' do
+        expect(response).to render_template('marketing')
+        expect(response).to render_template('signup')
+      end
+
+      it 'assigns an account' do
+        expect(assigns(:account)).to_not be_nil
+      end
+    end
+
+    context 'with a logged in user' do
+      before :each do
+        @user = FactoryGirl.create(:user)
+        sign_in :user, @user
+        plan = FactoryGirl.create(:plan)
+        @user_count = User.count
+        @account_count = Account.count
+        post :register, account: { address_city: 'address_city',
+                                   address_country: 'AU',
+                                   address_line1: 'address_line1',
+                                   address_line2: 'address_line2',
+                                   address_state: 'address_state',
+                                   address_zip: 'zipcode',
+                                   company_name: 'company_name',
+                                   plan_id: plan.id,
+                                   card_token: 'tok_abc' }
+      end
+
+      it 'to redirect to the pricing page' do
+        expect(response).to be_redirect
+        expect(response).to redirect_to(new_user_session_path)
+      end
+
+      it 'sets a notice' do
+        expect(request.flash[:notice]).to eq 'Success. Please log in to continue.'
+      end
+
+      it 'it creates a new account' do
+        expect(Account.count).to eq (@account_count + 1)
+      end
+
+      it 'it does not create a new user' do
+        expect(User.count).to eq @user_count
+      end
+
+      it 'makes the user an account admin' do
+        account = assigns(:account)
+        expect(account).to_not be_nil
+        expect(account.user_permissions[0]).to_not be_nil
+        expect(account.user_permissions[0].user).to eq @user
+      end
+    end
+
+    context 'without a logged in user' do
+      context 'and no user provided ' do
+        before :each do
+          plan = FactoryGirl.create(:plan)
+          @user_count = User.count
+          @account_count = Account.count
+          post :register, account: { address_city: 'address_city',
+                                     address_country: 'AU',
+                                     address_line1: 'address_line1',
+                                     address_line2: 'address_line2',
+                                     address_state: 'address_state',
+                                     address_zip: 'zipcode',
+                                     company_name: 'company_name',
+                                     plan_id: plan.id,
+                                     card_token: 'tok_abc' }
+        end
+
+        it 'responds successfully with an HTTP 200 status code' do
+          expect(response).to be_success
+          expect(response).to have_http_status(200)
+        end
+
+        it 'renders the signup form' do
+          expect(response).to render_template('marketing')
+          expect(response).to render_template('signup')
+        end
+
+        it 'assigns an account' do
+          expect(assigns(:account)).to_not be_nil
+        end
+      end
+
+      context 'and invalid user provided ' do
+        before :each do
+          plan = FactoryGirl.create(:plan)
+          @user_count = User.count
+          @account_count = Account.count
+          post :register, account: { address_city: 'address_city',
+                                     address_country: 'AU',
+                                     address_line1: 'address_line1',
+                                     address_line2: 'address_line2',
+                                     address_state: 'address_state',
+                                     address_zip: 'zipcode',
+                                     company_name: 'company_name',
+                                     plan_id: plan.id,
+                                     card_token: 'tok_abc',
+                                     user_attributes: [{
+                                       first_name: '',
+                                       last_name: '',
+                                       email: '',
+                                       password: '',
+                                       password_confirmation: ''
+                                     }]}
+        end
+
+        it 'responds successfully with an HTTP 200 status code' do
+          expect(response).to be_success
+          expect(response).to have_http_status(200)
+        end
+
+        it 'renders the signup form' do
+          expect(response).to render_template('marketing')
+          expect(response).to render_template('signup')
+        end
+
+        it 'assigns an account' do
+          expect(assigns(:account)).to_not be_nil
+        end
+      end
+
+      context 'and a valid user provided ' do
+        before :each do
+          plan = FactoryGirl.create(:plan)
+          @user_count = User.count
+          @account_count = Account.count
+          post :register, account: { address_city: 'address_city',
+                                     address_country: 'AU',
+                                     address_line1: 'address_line1',
+                                     address_line2: 'address_line2',
+                                     address_state: 'address_state',
+                                     address_zip: 'zipcode',
+                                     company_name: 'company_name',
+                                     plan_id: plan.id,
+                                     card_token: 'tok_abc',
+                                     users_attributes: [{
+                                       first_name: 'John',
+                                       last_name: 'Smith',
+                                       email: 'john@example.com',
+                                       password: 'abcd1234',
+                                       password_confirmation: 'abcd1234'
+                                     }]
+                                   }
+        end
+
+        it 'to redirect to the pricing page' do
+          expect(response).to be_redirect
+          expect(response).to redirect_to(new_user_session_path)
+        end
+
+        it 'sets a notice' do
+          expect(request.flash[:notice]).to eq 'Success. Please log in to continue.'
+        end
+
+        it 'it creates a new account' do
+          expect(Account.count).to eq (@account_count + 1)
+        end
+
+        it 'it creates a new user' do
+          expect(User.count).to eq (@user_count + 1)
+        end
+
+        it 'makes the user an account admin' do
+          account = Account.find(assigns(:account).id)
+          expect(account.user_permissions.count).to be >= 1
+          account.user_permissions.each do |up|
+            expect(up.account_admin).to eq true
+          end
+        end
+      end
+    end
+  end
 end

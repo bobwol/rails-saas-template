@@ -39,4 +39,29 @@ RSpec.describe 'routing to marketing homepage', type: :routing do
       action: 'index'
     )
   end
+
+  it 'routes http://www.example.com/pricing to marketing#index' do
+    expect(get: 'http://www.example.com/pricing').to route_to(
+      subdomain: 'www',
+      controller: 'marketing',
+      action: 'pricing'
+    )
+  end
+
+  it 'routes http://www.example.com/signup/1 to marketing#index' do
+    expect(get: 'http://www.example.com/signup/1').to route_to(
+      subdomain: 'www',
+      controller: 'marketing',
+      action: 'signup',
+      plan_id: '1'
+    )
+  end
+
+  it 'routes http://www.example.com/signup to marketing#index' do
+    expect(post: 'http://www.example.com/signup').to route_to(
+      subdomain: 'www',
+      controller: 'marketing',
+      action: 'register'
+    )
+  end
 end

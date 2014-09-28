@@ -36,6 +36,21 @@ RSpec.describe Account, type: :model do
     expect(FactoryGirl.build(:account)).to be_valid
   end
 
+  describe '.admin_all_users' do
+    it 'makes all users an account admin' do
+      account = FactoryGirl.create(:account)
+      permission0 = FactoryGirl.create(:user_permission, account: account)
+      permission1 = FactoryGirl.create(:user_permission, account: account)
+      expect(permission0.account_admin).to eq false
+      expect(permission1.account_admin).to eq false
+      account.admin_all_users
+      account = Account.find(account.id)
+      account.user_permissions.each do |up|
+        expect(up.account_admin).to eq true
+      end
+    end
+  end
+
   describe '.active' do
     # t.boolean :active, default: true, null: false
   end
@@ -559,6 +574,14 @@ RSpec.describe Account, type: :model do
       expect(account.users.count).to eq 2
       expect(account.users).to include user1
       expect(account.users).to include user2
+    end
+
+    it 'validates on create' do
+      user = FactoryGirl.build(:user, email: nil)
+      account = FactoryGirl.build(:account)
+      account.users << user
+      expect(account.save).to be false
+      expect(user.errors[:email]).to include 'can\'t be blank'
     end
   end
 end

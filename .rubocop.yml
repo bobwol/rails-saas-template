@@ -112,7 +112,7 @@ Style/AlignParameters:
     - with_first_parameter
     - with_fixed_indentation
 
-Style/BlockNesting:
+Metrics/BlockNesting:
   Max: 3
 
 Style/BracesAroundHashParameters:
@@ -156,7 +156,7 @@ Style/ClassCheck:
     - is_a?
     - kind_of?
 
-Style/ClassLength:
+Metrics/ClassLength:
   CountComments: false  # count full line comments?
   Max: 120
 
@@ -185,7 +185,7 @@ Style/CommentAnnotation:
     - REVIEW
 
 # Avoid complex methods.
-Style/CyclomaticComplexity:
+Metrics/CyclomaticComplexity:
   Max: 7
 
 # Multi-line method chaining should be done with leading dots.
@@ -267,7 +267,7 @@ Style/LambdaCall:
     - call
     - braces
 
-Style/LineLength:
+Metrics/LineLength:
   Max: 120
   AllowURI: true
 
@@ -295,7 +295,7 @@ Style/MethodDefParentheses:
     - require_parentheses
     - require_no_parentheses
 
-Style/MethodLength:
+Metrics/MethodLength:
   CountComments: false  # count full line comments?
   Max: 30
 
@@ -308,7 +308,7 @@ Style/MethodName:
 Style/NumericLiterals:
   MinDigits: 5
 
-Style/ParameterLists:
+Metrics/ParameterLists:
   Max: 5
   CountKeywordArgs: true
 

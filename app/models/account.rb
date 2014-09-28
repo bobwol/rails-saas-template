@@ -60,6 +60,8 @@ class Account < ActiveRecord::Base
 
   delegate :currency, :allow_hostname, :allow_subdomain, to: :plan, prefix: true
 
+  accepts_nested_attributes_for :users
+
   default_scope { order('company_name ASC') }
 
   validates :address_city, length: { maximum: 120 }
@@ -88,7 +90,11 @@ class Account < ActiveRecord::Base
   validates :stripe_customer_id, length: { maximum: 60 }
   validates :stripe_subscription_id, length: { maximum: 60 }
   validates :subdomain, length: { maximum: 64 }, presence: false
-  validates :subdomain, format: { with: /\A([a-z0-9]+[a-z0-9\-]*)\Z/i }, uniqueness: true, unless: 'subdomain.nil?'
+  validates :subdomain,
+            format: { with: /\A([a-z0-9]+[a-z0-9\-]*)\Z/i },
+            uniqueness: true,
+            unless: 'subdomain.nil?'
+  validates_associated :users, on: :create
 
   def to_s
     company_name
@@ -143,5 +149,12 @@ class Account < ActiveRecord::Base
     s = :cancel_pending unless cancelled_at.nil?
     s = :cancelled unless active
     s
+  end
+
+  def admin_all_users
+    user_permissions.each do |up|
+      up.account_admin = true
+      up.save
+    end
   end
 end

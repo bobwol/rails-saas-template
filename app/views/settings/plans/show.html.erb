@@ -6,10 +6,8 @@
 
 <%= render 'shared/pricing_table', plans: @plans, account: @current_account, action: :change  %>
 
-<div class="container">
-  <div class="row">
-    <div class="col-md-12">
-      <p><%= link_to "Cancel account", cancel_settings_plan_path, class: "btn btn-danger" %></p>
-    </div>
+<div class="row">
+  <div class="col-md-12">
+    <p><%= link_to "Cancel account", cancel_settings_plan_path, class: "btn btn-danger" %></p>
   </div>
 </div>
