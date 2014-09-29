@@ -12,7 +12,7 @@
 		<div class="panel-heading"><h3><%= plan.name %></h3></div>
 		<div class="panel-body">
 			<div class="the-price">
-				<h1>$<%= number_with_precision(plan.amount/100, :precision => 2) %><span class="subscript"> / <%if plan.interval_count > 1 %><%= number_with_precision(plan.interval_count, :precision => 0) %>  <% end %><%= plan.interval %></span></h1>
+				<h1>$<%= number_with_precision(plan.amount.to_f/100, :precision => 2) %><span class="subscript"> / <%if plan.interval_count > 1 %><%= number_with_precision(plan.interval_count, :precision => 0) %>  <% end %><%= plan.interval %></span></h1>
 <% if plan.trial_period_days > 0 %>
 				<small><%= plan.trial_period_days %> day FREE trial</small>
 <% end %>

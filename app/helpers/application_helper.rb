@@ -38,7 +38,7 @@ module ApplicationHelper
     period = number_with_precision(plan.interval_count, precision: 0) + ' ' if plan.interval_count > 1
     period += plan.interval
 
-    amount = number_with_precision(plan.amount / 100, precision: 2)
+    amount = number_with_precision(plan.amount.to_f / 100, precision: 2)
 
     "$#{amount} / #{period}"
   end
