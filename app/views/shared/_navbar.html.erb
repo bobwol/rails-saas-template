@@ -49,8 +49,8 @@
           </ul>
         </li>
 <% else %>
-        <li><a href="#">Plans & Pricing</a></li>
-        <li><a href="#">Sign Up</a></li>
+        <li><%= link_to "Plans & Pricing", pricing_path %></li>
+        <li><%= link_to "Sign Up", pricing_path %></li>
         <li><%= link_to "Sign In", new_user_session_path %></li>
 <% end %>
       </ul>
