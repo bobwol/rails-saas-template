@@ -30,10 +30,6 @@
 
 # Account model
 class Account < ActiveRecord::Base
-  # before_validation(on: create) do |account|
-  #   account.expires_at = Time.now + account.plan.trial_period_days.days if account.expires_at.nil?
-  # end
-  #
   # before_update do |account|
   #   if account.plan_id == account.paused_plan_id
   #     account.errors.add :paused_plan_id, 'cannot be the same as the main plan'
@@ -58,7 +54,8 @@ class Account < ActiveRecord::Base
   has_many :users, through: :user_permissions
   has_many :user_permissions
 
-  delegate :currency, :allow_hostname, :allow_subdomain, to: :plan, prefix: true
+  delegate :currency, :allow_hostname, :allow_subdomain, :stripe_id, to: :plan, prefix: true
+  delegate :stripe_id, to: :paused_plan, prefix: true, allow_nil: true
 
   accepts_nested_attributes_for :users
 
@@ -79,8 +76,7 @@ class Account < ActiveRecord::Base
   validates :card_token, length: { maximum: 60 }, presence: true
   validates :company_name, length: { maximum: 255 }, presence: true
   validates :email, length: { maximum: 255 }, presence: true
-  validates :expires_at, presence: true
-  validates :hostname, length: { maximum: 255 }, presence: false
+  validates :hostname, length: { maximum: 255 }
   validates :hostname,
             format: { with: /\A([a-z0-9]+[a-z0-9\-]*)((\.([a-z0-9]+[a-z0-9\-]*))+)\Z/i },
             uniqueness: true,
@@ -89,7 +85,7 @@ class Account < ActiveRecord::Base
   validates :plan_id, numericality: { integer_only: true }, presence: true
   validates :stripe_customer_id, length: { maximum: 60 }
   validates :stripe_subscription_id, length: { maximum: 60 }
-  validates :subdomain, length: { maximum: 64 }, presence: false
+  validates :subdomain, length: { maximum: 64 }
   validates :subdomain,
             format: { with: /\A([a-z0-9]+[a-z0-9\-]*)\Z/i },
             uniqueness: true,

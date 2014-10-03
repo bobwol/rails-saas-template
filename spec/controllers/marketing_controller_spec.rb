@@ -198,7 +198,8 @@ RSpec.describe MarketingController, type: :controller do
       end
 
       it 'it creates a new account' do
-        expect(Account.count).to eq (@account_count + 1)
+        @new_account_count = @account_count + 1
+        expect(Account.count).to eq @new_account_count
       end
 
       it 'it does not create a new user' do
@@ -264,8 +265,8 @@ RSpec.describe MarketingController, type: :controller do
                                        last_name: '',
                                        email: '',
                                        password: '',
-                                       password_confirmation: ''
-                                     }]}
+                                       password_confirmation: '' }]
+                                   }
         end
 
         it 'responds successfully with an HTTP 200 status code' do
@@ -317,11 +318,13 @@ RSpec.describe MarketingController, type: :controller do
         end
 
         it 'it creates a new account' do
-          expect(Account.count).to eq (@account_count + 1)
+          @new_account_count = @account_count + 1
+          expect(Account.count).to eq @new_account_count
         end
 
         it 'it creates a new user' do
-          expect(User.count).to eq (@user_count + 1)
+          @new_user_count = @user_count + 1
+          expect(User.count).to eq @new_user_count
         end
 
         it 'makes the user an account admin' do

@@ -50,7 +50,7 @@ class Admin::AccountsController < Admin::ApplicationController
     @account = Account.new(accounts_params)
     @account.card_token = 'dummy'
     if @account.save
-      # StripeGateway.delay.customer_create(@account.id)
+      StripeGateway.account_create(@account.id)
       AppEvent.success("Created account #{@account}", @account, current_user)
       redirect_to admin_account_path(@account),
                   notice: 'Account was successfully created.'
@@ -71,8 +71,7 @@ class Admin::AccountsController < Admin::ApplicationController
 
   def update
     if @account.update_attributes(accounts_params)
-      # StripeGateway.delay.customer_update(@account.id)
-      # StripeGateway.delay.subscription_update(@account.id)
+      StripeGateway.account_update(@account.id)
       AppEvent.success("Updated account #{@account}", @account, current_user)
       redirect_to admin_account_path(@account),
                   notice: 'Account was successfully updated.'
@@ -87,7 +86,7 @@ class Admin::AccountsController < Admin::ApplicationController
 
   def cancel
     if @account.cancel(cancel_params)
-      # StripeGateway.delay.customer_update(@account.id)
+      StripeGateway.account_cancel(@account.id)
       AppEvent.info("Cancelled account #{@account}", @account, current_user)
       redirect_to admin_account_path(@account), notice: 'Account was successfully cancelled.'
     else
@@ -103,7 +102,7 @@ class Admin::AccountsController < Admin::ApplicationController
 
   def restore
     if @account.restore
-      # StripeGateway.delay.customer_update(@account.id)
+      StripeGateway.account_restore(@account.id)
       AppEvent.success("Restored account #{@account}", @account, current_user)
       redirect_to admin_account_path(@account), notice: 'Account was successfully restored.'
     else

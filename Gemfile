@@ -59,6 +59,10 @@ gem 'daemons', '~> 1.1.9'
 gem 'delayed_job', '~> 4.0.4'
 gem 'delayed_job_active_record', '~> 4.0.2'
 
+# Yay Stripe!
+gem 'stripe', '~> 1.15.0'
+gem 'stripe_event', '~> 1.3.0'
+
 # Code quality tools
 group :development do
   gem 'rails_best_practices', '~> 1.15.4'
@@ -73,4 +77,5 @@ group :test, :development do
   gem 'database_cleaner', '~> 1.3.0'
   gem 'rspec', '~> 3.1.0'
   gem 'rspec-rails', '~> 3.1.0'
+  gem 'stripe-ruby-mock', '~> 1.10.1.7'
 end

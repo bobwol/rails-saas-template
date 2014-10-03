@@ -60,7 +60,6 @@ class MarketingController < ApplicationController
       @account.email = @account.users[0].email unless @account.users[0].nil?
     end
 
-    @account.expires_at = '2014-01-01'
     if @account.save
       # Add the current_user as an account admin or set all users as an account admin
       if user_signed_in? && (@account.user_permissions.count == 0)
@@ -69,7 +68,7 @@ class MarketingController < ApplicationController
         @account.admin_all_users
       end
 
-      # StripeGateway.delay.customer_update(@account.id)
+      StripeGateway.account_create(@account.id)
       AppEvent.success("Created account #{@account}", @account, nil)
       redirect_to new_user_session_path,
                   notice: 'Success. Please log in to continue.'
