@@ -137,6 +137,7 @@ class Admin::AccountsController < Admin::ApplicationController
                                     :address_state,
                                     :address_zip,
                                     :company_name,
+                                    :custom_path,
                                     :email,
                                     :expires_at,
                                     :hostname,

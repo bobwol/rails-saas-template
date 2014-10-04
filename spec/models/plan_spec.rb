@@ -36,12 +36,40 @@ RSpec.describe Plan, type: :model do
     expect(FactoryGirl.build(:plan)).to be_valid
   end
 
+  describe '.allow_custom_path' do
+    it 'can be true' do
+      plan = FactoryGirl.build(:plan, allow_custom_path: true)
+      expect(plan).to be_valid
+    end
+
+    it 'can be false' do
+      plan = FactoryGirl.build(:plan, allow_custom_path: false)
+      expect(plan).to be_valid
+    end
+  end
+
   describe '.allow_hostname' do
-    # t.boolean :allow_hostname, default: true, null: false
+    it 'can be true' do
+      plan = FactoryGirl.build(:plan, allow_hostname: true)
+      expect(plan).to be_valid
+    end
+
+    it 'can be false' do
+      plan = FactoryGirl.build(:plan, allow_hostname: false)
+      expect(plan).to be_valid
+    end
   end
 
   describe '.allow_subdomain' do
-    # t.boolean :allow_subdomain, default: true, null: false
+    it 'can be true' do
+      plan = FactoryGirl.build(:plan, allow_subdomain: true)
+      expect(plan).to be_valid
+    end
+
+    it 'can be false' do
+      plan = FactoryGirl.build(:plan, allow_subdomain: false)
+      expect(plan).to be_valid
+    end
   end
 
   describe '.amount' do

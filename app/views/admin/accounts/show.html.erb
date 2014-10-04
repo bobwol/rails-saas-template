@@ -49,6 +49,8 @@
   <dd><%= @account.address_state %></dd>
   <dt>Address Country</dt>
   <dd><%= @account.address_country_name %></dd>
+  <dt>Custom Path</dt>
+  <dd><% if @account.plan_allow_custom_path %><%= @account.custom_path %><% else %>Disabled by plan<% end %></dd>
   <dt>Hostname</dt>
   <dd><% if @account.plan_allow_hostname %><%= @account.hostname %><% else %>Disabled by plan<% end %></dd>
   <dt>Subdomain</dt>

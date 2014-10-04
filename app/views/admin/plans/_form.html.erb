@@ -79,6 +79,10 @@
 	<%= f.text_field :max_users, class: "form-control" %>
   </div>
   <div class="form-group">
+	<%= f.label :allow_custom_path, class: "control-label" %>
+	<%= f.check_box :allow_custom_path %>
+  </div>
+  <div class="form-group">
 	<%= f.label :allow_hostname, class: "control-label" %>
 	<%= f.check_box :allow_hostname %>
   </div>

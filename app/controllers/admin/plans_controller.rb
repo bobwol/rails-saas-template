@@ -105,6 +105,7 @@ class Admin::PlansController < Admin::ApplicationController
 
   def plans_create_params
     params.require(:plan).permit(:active,
+                                 :allow_custom_path,
                                  :allow_hostname,
                                  :allow_subdomain,
                                  :amount,
@@ -122,6 +123,7 @@ class Admin::PlansController < Admin::ApplicationController
 
   def plans_update_params
     params.require(:plan).permit(:active,
+                                 :allow_custom_path,
                                  :allow_hostname,
                                  :allow_subdomain,
                                  :max_users,

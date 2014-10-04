@@ -54,12 +54,18 @@ class Account < ActiveRecord::Base
   has_many :users, through: :user_permissions
   has_many :user_permissions
 
-  delegate :currency, :allow_hostname, :allow_subdomain, :stripe_id, to: :plan, prefix: true
+  delegate :currency, :allow_custom_path, :allow_hostname, :allow_subdomain, :stripe_id, to: :plan, prefix: true
   delegate :stripe_id, to: :paused_plan, prefix: true, allow_nil: true
 
   accepts_nested_attributes_for :users
 
   default_scope { order('company_name ASC') }
+
+  before_validation do |account|
+    account.custom_path = nil unless account.plan_allow_custom_path
+    account.hostname = nil unless account.plan_allow_hostname
+    account.subdomain = nil unless account.plan_allow_subdomain
+  end
 
   validates :address_city, length: { maximum: 120 }
   validates :address_country, length: { maximum: 2 }
@@ -75,6 +81,14 @@ class Account < ActiveRecord::Base
   validates :cancellation_reason, presence: true, if: '!cancelled_at.nil?'
   validates :card_token, length: { maximum: 60 }, presence: true
   validates :company_name, length: { maximum: 255 }, presence: true
+  validates :custom_path, length: { in: 2..60 }, allow_nil: true
+  validates :custom_path, uniqueness: true, unless: 'custom_path.nil?'
+  validates :custom_path,
+            format: { with: /\A[a-z0-9]+\Z/i, message: 'can only contain letters and numbers' },
+            unless: 'custom_path.nil?'
+  validates :custom_path,
+            format: { with: /[a-z]/i, message: 'must contain at least one letter' },
+            unless: 'custom_path.nil?'
   validates :email, length: { maximum: 255 }, presence: true
   validates :hostname, length: { maximum: 255 }
   validates :hostname,
@@ -117,7 +131,11 @@ class Account < ActiveRecord::Base
   end
 
   def self.find_by_path(path)
-    Account.where(active: true, id: path).first
+    if path.to_i.to_s == path.to_s
+      Account.where(active: true, id: path).first
+    else
+      Account.joins(:plan).where(plans: { allow_custom_path: true }, active: true, custom_path: path).first
+    end
   end
 
   def self.find_by_subdomain(subdomain)

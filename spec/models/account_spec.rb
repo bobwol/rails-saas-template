@@ -277,6 +277,63 @@ RSpec.describe Account, type: :model do
     end
   end
 
+  describe '.custom_path' do
+    before :each do
+      @plan = FactoryGirl.create(:plan, allow_custom_path: true)
+    end
+
+    it 'must be 2 characters or less' do
+      account = FactoryGirl.build(:account, plan: @plan, custom_path: 'A')
+      expect(account).to_not be_valid
+      expect(account.errors[:custom_path]).to include 'is too short (minimum is 2 characters)'
+    end
+
+    it 'must be 60 characters or less' do
+      account = FactoryGirl.build(:account, plan: @plan, custom_path: Faker::Lorem.characters(61))
+      expect(account).to_not be_valid
+      expect(account.errors[:custom_path]).to include 'is too long (maximum is 60 characters)'
+    end
+
+    it 'can be nil' do
+      account = FactoryGirl.build(:account, plan: @plan, custom_path: nil)
+      expect(account).to be_valid
+    end
+
+    it 'cannot be numeric' do
+      account = FactoryGirl.build(:account, plan: @plan, custom_path: '123')
+      expect(account).to_not be_valid
+      expect(account.errors[:custom_path]).to include 'must contain at least one letter'
+    end
+
+    it 'can start with a number' do
+      account = FactoryGirl.build(:account, plan: @plan, custom_path: '123me')
+      expect(account).to be_valid
+    end
+
+    it 'must be unique if not nil' do
+      account1 = FactoryGirl.create(:account, plan: @plan, custom_path: '123mex')
+      expect(account1).to be_valid
+
+      account2 = FactoryGirl.build(:account, plan: @plan, custom_path: '123mex')
+      expect(account2).to_not be_valid
+      expect(account2.errors[:custom_path]).to include 'has already been taken'
+    end
+
+    it 'can be nil if others are' do
+      account1 = FactoryGirl.create(:account, plan: @plan, custom_path: nil)
+      expect(account1).to be_valid
+
+      account2 = FactoryGirl.build(:account, plan: @plan, custom_path: nil)
+      expect(account2).to be_valid
+    end
+
+    it 'cannot contain illegal characters' do
+      account = FactoryGirl.build(:account, plan: @plan, custom_path: '123&me')
+      expect(account).to_not be_valid
+      expect(account.errors[:custom_path]).to include 'can only contain letters and numbers'
+    end
+  end
+
   describe '.email' do
     it 'must be 255 characters or less' do
       account = FactoryGirl.build(:account, email: Faker::Lorem.characters(256))
@@ -299,41 +356,45 @@ RSpec.describe Account, type: :model do
   end
 
   describe '.hostname' do
+    before :each do
+      @plan = FactoryGirl.create(:plan, allow_hostname: true)
+    end
+
     it 'must be 255 characters or less' do
-      account = FactoryGirl.build(:account, hostname: Faker::Lorem.characters(256))
+      account = FactoryGirl.build(:account, plan: @plan, hostname: Faker::Lorem.characters(256))
       expect(account).to_not be_valid
       expect(account.errors[:hostname]).to include 'is too long (maximum is 255 characters)'
     end
 
     it 'is required' do
-      account = FactoryGirl.build(:account, hostname: nil)
+      account = FactoryGirl.build(:account, plan: @plan, hostname: nil)
       expect(account).to be_valid
     end
 
     it 'can be a domain name' do
-      account = FactoryGirl.build(:account, hostname: 'my-app.example.com')
+      account = FactoryGirl.build(:account, plan: @plan, hostname: 'my-app.example.com')
       expect(account).to be_valid
     end
 
     it 'must be unique if not nil' do
-      account1 = FactoryGirl.create(:account, hostname: 'www.example.com')
+      account1 = FactoryGirl.create(:account, plan: @plan, hostname: 'www.example.com')
       expect(account1).to be_valid
 
-      account2 = FactoryGirl.build(:account, hostname: 'www.example.com')
+      account2 = FactoryGirl.build(:account, plan: @plan, hostname: 'www.example.com')
       expect(account2).to_not be_valid
       expect(account2.errors[:hostname]).to include 'has already been taken'
     end
 
     it 'can be nil if others are' do
-      account1 = FactoryGirl.create(:account, hostname: nil)
+      account1 = FactoryGirl.create(:account, plan: @plan, hostname: nil)
       expect(account1).to be_valid
 
-      account2 = FactoryGirl.build(:account, hostname: nil)
+      account2 = FactoryGirl.build(:account, plan: @plan, hostname: nil)
       expect(account2).to be_valid
     end
 
     it 'cannot contain illegal characters' do
-      account = FactoryGirl.build(:account, hostname: 'www&example.com')
+      account = FactoryGirl.build(:account, plan: @plan, hostname: 'www&example.com')
       expect(account).to_not be_valid
       expect(account.errors[:hostname]).to include 'is invalid'
     end
@@ -386,20 +447,80 @@ RSpec.describe Account, type: :model do
   end
 
   describe '.find_by_path' do
-    it 'finds active accounts' do
-      account = FactoryGirl.create(:account, active: true)
-      expect(account).to be_valid
+    context 'plan that allow custom path' do
+      before :each do
+        @plan = FactoryGirl.create(:plan, allow_custom_path: true)
+      end
 
-      a = Account.find_by_path(account.id)
-      expect(a).to eq account
+      it 'finds active accounts by ID' do
+        account = FactoryGirl.create(:account, active: true, plan: @plan)
+        expect(account).to be_valid
+
+        a = Account.find_by_path(account.id)
+        expect(a).to eq account
+      end
+
+      it 'does not find inactive accounts by ID' do
+        account = FactoryGirl.create(:account, active: false, plan: @plan)
+        expect(account).to be_valid
+
+        a = Account.find_by_path(account.id)
+        expect(a).to be_nil
+      end
+
+      it 'finds active accounts by custom path' do
+        account = FactoryGirl.create(:account, active: true, plan: @plan, custom_path: 'abc')
+        expect(account).to be_valid
+
+        a = Account.find_by_path('abc')
+        expect(a).to eq account
+      end
+
+      it 'does not find inactive accounts by  custom path' do
+        account = FactoryGirl.create(:account, active: false, plan: @plan, custom_path: 'abc')
+        expect(account).to be_valid
+
+        a = Account.find_by_path('abc')
+        expect(a).to be_nil
+      end
     end
 
-    it 'does not find inactive accounts' do
-      account = FactoryGirl.create(:account, active: false)
-      expect(account).to be_valid
+    context 'plan that do not allow custom path' do
+      before :each do
+        @plan = FactoryGirl.create(:plan, allow_custom_path: false)
+      end
 
-      a = Account.find_by_path(account.id)
-      expect(a).to be_nil
+      it 'finds active accounts by ID' do
+        account = FactoryGirl.create(:account, active: true, plan: @plan)
+        expect(account).to be_valid
+
+        a = Account.find_by_path(account.id)
+        expect(a).to eq account
+      end
+
+      it 'does not find inactive accounts by ' do
+        account = FactoryGirl.create(:account, active: false, plan: @plan)
+        expect(account).to be_valid
+
+        a = Account.find_by_path(account.id)
+        expect(a).to be_nil
+      end
+
+      it 'does not find active accounts by custom path' do
+        account = FactoryGirl.create(:account, active: true, plan: @plan, custom_path: 'abc')
+        expect(account).to be_valid
+
+        a = Account.find_by_path('abc')
+        expect(a).to be_nil
+      end
+
+      it 'does not find inactive accounts by  custom path' do
+        account = FactoryGirl.create(:account, active: false, plan: @plan, custom_path: 'abc')
+        expect(account).to be_valid
+
+        a = Account.find_by_path('abc')
+        expect(a).to be_nil
+      end
     end
   end
 
@@ -480,6 +601,19 @@ RSpec.describe Account, type: :model do
       stripe_id = "plan_#{paused_plan.id}"
       paused_plan.stripe_id = stripe_id
       expect(account.paused_plan_stripe_id).to eq stripe_id
+    end
+  end
+
+  describe '.plan_allow_custom_path' do
+    it 'returns the plans allow_custom_path' do
+      account = FactoryGirl.build(:account)
+      plan = account.plan
+
+      plan.allow_custom_path = true
+      expect(account.plan_allow_custom_path).to eq true
+
+      plan.allow_custom_path = false
+      expect(account.plan_allow_custom_path).to eq false
     end
   end
 

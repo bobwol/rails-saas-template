@@ -41,9 +41,9 @@ RSpec.describe Admin::PlansController, type: :controller do
       end
 
       it 'does not create a plan' do
-        expect{
+        expect {
           post :create, plan: FactoryGirl.attributes_for(:plan)
-        }.to change{Plan.count}.by(0)
+        }.to change { Plan.count }.by(0)
       end
     end
 
@@ -65,9 +65,9 @@ RSpec.describe Admin::PlansController, type: :controller do
       end
 
       it 'does not create a plan' do
-        expect{
+        expect {
           post :create, plan: FactoryGirl.attributes_for(:plan)
-        }.to change{Plan.count}.by(0)
+        }.to change { Plan.count }.by(0)
       end
     end
 
@@ -96,9 +96,9 @@ RSpec.describe Admin::PlansController, type: :controller do
         end
 
         it 'creates a plan' do
-          expect{
+          expect {
             post :create, plan: FactoryGirl.attributes_for(:plan)
-          }.to change{Plan.count}.by(1)
+          }.to change { Plan.count }.by(1)
         end
       end
 
@@ -122,9 +122,9 @@ RSpec.describe Admin::PlansController, type: :controller do
         end
 
         it 'does not create a plan' do
-          expect{
-          post :create, plan: FactoryGirl.attributes_for(:plan, name: '')
-          }.to change{Plan.count}.by(0)
+          expect {
+            post :create, plan: FactoryGirl.attributes_for(:plan, name: '')
+          }.to change { Plan.count }.by(0)
         end
       end
     end
@@ -143,9 +143,9 @@ RSpec.describe Admin::PlansController, type: :controller do
       end
 
       it 'does not remove a plan' do
-        expect{
+        expect {
           delete :destroy, id: @plan.id
-        }.to change{Plan.count}.by(0)
+        }.to change { Plan.count }.by(0)
       end
     end
 
@@ -167,9 +167,9 @@ RSpec.describe Admin::PlansController, type: :controller do
       end
 
       it 'does not remove a plan' do
-        expect{
+        expect {
           delete :destroy, id: @plan.id
-        }.to change{Plan.count}.by(0)
+        }.to change { Plan.count }.by(0)
       end
     end
 
@@ -191,9 +191,9 @@ RSpec.describe Admin::PlansController, type: :controller do
       end
 
       it 'removes a plan' do
-        expect{
+        expect {
           delete :destroy, id: @plan.id
-        }.to change{Plan.count}.by(-1)
+        }.to change { Plan.count }.by(-1)
       end
     end
   end

@@ -41,9 +41,9 @@ RSpec.describe Admin::AccountsController, type: :controller do
       end
 
       it 'does not create an account' do
-        expect{
+        expect {
           post :create, account: FactoryGirl.attributes_for(:account)
-        }.to change{Account.count}.by(0)
+        }.to change { Account.count }.by(0)
       end
     end
 
@@ -65,9 +65,9 @@ RSpec.describe Admin::AccountsController, type: :controller do
       end
 
       it 'does not create an account' do
-        expect{
+        expect {
           post :create, account: FactoryGirl.attributes_for(:account)
-        }.to change{Account.count}.by(0)
+        }.to change { Account.count }.by(0)
       end
     end
 
@@ -101,9 +101,9 @@ RSpec.describe Admin::AccountsController, type: :controller do
         end
 
         it 'creates an account' do
-          expect{
+          expect {
             post :create, account: @account_attributes
-          }.to change{Account.count}.by(1)
+          }.to change { Account.count }.by(1)
         end
       end
 
@@ -127,9 +127,9 @@ RSpec.describe Admin::AccountsController, type: :controller do
         end
 
         it 'does not create an account' do
-          expect{
+          expect {
             post :create, account: FactoryGirl.attributes_for(:account, company_name: '')
-          }.to change{Account.count}.by(0)
+          }.to change { Account.count }.by(0)
         end
       end
     end

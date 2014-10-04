@@ -147,9 +147,9 @@ RSpec.describe MarketingController, type: :controller do
       end
 
       it 'does not create an account' do
-        expect{
+        expect {
           post :register, account: FactoryGirl.attributes_for(:account, plan_id: 0)
-        }.to change{Account.count}.by(0)
+        }.to change { Account.count }.by(0)
       end
     end
 
@@ -176,9 +176,9 @@ RSpec.describe MarketingController, type: :controller do
       end
 
       it 'does not create an account' do
-        expect{
+        expect {
           post :register, account: FactoryGirl.attributes_for(:account, plan_id: @plan.id)
-        }.to change{Account.count}.by(0)
+        }.to change { Account.count }.by(0)
       end
     end
 
@@ -217,7 +217,7 @@ RSpec.describe MarketingController, type: :controller do
       end
 
       it 'creates an account' do
-        expect{
+        expect {
           post :register, account: { address_city: 'address_city',
                                      address_country: 'AU',
                                      address_line1: 'address_line1',
@@ -227,11 +227,11 @@ RSpec.describe MarketingController, type: :controller do
                                      company_name: 'company_name',
                                      plan_id: @plan.id,
                                      card_token: 'tok_abc' }
-        }.to change{Account.count}.by(1)
+        }.to change { Account.count }.by(1)
       end
 
       it 'it does not create a new user' do
-        expect{
+        expect {
           post :register, account: { address_city: 'address_city',
                                      address_country: 'AU',
                                      address_line1: 'address_line1',
@@ -241,7 +241,7 @@ RSpec.describe MarketingController, type: :controller do
                                      company_name: 'company_name',
                                      plan_id: @plan.id,
                                      card_token: 'tok_abc' }
-        }.to change{User.count}.by(0)
+        }.to change { User.count }.by(0)
       end
 
       it 'makes the user an account admin' do
@@ -427,7 +427,7 @@ RSpec.describe MarketingController, type: :controller do
         end
 
         it 'creates an account' do
-          expect{
+          expect {
             post :register, account: { address_city: 'address_city',
                                        address_country: 'AU',
                                        address_line1: 'address_line1',
@@ -445,11 +445,11 @@ RSpec.describe MarketingController, type: :controller do
                                          password_confirmation: 'abcd1234'
                                        }]
                                      }
-          }.to change{Account.count}.by(1)
+          }.to change { Account.count }.by(1)
         end
 
         it 'it does not create a new user' do
-          expect{
+          expect {
             post :register, account: { address_city: 'address_city',
                                        address_country: 'AU',
                                        address_line1: 'address_line1',
@@ -467,7 +467,7 @@ RSpec.describe MarketingController, type: :controller do
                                          password_confirmation: 'abcd1234'
                                        }]
                                      }
-          }.to change{User.count}.by(1)
+          }.to change { User.count }.by(1)
         end
 
         it 'makes the user an account admin' do

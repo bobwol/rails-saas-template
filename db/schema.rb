@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140913115149) do
+ActiveRecord::Schema.define(version: 20141004023049) do
 
   create_table "accounts", force: true do |t|
     t.string   "company_name",                                      null: false
@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(version: 20140913115149) do
     t.integer  "plan_id",                                           null: false
     t.integer  "paused_plan_id"
     t.boolean  "active",                             default: true, null: false
+    t.string   "custom_path",            limit: 60
     t.string   "hostname"
     t.string   "subdomain",              limit: 64
     t.string   "address_line1",          limit: 120
@@ -39,6 +40,7 @@ ActiveRecord::Schema.define(version: 20140913115149) do
     t.datetime "updated_at"
   end
 
+  add_index "accounts", ["custom_path"], name: "index_accounts_on_custom_path", unique: true, using: :btree
   add_index "accounts", ["email"], name: "index_accounts_on_email", using: :btree
   add_index "accounts", ["hostname"], name: "index_accounts_on_hostname", unique: true, using: :btree
   add_index "accounts", ["paused_plan_id"], name: "index_accounts_on_paused_plan_id", using: :btree
@@ -89,6 +91,7 @@ ActiveRecord::Schema.define(version: 20140913115149) do
     t.integer  "amount",                            default: 0,       null: false
     t.integer  "trial_period_days",                 default: 30,      null: false
     t.integer  "max_users",                         default: 1,       null: false
+    t.boolean  "allow_custom_path",                 default: false,   null: false
     t.boolean  "allow_hostname",                    default: false,   null: false
     t.boolean  "allow_subdomain",                   default: false,   null: false
     t.datetime "created_at"
