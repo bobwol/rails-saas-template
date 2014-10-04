@@ -70,9 +70,6 @@ class Ability
     if user.super_admin?
       can :manage, :dashboard
       can :manage, :admin_dashboard
-#      can :index, :admin_dashboard
-#      can :events, :admin_dashboard
-#      can :jobs, :admin_dashboard
       can :manage, Account
       can :manage, Plan
       can :manage, User

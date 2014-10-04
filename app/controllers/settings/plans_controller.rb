@@ -52,7 +52,7 @@ class Settings::PlansController < Settings::ApplicationController
   def update
     @plan = Plan.available.find(params[:account][:plan_id])
     if @account.update_attributes(plan_id: @plan.id)
-      # StripeGateway.delay.subscription_update(@account.id)
+      StripeGateway.account_update(@account.id)
       AppEvent.success('Change to plan ' + @plan.to_s, current_account, current_user)
       redirect_to settings_plan_path, notice: 'Plan was successfully updated.'
     else
@@ -65,7 +65,7 @@ class Settings::PlansController < Settings::ApplicationController
 
   def pause
     if @account.pause
-      # StripeGateway.delay.subscription_update(@account.id)
+      StripeGateway.account_update(@account.id)
       AppEvent.warning('Paused the account', current_account, current_user)
       redirect_to root_path, notice: 'Account paused.'
     else
@@ -76,7 +76,7 @@ class Settings::PlansController < Settings::ApplicationController
 
   def destroy
     if @account.cancel(cancel_params)
-      # StripeGateway.delay.customer_cancel(@account.id)
+      StripeGateway.account_cancel(@account.id)
       AppEvent.alert('Cancelled the account', current_account, current_user)
       redirect_to root_path, notice: 'Account cancelled.'
     else
