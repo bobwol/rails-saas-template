@@ -135,38 +135,50 @@ RSpec.describe MarketingController, type: :controller do
 
   describe 'POST #register' do
     context 'without a valid plan_id' do
-      before :each do
-        post :register, account: FactoryGirl.attributes_for(:account, plan_id: 0)
-      end
-
       it 'to redirect to the pricing page' do
+        post :register, account: FactoryGirl.attributes_for(:account, plan_id: 0)
         expect(response).to be_redirect
         expect(response).to redirect_to(pricing_path)
       end
 
       it 'sets a alert' do
+        post :register, account: FactoryGirl.attributes_for(:account, plan_id: 0)
         expect(request.flash[:alert]).to eq 'Invalid plan.'
+      end
+
+      it 'does not create an account' do
+        expect{
+          post :register, account: FactoryGirl.attributes_for(:account, plan_id: 0)
+        }.to change{Account.count}.by(0)
       end
     end
 
     context 'there is an error' do
       before :each do
-        plan = FactoryGirl.create(:plan)
-        post :register, account: FactoryGirl.attributes_for(:account, plan_id: plan.id)
+        @plan = FactoryGirl.create(:plan)
       end
 
       it 'responds successfully with an HTTP 200 status code' do
+        post :register, account: FactoryGirl.attributes_for(:account, plan_id: @plan.id)
         expect(response).to be_success
         expect(response).to have_http_status(200)
       end
 
       it 'renders the signup form' do
+        post :register, account: FactoryGirl.attributes_for(:account, plan_id: @plan.id)
         expect(response).to render_template('marketing')
         expect(response).to render_template('signup')
       end
 
       it 'assigns an account' do
+        post :register, account: FactoryGirl.attributes_for(:account, plan_id: @plan.id)
         expect(assigns(:account)).to_not be_nil
+      end
+
+      it 'does not create an account' do
+        expect{
+          post :register, account: FactoryGirl.attributes_for(:account, plan_id: @plan.id)
+        }.to change{Account.count}.by(0)
       end
     end
 
@@ -174,9 +186,10 @@ RSpec.describe MarketingController, type: :controller do
       before :each do
         @user = FactoryGirl.create(:user)
         sign_in :user, @user
-        plan = FactoryGirl.create(:plan)
-        @user_count = User.count
-        @account_count = Account.count
+        @plan = FactoryGirl.create(:plan)
+      end
+
+      it 'to redirect to the pricing page' do
         post :register, account: { address_city: 'address_city',
                                    address_country: 'AU',
                                    address_line1: 'address_line1',
@@ -184,29 +197,63 @@ RSpec.describe MarketingController, type: :controller do
                                    address_state: 'address_state',
                                    address_zip: 'zipcode',
                                    company_name: 'company_name',
-                                   plan_id: plan.id,
+                                   plan_id: @plan.id,
                                    card_token: 'tok_abc' }
-      end
-
-      it 'to redirect to the pricing page' do
         expect(response).to be_redirect
         expect(response).to redirect_to(new_user_session_path)
       end
 
       it 'sets a notice' do
+        post :register, account: { address_city: 'address_city',
+                                   address_country: 'AU',
+                                   address_line1: 'address_line1',
+                                   address_line2: 'address_line2',
+                                   address_state: 'address_state',
+                                   address_zip: 'zipcode',
+                                   company_name: 'company_name',
+                                   plan_id: @plan.id,
+                                   card_token: 'tok_abc' }
         expect(request.flash[:notice]).to eq 'Success. Please log in to continue.'
       end
 
-      it 'it creates a new account' do
-        @new_account_count = @account_count + 1
-        expect(Account.count).to eq @new_account_count
+      it 'creates an account' do
+        expect{
+          post :register, account: { address_city: 'address_city',
+                                     address_country: 'AU',
+                                     address_line1: 'address_line1',
+                                     address_line2: 'address_line2',
+                                     address_state: 'address_state',
+                                     address_zip: 'zipcode',
+                                     company_name: 'company_name',
+                                     plan_id: @plan.id,
+                                     card_token: 'tok_abc' }
+        }.to change{Account.count}.by(1)
       end
 
       it 'it does not create a new user' do
-        expect(User.count).to eq @user_count
+        expect{
+          post :register, account: { address_city: 'address_city',
+                                     address_country: 'AU',
+                                     address_line1: 'address_line1',
+                                     address_line2: 'address_line2',
+                                     address_state: 'address_state',
+                                     address_zip: 'zipcode',
+                                     company_name: 'company_name',
+                                     plan_id: @plan.id,
+                                     card_token: 'tok_abc' }
+        }.to change{User.count}.by(0)
       end
 
       it 'makes the user an account admin' do
+        post :register, account: { address_city: 'address_city',
+                                   address_country: 'AU',
+                                   address_line1: 'address_line1',
+                                   address_line2: 'address_line2',
+                                   address_state: 'address_state',
+                                   address_zip: 'zipcode',
+                                   company_name: 'company_name',
+                                   plan_id: @plan.id,
+                                   card_token: 'tok_abc' }
         account = assigns(:account)
         expect(account).to_not be_nil
         expect(account.user_permissions[0]).to_not be_nil
@@ -217,9 +264,11 @@ RSpec.describe MarketingController, type: :controller do
     context 'without a logged in user' do
       context 'and no user provided ' do
         before :each do
-          plan = FactoryGirl.create(:plan)
+          @plan = FactoryGirl.create(:plan)
           @user_count = User.count
-          @account_count = Account.count
+        end
+
+        it 'responds successfully with an HTTP 200 status code' do
           post :register, account: { address_city: 'address_city',
                                      address_country: 'AU',
                                      address_line1: 'address_line1',
@@ -227,30 +276,46 @@ RSpec.describe MarketingController, type: :controller do
                                      address_state: 'address_state',
                                      address_zip: 'zipcode',
                                      company_name: 'company_name',
-                                     plan_id: plan.id,
+                                     plan_id: @plan.id,
                                      card_token: 'tok_abc' }
-        end
-
-        it 'responds successfully with an HTTP 200 status code' do
           expect(response).to be_success
           expect(response).to have_http_status(200)
         end
 
         it 'renders the signup form' do
+          post :register, account: { address_city: 'address_city',
+                                     address_country: 'AU',
+                                     address_line1: 'address_line1',
+                                     address_line2: 'address_line2',
+                                     address_state: 'address_state',
+                                     address_zip: 'zipcode',
+                                     company_name: 'company_name',
+                                     plan_id: @plan.id,
+                                     card_token: 'tok_abc' }
           expect(response).to render_template('marketing')
           expect(response).to render_template('signup')
         end
 
         it 'assigns an account' do
+          post :register, account: { address_city: 'address_city',
+                                     address_country: 'AU',
+                                     address_line1: 'address_line1',
+                                     address_line2: 'address_line2',
+                                     address_state: 'address_state',
+                                     address_zip: 'zipcode',
+                                     company_name: 'company_name',
+                                     plan_id: @plan.id,
+                                     card_token: 'tok_abc' }
           expect(assigns(:account)).to_not be_nil
         end
       end
 
       context 'and invalid user provided ' do
         before :each do
-          plan = FactoryGirl.create(:plan)
-          @user_count = User.count
-          @account_count = Account.count
+          @plan = FactoryGirl.create(:plan)
+        end
+
+        it 'responds successfully with an HTTP 200 status code' do
           post :register, account: { address_city: 'address_city',
                                      address_country: 'AU',
                                      address_line1: 'address_line1',
@@ -258,7 +323,7 @@ RSpec.describe MarketingController, type: :controller do
                                      address_state: 'address_state',
                                      address_zip: 'zipcode',
                                      company_name: 'company_name',
-                                     plan_id: plan.id,
+                                     plan_id: @plan.id,
                                      card_token: 'tok_abc',
                                      user_attributes: [{
                                        first_name: '',
@@ -267,28 +332,11 @@ RSpec.describe MarketingController, type: :controller do
                                        password: '',
                                        password_confirmation: '' }]
                                    }
-        end
-
-        it 'responds successfully with an HTTP 200 status code' do
           expect(response).to be_success
           expect(response).to have_http_status(200)
         end
 
         it 'renders the signup form' do
-          expect(response).to render_template('marketing')
-          expect(response).to render_template('signup')
-        end
-
-        it 'assigns an account' do
-          expect(assigns(:account)).to_not be_nil
-        end
-      end
-
-      context 'and a valid user provided ' do
-        before :each do
-          plan = FactoryGirl.create(:plan)
-          @user_count = User.count
-          @account_count = Account.count
           post :register, account: { address_city: 'address_city',
                                      address_country: 'AU',
                                      address_line1: 'address_line1',
@@ -296,7 +344,54 @@ RSpec.describe MarketingController, type: :controller do
                                      address_state: 'address_state',
                                      address_zip: 'zipcode',
                                      company_name: 'company_name',
-                                     plan_id: plan.id,
+                                     plan_id: @plan.id,
+                                     card_token: 'tok_abc',
+                                     user_attributes: [{
+                                       first_name: '',
+                                       last_name: '',
+                                       email: '',
+                                       password: '',
+                                       password_confirmation: '' }]
+                                   }
+          expect(response).to render_template('marketing')
+          expect(response).to render_template('signup')
+        end
+
+        it 'assigns an account' do
+          post :register, account: { address_city: 'address_city',
+                                     address_country: 'AU',
+                                     address_line1: 'address_line1',
+                                     address_line2: 'address_line2',
+                                     address_state: 'address_state',
+                                     address_zip: 'zipcode',
+                                     company_name: 'company_name',
+                                     plan_id: @plan.id,
+                                     card_token: 'tok_abc',
+                                     user_attributes: [{
+                                       first_name: '',
+                                       last_name: '',
+                                       email: '',
+                                       password: '',
+                                       password_confirmation: '' }]
+                                   }
+          expect(assigns(:account)).to_not be_nil
+        end
+      end
+
+      context 'and a valid user provided ' do
+        before :each do
+          @plan = FactoryGirl.create(:plan)
+        end
+
+        it 'to redirect to the pricing page' do
+          post :register, account: { address_city: 'address_city',
+                                     address_country: 'AU',
+                                     address_line1: 'address_line1',
+                                     address_line2: 'address_line2',
+                                     address_state: 'address_state',
+                                     address_zip: 'zipcode',
+                                     company_name: 'company_name',
+                                     plan_id: @plan.id,
                                      card_token: 'tok_abc',
                                      users_attributes: [{
                                        first_name: 'John',
@@ -306,28 +401,93 @@ RSpec.describe MarketingController, type: :controller do
                                        password_confirmation: 'abcd1234'
                                      }]
                                    }
-        end
-
-        it 'to redirect to the pricing page' do
           expect(response).to be_redirect
           expect(response).to redirect_to(new_user_session_path)
         end
 
         it 'sets a notice' do
+          post :register, account: { address_city: 'address_city',
+                                     address_country: 'AU',
+                                     address_line1: 'address_line1',
+                                     address_line2: 'address_line2',
+                                     address_state: 'address_state',
+                                     address_zip: 'zipcode',
+                                     company_name: 'company_name',
+                                     plan_id: @plan.id,
+                                     card_token: 'tok_abc',
+                                     users_attributes: [{
+                                       first_name: 'John',
+                                       last_name: 'Smith',
+                                       email: 'john@example.com',
+                                       password: 'abcd1234',
+                                       password_confirmation: 'abcd1234'
+                                     }]
+                                   }
           expect(request.flash[:notice]).to eq 'Success. Please log in to continue.'
         end
 
-        it 'it creates a new account' do
-          @new_account_count = @account_count + 1
-          expect(Account.count).to eq @new_account_count
+        it 'creates an account' do
+          expect{
+            post :register, account: { address_city: 'address_city',
+                                       address_country: 'AU',
+                                       address_line1: 'address_line1',
+                                       address_line2: 'address_line2',
+                                       address_state: 'address_state',
+                                       address_zip: 'zipcode',
+                                       company_name: 'company_name',
+                                       plan_id: @plan.id,
+                                       card_token: 'tok_abc',
+                                       users_attributes: [{
+                                         first_name: 'John',
+                                         last_name: 'Smith',
+                                         email: 'john@example.com',
+                                         password: 'abcd1234',
+                                         password_confirmation: 'abcd1234'
+                                       }]
+                                     }
+          }.to change{Account.count}.by(1)
         end
 
-        it 'it creates a new user' do
-          @new_user_count = @user_count + 1
-          expect(User.count).to eq @new_user_count
+        it 'it does not create a new user' do
+          expect{
+            post :register, account: { address_city: 'address_city',
+                                       address_country: 'AU',
+                                       address_line1: 'address_line1',
+                                       address_line2: 'address_line2',
+                                       address_state: 'address_state',
+                                       address_zip: 'zipcode',
+                                       company_name: 'company_name',
+                                       plan_id: @plan.id,
+                                       card_token: 'tok_abc',
+                                       users_attributes: [{
+                                         first_name: 'John',
+                                         last_name: 'Smith',
+                                         email: 'john@example.com',
+                                         password: 'abcd1234',
+                                         password_confirmation: 'abcd1234'
+                                       }]
+                                     }
+          }.to change{User.count}.by(1)
         end
 
         it 'makes the user an account admin' do
+          post :register, account: { address_city: 'address_city',
+                                     address_country: 'AU',
+                                     address_line1: 'address_line1',
+                                     address_line2: 'address_line2',
+                                     address_state: 'address_state',
+                                     address_zip: 'zipcode',
+                                     company_name: 'company_name',
+                                     plan_id: @plan.id,
+                                     card_token: 'tok_abc',
+                                     users_attributes: [{
+                                       first_name: 'John',
+                                       last_name: 'Smith',
+                                       email: 'john@example.com',
+                                       password: 'abcd1234',
+                                       password_confirmation: 'abcd1234'
+                                     }]
+                                   }
           account = Account.find(assigns(:account).id)
           expect(account.user_permissions.count).to be >= 1
           account.user_permissions.each do |up|

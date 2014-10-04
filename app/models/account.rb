@@ -131,7 +131,8 @@ class Account < ActiveRecord::Base
   end
 
   def restore
-    params = { cancellation_reason: nil,
+    params = { cancellation_category: nil,
+               cancellation_reason: nil,
                cancellation_message: nil,
                cancelled_at: nil,
                active: true }

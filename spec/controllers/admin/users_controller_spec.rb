@@ -39,6 +39,12 @@ RSpec.describe Admin::UsersController, type: :controller do
         expect(response).to be_redirect
         expect(response).to redirect_to(new_user_session_path)
       end
+
+      it 'does not create a user' do
+        expect{
+          post :create, user: FactoryGirl.attributes_for(:user)
+        }.to change{User.count}.by(0)
+      end
     end
 
     context 'as unauthorized users' do
@@ -56,6 +62,12 @@ RSpec.describe Admin::UsersController, type: :controller do
         post :create, user: FactoryGirl.attributes_for(:user)
         expect(response).to render_template('errors/forbidden')
         expect(response).to render_template('layouts/errors')
+      end
+
+      it 'does not create a user' do
+        expect{
+          post :create, user: FactoryGirl.attributes_for(:user)
+        }.to change{User.count}.by(0)
       end
     end
 
@@ -82,6 +94,12 @@ RSpec.describe Admin::UsersController, type: :controller do
           post :create, user: FactoryGirl.attributes_for(:user)
           expect(request.flash[:notice]).to eq 'User was successfully created.'
         end
+
+        it 'creates a user' do
+          expect{
+            post :create, user: FactoryGirl.attributes_for(:user)
+          }.to change{User.count}.by(1)
+        end
       end
 
       context 'with invalid attributes' do
@@ -102,6 +120,12 @@ RSpec.describe Admin::UsersController, type: :controller do
           expect(user).to_not be_nil
           expect(user).to be_new_record
         end
+
+        it 'does not create a user' do
+          expect{
+            post :create, user: FactoryGirl.attributes_for(:user, email: '')
+          }.to change{User.count}.by(0)
+        end
       end
     end
   end
@@ -116,6 +140,12 @@ RSpec.describe Admin::UsersController, type: :controller do
         delete :destroy, id: @user.id
         expect(response).to be_redirect
         expect(response).to redirect_to(new_user_session_path)
+      end
+
+      it 'does not delete a user' do
+        expect{
+          delete :destroy, id: @user.id
+        }.to change{User.count}.by(0)
       end
     end
 
@@ -133,6 +163,12 @@ RSpec.describe Admin::UsersController, type: :controller do
         delete :destroy, id: @user.id
         expect(response).to render_template('errors/forbidden')
         expect(response).to render_template('layouts/errors')
+      end
+
+      it 'does not delete a user' do
+        expect{
+          delete :destroy, id: @user.id
+        }.to change{User.count}.by(0)
       end
     end
 
@@ -153,6 +189,12 @@ RSpec.describe Admin::UsersController, type: :controller do
           delete :destroy, id: @user.id
           expect(request.flash[:notice]).to eq 'User was successfully removed.'
         end
+
+        it 'deletes a user' do
+          expect{
+            delete :destroy, id: @user.id
+          }.to change{User.count}.by(-1)
+        end
       end
 
       context 'deleting yourself' do
@@ -165,6 +207,12 @@ RSpec.describe Admin::UsersController, type: :controller do
         it 'sets a notice' do
           delete :destroy, id: @admin.id
           expect(request.flash[:alert]).to eq 'You cannot delete yourself.'
+        end
+
+        it 'does not delete a user' do
+          expect{
+            delete :destroy, id: @admin.id
+          }.to change{User.count}.by(0)
         end
       end
     end

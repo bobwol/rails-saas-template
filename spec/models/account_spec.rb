@@ -472,6 +472,43 @@ RSpec.describe Account, type: :model do
     end
   end
 
+  describe '.paused_plan_stripe_id' do
+    it 'returns the paused plans allow_subdomain' do
+      paused_plan = FactoryGirl.create(:plan)
+      account = FactoryGirl.build(:account, paused_plan: paused_plan)
+
+      stripe_id = "plan_#{paused_plan.id}"
+      paused_plan.stripe_id = stripe_id
+      expect(account.paused_plan_stripe_id).to eq stripe_id
+    end
+  end
+
+  describe '.plan_allow_hostname' do
+    it 'returns the plans allow_hostname' do
+      account = FactoryGirl.build(:account)
+      plan = account.plan
+
+      plan.allow_hostname = true
+      expect(account.plan_allow_hostname).to eq true
+
+      plan.allow_hostname = false
+      expect(account.plan_allow_hostname).to eq false
+    end
+  end
+
+  describe '.plan_allow_subdomain' do
+    it 'returns the plans allow_subdomain' do
+      account = FactoryGirl.build(:account)
+      plan = account.plan
+
+      plan.allow_subdomain = true
+      expect(account.plan_allow_subdomain).to eq true
+
+      plan.allow_subdomain = false
+      expect(account.plan_allow_subdomain).to eq false
+    end
+  end
+
   describe '.plan_id' do
     it 'must be an integer' do
       account = FactoryGirl.build(:account, plan_id: 5.3)
@@ -483,6 +520,62 @@ RSpec.describe Account, type: :model do
       account = FactoryGirl.build(:account, plan_id: '')
       expect(account).to_not be_valid
       expect(account.errors[:plan_id]).to include 'can\'t be blank'
+    end
+  end
+
+  describe '.plan_stripe_id' do
+    it 'returns the plans allow_subdomain' do
+      account = FactoryGirl.build(:account)
+      plan = account.plan
+
+      stripe_id = "plan_#{plan.id}"
+      plan.stripe_id = stripe_id
+      expect(account.plan_stripe_id).to eq stripe_id
+    end
+  end
+
+  describe '.restore' do
+    it 'removes the paused plan' do
+      account = FactoryGirl.create(:account,
+                                   active: false,
+                                   cancelled_at: Time.now - 1.days,
+                                   cancellation_category: 'Something',
+                                   cancellation_message: 'Something',
+                                   cancellation_reason: 'Something')
+      expect(account.restore).to eq true
+      expect(account.active).to eq true
+      expect(account.cancelled_at).to be_nil
+      expect(account.cancellation_category).to be_nil
+      expect(account.cancellation_message).to be_nil
+      expect(account.cancellation_reason).to be_nil
+    end
+  end
+
+  describe '.status' do
+    it 'is canclled when not active' do
+      account = FactoryGirl.build(:account, active: false)
+      expect(account.status).to eq :cancelled
+    end
+
+    it 'is cancel_pending with cancelled_at not nil but still active' do
+      account = FactoryGirl.build(:account, active: true, cancelled_at: Time.now)
+      expect(account.status).to eq :cancel_pending
+    end
+
+    it 'is expired if past expires_at but still active' do
+      account = FactoryGirl.build(:account, active: true, expires_at: Time.now - 1.days)
+      expect(account.status).to eq :expired
+    end
+
+    it 'is paused if there is a a pused plan' do
+      paused_plan = FactoryGirl.create(:plan)
+      account = FactoryGirl.build(:account, paused_plan: paused_plan)
+      expect(account.status).to eq :paused
+    end
+
+    it 'is active by default' do
+      account = FactoryGirl.build(:account)
+      expect(account.status).to eq :active
     end
   end
 

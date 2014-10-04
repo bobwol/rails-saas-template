@@ -39,6 +39,12 @@ RSpec.describe Admin::PlansController, type: :controller do
         expect(response).to be_redirect
         expect(response).to redirect_to(new_user_session_path)
       end
+
+      it 'does not create a plan' do
+        expect{
+          post :create, plan: FactoryGirl.attributes_for(:plan)
+        }.to change{Plan.count}.by(0)
+      end
     end
 
     context 'as unauthorized users' do
@@ -56,6 +62,12 @@ RSpec.describe Admin::PlansController, type: :controller do
         post :create, plan: FactoryGirl.attributes_for(:plan)
         expect(response).to render_template('errors/forbidden')
         expect(response).to render_template('layouts/errors')
+      end
+
+      it 'does not create a plan' do
+        expect{
+          post :create, plan: FactoryGirl.attributes_for(:plan)
+        }.to change{Plan.count}.by(0)
       end
     end
 
@@ -82,6 +94,12 @@ RSpec.describe Admin::PlansController, type: :controller do
           post :create, plan: FactoryGirl.attributes_for(:plan)
           expect(request.flash[:notice]).to eq 'Plan was successfully created.'
         end
+
+        it 'creates a plan' do
+          expect{
+            post :create, plan: FactoryGirl.attributes_for(:plan)
+          }.to change{Plan.count}.by(1)
+        end
       end
 
       context 'with invalid attributes' do
@@ -102,6 +120,12 @@ RSpec.describe Admin::PlansController, type: :controller do
           expect(plan).to_not be_nil
           expect(plan).to be_new_record
         end
+
+        it 'does not create a plan' do
+          expect{
+          post :create, plan: FactoryGirl.attributes_for(:plan, name: '')
+          }.to change{Plan.count}.by(0)
+        end
       end
     end
   end
@@ -116,6 +140,12 @@ RSpec.describe Admin::PlansController, type: :controller do
         delete :destroy, id: @plan.id
         expect(response).to be_redirect
         expect(response).to redirect_to(new_user_session_path)
+      end
+
+      it 'does not remove a plan' do
+        expect{
+          delete :destroy, id: @plan.id
+        }.to change{Plan.count}.by(0)
       end
     end
 
@@ -135,6 +165,12 @@ RSpec.describe Admin::PlansController, type: :controller do
         expect(response).to render_template('errors/forbidden')
         expect(response).to render_template('layouts/errors')
       end
+
+      it 'does not remove a plan' do
+        expect{
+          delete :destroy, id: @plan.id
+        }.to change{Plan.count}.by(0)
+      end
     end
 
     context 'as super admin user' do
@@ -152,6 +188,12 @@ RSpec.describe Admin::PlansController, type: :controller do
       it 'sets a notice' do
         delete :destroy, id: @plan.id
         expect(request.flash[:notice]).to eq 'Plan was successfully removed.'
+      end
+
+      it 'removes a plan' do
+        expect{
+          delete :destroy, id: @plan.id
+        }.to change{Plan.count}.by(-1)
       end
     end
   end

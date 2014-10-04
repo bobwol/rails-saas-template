@@ -39,6 +39,12 @@ RSpec.describe Admin::AccountsController, type: :controller do
         expect(response).to be_redirect
         expect(response).to redirect_to(new_user_session_path)
       end
+
+      it 'does not create an account' do
+        expect{
+          post :create, account: FactoryGirl.attributes_for(:account)
+        }.to change{Account.count}.by(0)
+      end
     end
 
     context 'as unauthorized users' do
@@ -56,6 +62,12 @@ RSpec.describe Admin::AccountsController, type: :controller do
         post :create, account: FactoryGirl.attributes_for(:account)
         expect(response).to render_template('errors/forbidden')
         expect(response).to render_template('layouts/errors')
+      end
+
+      it 'does not create an account' do
+        expect{
+          post :create, account: FactoryGirl.attributes_for(:account)
+        }.to change{Account.count}.by(0)
       end
     end
 
@@ -87,6 +99,12 @@ RSpec.describe Admin::AccountsController, type: :controller do
           post :create, account: @account_attributes
           expect(request.flash[:notice]).to eq 'Account was successfully created.'
         end
+
+        it 'creates an account' do
+          expect{
+            post :create, account: @account_attributes
+          }.to change{Account.count}.by(1)
+        end
       end
 
       context 'with invalid attributes' do
@@ -106,6 +124,12 @@ RSpec.describe Admin::AccountsController, type: :controller do
           account = assigns(:account)
           expect(account).to_not be_nil
           expect(account).to be_new_record
+        end
+
+        it 'does not create an account' do
+          expect{
+            post :create, account: FactoryGirl.attributes_for(:account, company_name: '')
+          }.to change{Account.count}.by(0)
         end
       end
     end
