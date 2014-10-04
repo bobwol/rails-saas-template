@@ -32,32 +32,36 @@ require 'rails_helper'
 
 # Tests for the application dashboard
 RSpec.describe DashboardController, type: :controller do
-  # Requesting http://app.[your-domain]/ should show the application dashboard
+  # Requesting /path should show the application dashboard
   describe 'GET #index' do
+    before :each do
+      @account = FactoryGirl.create(:account)
+    end
+
     context 'as anonymous user' do
       it 'redirect to login page' do
-        get :index
+        get :index, path: @account.id
         expect(response).to redirect_to(new_user_session_path)
       end
     end
 
     context 'as unauthorized users' do
       pending 'These tests cannot be implemented until accounts are working'
-      # before(:each) do
-      #   user = FactoryGirl.create(:user)
-      #   sign_in :user, user
-      # end
+        before(:each) do
+          user = FactoryGirl.create(:user)
+          sign_in :user, user
+        end
 
-      # it 'responds with forbidden' do
-      #   get :index
-      #   expect(response).to be_forbidden
-      # end
+        it 'responds with forbidden' do
+          get :index, path: @account.id
+          expect(response).to be_forbidden
+        end
 
-      # it 'renders the forbidden' do
-      #  get :index
-      #  expect(response).to render_template('errors/forbidden')
-      #  expect(response).to render_template('layouts/errors')
-      # end
+        it 'renders the forbidden' do
+          get :index, path: @account.id
+          expect(response).to render_template('errors/forbidden')
+          expect(response).to render_template('layouts/errors')
+        end
     end
 
     context 'as super admin user' do
@@ -67,13 +71,13 @@ RSpec.describe DashboardController, type: :controller do
       end
 
       it 'responds successfully with an HTTP 200 status code' do
-        get :index
+        get :index, path: @account.id
         expect(response).to be_success
         expect(response).to have_http_status(200)
       end
 
       it 'renders the index template' do
-        get :index
+        get :index, path: @account.id
         expect(response).to render_template('index')
         expect(response).to render_template('layouts/application')
       end

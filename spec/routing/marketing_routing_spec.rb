@@ -32,34 +32,30 @@ require 'rails_helper'
 
 # Tests for marketing routing
 RSpec.describe 'routing to marketing homepage', type: :routing do
-  it 'routes http://www.example.com/ to marketing#index' do
-    expect(get: 'http://www.example.com/').to route_to(
-      subdomain: 'www',
+  it 'routes / to marketing#index' do
+    expect(get: '/').to route_to(
       controller: 'marketing',
       action: 'index'
     )
   end
 
-  it 'routes http://www.example.com/pricing to marketing#index' do
-    expect(get: 'http://www.example.com/pricing').to route_to(
-      subdomain: 'www',
+  it 'routes /pricing to marketing#index' do
+    expect(get: '/pricing').to route_to(
       controller: 'marketing',
       action: 'pricing'
     )
   end
 
-  it 'routes http://www.example.com/signup/1 to marketing#index' do
-    expect(get: 'http://www.example.com/signup/1').to route_to(
-      subdomain: 'www',
+  it 'routes /signup/1 to marketing#index' do
+    expect(get: '/signup/1').to route_to(
       controller: 'marketing',
       action: 'signup',
       plan_id: '1'
     )
   end
 
-  it 'routes http://www.example.com/signup to marketing#index' do
-    expect(post: 'http://www.example.com/signup').to route_to(
-      subdomain: 'www',
+  it 'routes /signup to marketing#index' do
+    expect(post: '/signup').to route_to(
       controller: 'marketing',
       action: 'register'
     )

@@ -32,46 +32,52 @@ require 'rails_helper'
 
 # Tests for settings/plans routing
 RSpec.describe 'routing for the settings plans', type: :routing do
-  it 'routes GET /settings/plan to settings/plans#show' do
-    expect(get: '/settings/plan').to route_to(
+  it 'routes GET /path/settings/plan to settings/plans#show' do
+    expect(get: '/path/settings/plan').to route_to(
       controller: 'settings/plans',
-      action: 'show'
+      action: 'show',
+      path: 'path'
     )
   end
 
-  it 'routes GET /settings/plan/1 to settings/plans#edit' do
-    expect(get: '/settings/plan/1').to route_to(
+  it 'routes GET /path/settings/plan/1 to settings/plans#edit' do
+    expect(get: '/path/settings/plan/1').to route_to(
       controller: 'settings/plans',
       action: 'edit',
-      id: '1'
+      id: '1',
+      path: 'path'
     )
   end
 
-  it 'routes PATCH /settings/plan to settings/plans#update' do
-    expect(patch: '/settings/plan').to route_to(
+  it 'routes PATCH /path/settings/plan to settings/plans#update' do
+    expect(patch: '/path/settings/plan').to route_to(
       controller: 'settings/plans',
-      action: 'update'
+      action: 'update',
+      path: 'path'
     )
   end
 
-  it 'routes DELETE /settings/plan to settings/plans#destroy' do
-    expect(delete: '/settings/plan').to route_to(
+  it 'routes DELETE /path/settings/plan to settings/plans#destroy' do
+    expect(delete: '/path/settings/plan').to route_to(
       controller: 'settings/plans',
-      action: 'destroy'
+      action: 'destroy',
+      path: 'path'
     )
   end
 
-  it 'routes GET /settings/plan/cancel to settings/plans#cancel' do
-    expect(get: '/settings/plan/cancel').to route_to(
+  it 'routes GET /path/settings/plan/cancel to settings/plans#cancel' do
+    expect(get: '/path/settings/plan/cancel').to route_to(
       controller: 'settings/plans',
-      action: 'cancel'
+      action: 'cancel',
+      path: 'path'
     )
   end
 
-  it 'routes PATCH /settings/plans/pause to settings/plans#pause' do
-    expect(patch: '/settings/plan/pause').to route_to(
+  it 'routes PATCH /path/settings/plans/pause to settings/plans#pause' do
+    expect(patch: '/path/settings/plan/pause').to route_to(
       controller: 'settings/plans',
-      action: 'pause'
+      action: 'pause',
+      path: 'path'
     )
   end
 end

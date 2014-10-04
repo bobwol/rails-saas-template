@@ -32,31 +32,35 @@ require 'rails_helper'
 
 # Tests for settings/accounts routing
 RSpec.describe 'routing for the settings accounts', type: :routing do
-  it 'routes GET /settings to settings/accounts#home' do
-    expect(get: '/settings').to route_to(
+  it 'routes GET /path/settings to settings/accounts#home' do
+    expect(get: '/path/settings').to route_to(
       controller: 'settings/accounts',
-      action: 'home'
+      action: 'home',
+      path: 'path'
     )
   end
 
-  it 'routes GET /settings/account to settings/accounts#show' do
-    expect(get: '/settings/account').to route_to(
+  it 'routes GET /path/settings/account to settings/accounts#show' do
+    expect(get: '/path/settings/account').to route_to(
       controller: 'settings/accounts',
-      action: 'show'
+      action: 'show',
+      path: 'path'
     )
   end
 
-  it 'routes GET /settings/account/edit to settings/accounts#edit' do
-    expect(get: '/settings/account/edit').to route_to(
+  it 'routes GET /path/settings/account/edit to settings/accounts#edit' do
+    expect(get: '/path/settings/account/edit').to route_to(
       controller: 'settings/accounts',
-      action: 'edit'
+      action: 'edit',
+      path: 'path'
     )
   end
 
-  it 'routes PATCH /settings/account to settings/accounts#update' do
-    expect(patch: '/settings/account').to route_to(
+  it 'routes PATCH /path/settings/account to settings/accounts#update' do
+    expect(patch: '/path/settings/account').to route_to(
       controller: 'settings/accounts',
-      action: 'update'
+      action: 'update',
+      path: 'path'
     )
   end
 end

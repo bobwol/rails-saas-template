@@ -61,20 +61,27 @@ class Ability
     # https://github.com/CanCanCommunity/cancancan/wiki/Defining-Abilities
     return if user.nil?
 
-    permissions = user.user_permissions.where(account: account).first
+    if account != nil
+      permissions = user.user_permissions.where(account: account).first
+    else
+      permissions = nil
+    end
 
     if user.super_admin?
-      can :index, :admin_dashboard
-      can :events, :admin_dashboard
-      can :jobs, :admin_dashboard
+      can :manage, :dashboard
+      can :manage, :admin_dashboard
+#      can :index, :admin_dashboard
+#      can :events, :admin_dashboard
+#      can :jobs, :admin_dashboard
       can :manage, Account
       can :manage, Plan
       can :manage, User
     end
 
-    can :manage, Account, id: account.id if !permissions.nil? && permissions.account_admin?
-
-    can :index, :dashboard
+    if !permissions.nil? && permissions.account_admin?
+      can :manage, Account, id: account.id
+      can :index, :dashboard
+    end
 
     cannot :pause, Account, plan: { paused_plan: nil }
   end

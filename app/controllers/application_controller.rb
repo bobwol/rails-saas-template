@@ -63,8 +63,7 @@ class ApplicationController < ActionController::Base
     Ability.new(current_user, current_account)
   end
 
-  # This is only required for path based multi-tenant support but having it shouldn't hurt. It makes sure that the :path
-  # is available when building paths
+  # This makes sure we retain the :path value for routes that require it
   def url_options
     if params[:path]
       { path: params[:path] }.merge(super)

@@ -62,9 +62,11 @@ class Account < ActiveRecord::Base
   default_scope { order('company_name ASC') }
 
   before_validation do |account|
-    account.custom_path = nil unless account.plan_allow_custom_path
-    account.hostname = nil unless account.plan_allow_hostname
-    account.subdomain = nil unless account.plan_allow_subdomain
+    unless account.plan.nil?
+      account.custom_path = nil unless account.plan_allow_custom_path
+      account.hostname = nil unless account.plan_allow_hostname
+      account.subdomain = nil unless account.plan_allow_subdomain
+    end
   end
 
   validates :address_city, length: { maximum: 120 }

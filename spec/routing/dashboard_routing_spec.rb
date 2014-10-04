@@ -32,10 +32,11 @@ require 'rails_helper'
 
 # Tests for dashboard routing
 RSpec.describe 'routing to application homepage', type: :routing do
-  it 'routes http://app.example.com/ to dashboard#index' do
-    expect(get: 'http://app.example.com/').to route_to(
+  it 'routes /path to dashboard#index' do
+    expect(get: '/path').to route_to(
       controller: 'dashboard',
-      action: 'index'
+      action: 'index',
+      path: 'path'
     )
   end
 end
