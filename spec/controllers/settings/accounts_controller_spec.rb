@@ -35,7 +35,6 @@ RSpec.describe Settings::AccountsController, type: :controller do
   describe 'GET #edit' do
     before(:each) do
       @account = FactoryGirl.create(:account)
-      @controller.instance_variable_set(:@current_account, @account)
     end
 
     context 'as anonymous user' do
@@ -272,7 +271,7 @@ RSpec.describe Settings::AccountsController, type: :controller do
         it 'it redirects to account' do
           patch :update, path: @account.id, account: FactoryGirl.attributes_for(:account)
           expect(response).to be_redirect
-          expect(response).to redirect_to(settings_account_path)
+          expect(response).to redirect_to(settings_root_path)
         end
 
         it 'sets a notice' do
@@ -317,7 +316,7 @@ RSpec.describe Settings::AccountsController, type: :controller do
         it 'it redirects to account' do
           patch :update, path: @account.id, account: FactoryGirl.attributes_for(:account)
           expect(response).to be_redirect
-          expect(response).to redirect_to(settings_account_path)
+          expect(response).to redirect_to(settings_root_path)
         end
 
         it 'sets a notice' do

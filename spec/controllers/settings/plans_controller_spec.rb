@@ -37,7 +37,6 @@ RSpec.describe Settings::PlansController, type: :controller do
       @plan = FactoryGirl.create(:plan, currency: 'USD')
       @plan1 = FactoryGirl.create(:plan, currency: 'USD')
       @account = FactoryGirl.create(:account, plan: @plan)
-      @controller.instance_variable_set(:@current_account, @account)
     end
 
     context 'as anonymous user' do
@@ -291,7 +290,7 @@ RSpec.describe Settings::PlansController, type: :controller do
         it 'it redirects to plans' do
           patch :update, path: @account.id, account: FactoryGirl.attributes_for(:account, plan_id: @plan1.id)
           expect(response).to be_redirect
-          expect(response).to redirect_to(settings_plan_path)
+          expect(response).to redirect_to(settings_root_path)
         end
 
         it 'sets a notice' do
@@ -336,7 +335,7 @@ RSpec.describe Settings::PlansController, type: :controller do
         it 'it redirects to plans' do
           patch :update, path: @account.id, account: FactoryGirl.attributes_for(:account, plan_id: @plan1.id)
           expect(response).to be_redirect
-          expect(response).to redirect_to(settings_plan_path)
+          expect(response).to redirect_to(settings_root_path)
         end
 
         it 'sets a notice' do

@@ -40,9 +40,9 @@ class Settings::AccountsController < Settings::ApplicationController
 
   def update
     if @account.update_attributes(accounts_params)
-      # StripeGateway.delay.customer_update(@account.id)
+      StripeGateway.account_update(@account.id)
       AppEvent.success('Updated account details', current_account, current_user)
-      redirect_to settings_account_path, notice: 'Account was successfully updated.'
+      redirect_to settings_root_path, notice: 'Account was successfully updated.'
     else
       render 'edit'
     end

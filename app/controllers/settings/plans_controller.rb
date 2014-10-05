@@ -54,7 +54,7 @@ class Settings::PlansController < Settings::ApplicationController
     if @account.update_attributes(plan_id: @plan.id)
       StripeGateway.account_update(@account.id)
       AppEvent.success('Change to plan ' + @plan.to_s, current_account, current_user)
-      redirect_to settings_plan_path, notice: 'Plan was successfully updated.'
+      redirect_to settings_root_path, notice: 'Plan was successfully updated.'
     else
       render 'edit'
     end
