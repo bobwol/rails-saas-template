@@ -34,19 +34,19 @@ require 'rails_helper'
 RSpec.describe DashboardController, type: :controller do
   # Requesting /path should show the application dashboard
   describe 'GET #index' do
-    before :each do
-      @account = FactoryGirl.create(:account)
-    end
-
-    context 'as anonymous user' do
-      it 'redirect to login page' do
-        get :index, path: @account.id
-        expect(response).to redirect_to(new_user_session_path)
+    context 'the account exists and is active' do
+      before :each do
+        @account = FactoryGirl.create(:account)
       end
-    end
 
-    context 'as unauthorized users' do
-      pending 'These tests cannot be implemented until accounts are working'
+      context 'as anonymous user' do
+        it 'redirect to login page' do
+          get :index, path: @account.id
+          expect(response).to redirect_to(new_user_session_path)
+        end
+      end
+
+      context 'as unauthorized users' do
         before(:each) do
           user = FactoryGirl.create(:user)
           sign_in :user, user
@@ -62,24 +62,123 @@ RSpec.describe DashboardController, type: :controller do
           expect(response).to render_template('errors/forbidden')
           expect(response).to render_template('layouts/errors')
         end
+      end
+
+      context 'as super admin user' do
+        before(:each) do
+          admin = FactoryGirl.create(:admin)
+          sign_in :user, admin
+        end
+
+        it 'responds successfully with an HTTP 200 status code' do
+          get :index, path: @account.id
+          expect(response).to be_success
+          expect(response).to have_http_status(200)
+        end
+
+        it 'renders the index template' do
+          get :index, path: @account.id
+          expect(response).to render_template('index')
+          expect(response).to render_template('layouts/application')
+        end
+      end
     end
 
-    context 'as super admin user' do
-      before(:each) do
-        admin = FactoryGirl.create(:admin)
-        sign_in :user, admin
+    context 'the account exists and is not active' do
+      before :each do
+        @account = FactoryGirl.create(:account, active: false)
       end
 
-      it 'responds successfully with an HTTP 200 status code' do
-        get :index, path: @account.id
-        expect(response).to be_success
-        expect(response).to have_http_status(200)
+      context 'as anonymous user' do
+        it 'redirect to login page' do
+          get :index, path: @account.id
+          expect(response).to redirect_to(new_user_session_path)
+        end
       end
 
-      it 'renders the index template' do
-        get :index, path: @account.id
-        expect(response).to render_template('index')
-        expect(response).to render_template('layouts/application')
+      context 'as unauthorized users' do
+        before(:each) do
+          user = FactoryGirl.create(:user)
+          sign_in :user, user
+        end
+
+        it 'responds with not found' do
+          get :index, path: @account.id
+          expect(response).to_not be_success
+          expect(response).to have_http_status(:not_found)
+        end
+
+        it 'renders not found' do
+          get :index, path: @account.id
+          expect(response).to render_template('errors')
+          expect(response).to render_template('errors/not_found')
+        end
+      end
+
+      context 'as super admin user' do
+        before(:each) do
+          admin = FactoryGirl.create(:admin)
+          sign_in :user, admin
+        end
+
+        it 'responds with not found' do
+          get :index, path: @account.id
+          expect(response).to_not be_success
+          expect(response).to have_http_status(:not_found)
+        end
+
+        it 'renders not found' do
+          get :index, path: @account.id
+          expect(response).to render_template('errors')
+          expect(response).to render_template('errors/not_found')
+        end
+      end
+    end
+
+    context 'the account does not exist' do
+      context 'as anonymous user' do
+        it 'redirect to login page' do
+          get :index, path: 0
+          expect(response).to redirect_to(new_user_session_path)
+        end
+      end
+
+      context 'as unauthorized users' do
+        before(:each) do
+          user = FactoryGirl.create(:user)
+          sign_in :user, user
+        end
+
+        it 'responds with not found' do
+          get :index, path: 0
+          expect(response).to_not be_success
+          expect(response).to have_http_status(:not_found)
+        end
+
+        it 'renders not found' do
+          get :index, path: 0
+          expect(response).to render_template('errors')
+          expect(response).to render_template('errors/not_found')
+        end
+      end
+
+      context 'as super admin user' do
+        before(:each) do
+          admin = FactoryGirl.create(:admin)
+          sign_in :user, admin
+        end
+
+        it 'responds with not found' do
+          get :index, path: 0
+          expect(response).to_not be_success
+          expect(response).to have_http_status(:not_found)
+        end
+
+        it 'renders not found' do
+          get :index, path: 0
+          expect(response).to render_template('errors')
+          expect(response).to render_template('errors/not_found')
+        end
       end
     end
   end

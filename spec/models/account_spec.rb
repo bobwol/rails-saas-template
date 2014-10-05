@@ -524,6 +524,79 @@ RSpec.describe Account, type: :model do
     end
   end
 
+  describe '.find_by_path!' do
+    context 'plan that allow custom path' do
+      before :each do
+        @plan = FactoryGirl.create(:plan, allow_custom_path: true)
+      end
+
+      it 'finds active accounts by ID' do
+        account = FactoryGirl.create(:account, active: true, plan: @plan)
+        expect(account).to be_valid
+
+        a = Account.find_by_path!(account.id)
+        expect(a).to eq account
+      end
+
+      it 'does not find inactive accounts by ID' do
+        account = FactoryGirl.create(:account, active: false, plan: @plan)
+        expect(account).to be_valid
+
+        expect { Account.find_by_path!(account.id) }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+
+      it 'finds active accounts by custom path' do
+        account = FactoryGirl.create(:account, active: true, plan: @plan, custom_path: 'abc')
+        expect(account).to be_valid
+
+        a = Account.find_by_path!('abc')
+        expect(a).to eq account
+      end
+
+      it 'does not find inactive accounts by  custom path' do
+        account = FactoryGirl.create(:account, active: false, plan: @plan, custom_path: 'abc')
+        expect(account).to be_valid
+
+        expect { Account.find_by_path!('abc') }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+
+    context 'plan that do not allow custom path' do
+      before :each do
+        @plan = FactoryGirl.create(:plan, allow_custom_path: false)
+      end
+
+      it 'finds active accounts by ID' do
+        account = FactoryGirl.create(:account, active: true, plan: @plan)
+        expect(account).to be_valid
+
+        a = Account.find_by_path!(account.id)
+        expect(a).to eq account
+      end
+
+      it 'does not find inactive accounts by ' do
+        account = FactoryGirl.create(:account, active: false, plan: @plan)
+        expect(account).to be_valid
+
+        expect { Account.find_by_path!(account.id) }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+
+      it 'does not find active accounts by custom path' do
+        account = FactoryGirl.create(:account, active: true, plan: @plan, custom_path: 'abc')
+        expect(account).to be_valid
+
+        expect { Account.find_by_path!('abc') }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+
+      it 'does not find inactive accounts by  custom path' do
+        account = FactoryGirl.create(:account, active: false, plan: @plan, custom_path: 'abc')
+        expect(account).to be_valid
+
+        expect { Account.find_by_path!('abc') }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+  end
+
   describe '.find_by_subdomain' do
     context 'plan that allows subdomain' do
       before :each do

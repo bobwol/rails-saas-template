@@ -140,6 +140,12 @@ class Account < ActiveRecord::Base
     end
   end
 
+  def self.find_by_path!(path)
+    account = Account.find_by_path(path)
+    raise ActiveRecord::RecordNotFound if account.nil?
+    account
+  end
+
   def self.find_by_subdomain(subdomain)
     Account.joins(:plan).where(plans: { allow_subdomain: true }, active: true, subdomain: subdomain).first
   end

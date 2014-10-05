@@ -78,7 +78,7 @@ class ApplicationController < ActionController::Base
 
     if params[:path]
       # Assume that they're using http://www.example.com/ACCOUNT
-      @current_account = Account.find_by_path(params[:path])
+      @current_account = Account.find_by_path!(params[:path])
     else
       # Try http://ACCOUNT/ then http://ACCOUNT.example.com/
       @current_account = Account.find_by_hostname(request.host)
