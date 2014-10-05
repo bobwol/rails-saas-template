@@ -1,0 +1,43 @@
+﻿<%
+@title = 'Account Credit Card'
+@heading = 'Settings'
+@subheading = 'Credit Card'
+%>
+
+<% if @account.card_brand.nil? %>
+<div style="text-align: right; padding: 10px 0px;">
+  <% if can? :edit, @account %><%= link_to "Add Card", edit_settings_card_path, class: "btn btn-primary" %><% end %>
+</div>
+<p>No card. <%= link_to "Add a card now", edit_settings_card_path %>.</p>
+<% else %>
+<div style="text-align: right; padding: 10px 0px;">
+  <% if can? :edit, @account %><%= link_to "Edit Card", edit_settings_card_path, class: "btn btn-primary" %><% end %>
+</div>
+
+<form>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group" id="card_name_group">
+        <label class="control-label">Card Brand</label>
+        <p class="form-control-static"><%= @account.card_brand %></p>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group" id="card_number_group">
+        <label class="control-label">Card Number</label>
+        <p class="form-control-static">xxxx xxxx xxxx x<%= @account.card_last4 %></p>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group" id="card_expiry_group">
+        <label class="control-label">Expiry Date</label>
+        <p class="form-control-static"><%= @account.card_exp %></p>
+      </div>
+    </div>
+  </div>
+</form>
+<% end %>

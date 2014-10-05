@@ -28,42 +28,17 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# Allows the account admin to manage account details in the settings
-class Settings::AccountsController < Settings::ApplicationController
-  authorize_resource
+require 'rails_helper'
 
-  def edit
-  end
-
-  def show
-  end
-
-  def update
-    if @account.update_attributes(accounts_params)
-      StripeGateway.account_update(@account.id)
-      AppEvent.success('Updated account details', current_account, current_user)
-      redirect_to settings_root_path, notice: 'Account was successfully updated.'
-    else
-      render 'edit'
-    end
-  end
-
-  private
-
-  def set_nav_item
-    @nav_item = 'account'
-  end
-
-  def accounts_params
-    params.require(:account).permit(:address_city,
-                                    :address_country,
-                                    :address_line1,
-                                    :address_line2,
-                                    :address_state,
-                                    :address_zip,
-                                    :company_name,
-                                    :email,
-                                    :hostname,
-                                    :subdomain)
-  end
+# Specs in this file have access to a helper object that includes
+# the Settings::AccountsHelper. For example:
+#
+# describe Settings::AccountsHelper do
+#   describe "string concat" do
+#     it "concats two strings with spaces" do
+#       expect(helper.concat_strings("this","that")).to eq("this that")
+#     end
+#   end
+# end
+RSpec.describe Settings::CardsHelper, type: :helper do
 end

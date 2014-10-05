@@ -113,12 +113,12 @@ Rails.application.routes.draw do
   scope ':path' do
     namespace :settings do
       resource :account, only: [:show, :edit, :update]
+      resource :card, only: [:show, :edit, :update]
       resource :plan, only: [:show, :update, :destroy] do
         get 'cancel'
         patch 'pause'
         get ':id' => 'plans#edit', as: :edit
       end
-      # resource :card, only: [:show, :update]
       # resources :users
       root to: 'accounts#home'
     end

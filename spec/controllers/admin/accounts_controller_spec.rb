@@ -41,9 +41,7 @@ RSpec.describe Admin::AccountsController, type: :controller do
       end
 
       it 'does not create an account' do
-        expect {
-          post :create, account: FactoryGirl.attributes_for(:account)
-        }.to change { Account.count }.by(0)
+        expect { post :create, account: FactoryGirl.attributes_for(:account) }.to change { Account.count }.by(0)
       end
     end
 
@@ -65,9 +63,7 @@ RSpec.describe Admin::AccountsController, type: :controller do
       end
 
       it 'does not create an account' do
-        expect {
-          post :create, account: FactoryGirl.attributes_for(:account)
-        }.to change { Account.count }.by(0)
+        expect { post :create, account: FactoryGirl.attributes_for(:account) }.to change { Account.count }.by(0)
       end
     end
 
@@ -101,35 +97,35 @@ RSpec.describe Admin::AccountsController, type: :controller do
         end
 
         it 'creates an account' do
-          expect {
-            post :create, account: @account_attributes
-          }.to change { Account.count }.by(1)
+          expect { post :create, account: @account_attributes }.to change { Account.count }.by(1)
         end
       end
 
       context 'with invalid attributes' do
+        before :each do
+          @attrs = FactoryGirl.attributes_for(:account, company_name: '')
+        end
+
         it 'sets the nav_item to accounts' do
-          post :create, account: FactoryGirl.attributes_for(:account, company_name: '')
+          post :create, account: @attrs
           expect(assigns(:nav_item)).to eq 'accounts'
         end
 
         it 'it renders the new template' do
-          post :create, account: FactoryGirl.attributes_for(:account, company_name: '')
+          post :create, account: @attrs
           expect(response).to render_template('new')
           expect(response).to render_template('layouts/admin')
         end
 
         it 'it pass a new account' do
-          post :create, account: FactoryGirl.attributes_for(:account, company_name: '')
+          post :create, account: @attrs
           account = assigns(:account)
           expect(account).to_not be_nil
           expect(account).to be_new_record
         end
 
         it 'does not create an account' do
-          expect {
-            post :create, account: FactoryGirl.attributes_for(:account, company_name: '')
-          }.to change { Account.count }.by(0)
+          expect { post :create, account: @attrs }.to change { Account.count }.by(0)
         end
       end
     end

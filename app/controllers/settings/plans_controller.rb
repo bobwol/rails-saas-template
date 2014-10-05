@@ -88,7 +88,7 @@ class Settings::PlansController < Settings::ApplicationController
   private
 
   def set_nav_item
-    @nav_item = 'plans'
+    @nav_item = 'plan'
   end
 
   def cancel_params

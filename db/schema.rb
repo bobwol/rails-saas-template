@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141004023049) do
+ActiveRecord::Schema.define(version: 20141005120155) do
 
   create_table "accounts", force: true do |t|
     t.string   "company_name",                                      null: false
@@ -29,6 +29,9 @@ ActiveRecord::Schema.define(version: 20141004023049) do
     t.string   "address_state",          limit: 60
     t.string   "address_country",        limit: 2
     t.string   "card_token",             limit: 60
+    t.string   "card_brand",             limit: 25
+    t.string   "card_last4",             limit: 4
+    t.string   "card_exp",               limit: 7
     t.string   "stripe_customer_id",     limit: 60
     t.string   "stripe_subscription_id", limit: 60
     t.string   "cancellation_category"

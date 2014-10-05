@@ -80,7 +80,7 @@ RSpec.describe Settings::PlansController, type: :controller do
 
       it 'sets the nav_item to plans' do
         get :edit, path: @account.id, id: @plan1.id
-        expect(assigns(:nav_item)).to eq 'plans'
+        expect(assigns(:nav_item)).to eq 'plan'
       end
 
       it 'renders the edit template' do
@@ -112,7 +112,7 @@ RSpec.describe Settings::PlansController, type: :controller do
 
       it 'sets the nav_item to plans' do
         get :edit, path: @account.id, id: @plan1.id
-        expect(assigns(:nav_item)).to eq 'plans'
+        expect(assigns(:nav_item)).to eq 'plan'
       end
 
       it 'renders the edit template' do
@@ -135,7 +135,6 @@ RSpec.describe Settings::PlansController, type: :controller do
     before(:each) do
       @plan = FactoryGirl.create(:plan, currency: 'USD')
       @account = FactoryGirl.create(:account, plan: @plan)
-      @controller.instance_variable_set(:@current_account, @account)
     end
 
     context 'as anonymous user' do
@@ -182,7 +181,7 @@ RSpec.describe Settings::PlansController, type: :controller do
 
       it 'sets the nav_item to plans' do
         get :show, path: @account.id
-        expect(assigns(:nav_item)).to eq 'plans'
+        expect(assigns(:nav_item)).to eq 'plan'
       end
 
       it 'renders the show template' do
@@ -219,7 +218,7 @@ RSpec.describe Settings::PlansController, type: :controller do
 
       it 'sets the nav_item to plans' do
         get :show, path: @account.id
-        expect(assigns(:nav_item)).to eq 'plans'
+        expect(assigns(:nav_item)).to eq 'plan'
       end
 
       it 'renders the show template' do
@@ -245,7 +244,6 @@ RSpec.describe Settings::PlansController, type: :controller do
       @plan = FactoryGirl.create(:plan, currency: 'USD')
       @plan1 = FactoryGirl.create(:plan, currency: 'USD')
       @account = FactoryGirl.create(:account, plan: @plan)
-      @controller.instance_variable_set(:@current_account, @account)
     end
 
     context 'as anonymous user' do
@@ -284,7 +282,7 @@ RSpec.describe Settings::PlansController, type: :controller do
       context 'with valid attributes' do
         it 'sets the nav_item to plans' do
           patch :update, path: @account.id, account: FactoryGirl.attributes_for(:account, plan_id: @plan1.id)
-          expect(assigns(:nav_item)).to eq 'plans'
+          expect(assigns(:nav_item)).to eq 'plan'
         end
 
         it 'it redirects to plans' do
@@ -302,7 +300,7 @@ RSpec.describe Settings::PlansController, type: :controller do
       context 'with invalid attributes' do
         it 'sets the nav_item to plans' do
           patch :update, path: @account.id, account: FactoryGirl.attributes_for(:account, plan_id: nil)
-          expect(assigns(:nav_item)).to eq 'plans'
+          expect(assigns(:nav_item)).to eq 'plan'
         end
 
         it 'it renders the errors/not_found template' do
@@ -329,7 +327,7 @@ RSpec.describe Settings::PlansController, type: :controller do
       context 'with valid attributes' do
         it 'sets the nav_item to plans' do
           patch :update, path: @account.id, account: FactoryGirl.attributes_for(:account, plan_id: @plan1.id)
-          expect(assigns(:nav_item)).to eq 'plans'
+          expect(assigns(:nav_item)).to eq 'plan'
         end
 
         it 'it redirects to plans' do
@@ -347,7 +345,7 @@ RSpec.describe Settings::PlansController, type: :controller do
       context 'with invalid attributes' do
         it 'sets the nav_item to plans' do
           patch :update, path: @account.id, account: FactoryGirl.attributes_for(:account, plan_id: nil)
-          expect(assigns(:nav_item)).to eq 'plans'
+          expect(assigns(:nav_item)).to eq 'plan'
         end
 
         it 'it renders the errors/not_found template' do
@@ -370,7 +368,6 @@ RSpec.describe Settings::PlansController, type: :controller do
     before(:each) do
       @plan = FactoryGirl.create(:plan, currency: 'USD')
       @account = FactoryGirl.create(:account, plan: @plan)
-      @controller.instance_variable_set(:@current_account, @account)
     end
 
     context 'as anonymous user' do
@@ -414,7 +411,7 @@ RSpec.describe Settings::PlansController, type: :controller do
 
       it 'sets the nav_item to plans' do
         get :cancel, path: @account.id
-        expect(assigns(:nav_item)).to eq 'plans'
+        expect(assigns(:nav_item)).to eq 'plan'
       end
 
       it 'renders the cancel template' do
@@ -445,7 +442,7 @@ RSpec.describe Settings::PlansController, type: :controller do
 
       it 'sets the nav_item to plans' do
         get :cancel, path: @account.id
-        expect(assigns(:nav_item)).to eq 'plans'
+        expect(assigns(:nav_item)).to eq 'plan'
       end
 
       it 'renders the cancel template' do
@@ -468,7 +465,6 @@ RSpec.describe Settings::PlansController, type: :controller do
       @paused_plan = FactoryGirl.create(:plan, currency: 'USD')
       @plan = FactoryGirl.create(:plan, currency: 'USD', paused_plan: @paused_plan)
       @account = FactoryGirl.create(:account, plan: @plan)
-      @controller.instance_variable_set(:@current_account, @account)
     end
 
     context 'as anonymous user' do
@@ -507,7 +503,7 @@ RSpec.describe Settings::PlansController, type: :controller do
       context 'is pausable' do
         it 'sets the nav_item to plans' do
           patch :pause, path: @account.id
-          expect(assigns(:nav_item)).to eq 'plans'
+          expect(assigns(:nav_item)).to eq 'plan'
         end
 
         it 'it redirects to the root path' do
@@ -529,7 +525,7 @@ RSpec.describe Settings::PlansController, type: :controller do
 
         it 'sets the nav_item to plans' do
           patch :pause, path: @account.id
-          expect(assigns(:nav_item)).to eq 'plans'
+          expect(assigns(:nav_item)).to eq 'plan'
         end
 
         it 'it renders the errors/cancel template' do
@@ -561,7 +557,7 @@ RSpec.describe Settings::PlansController, type: :controller do
       context 'is pausable' do
         it 'sets the nav_item to plans' do
           patch :pause, path: @account.id
-          expect(assigns(:nav_item)).to eq 'plans'
+          expect(assigns(:nav_item)).to eq 'plan'
         end
 
         it 'it redirects to the root path' do
@@ -583,7 +579,7 @@ RSpec.describe Settings::PlansController, type: :controller do
 
         it 'sets the nav_item to plans' do
           patch :pause, path: @account.id
-          expect(assigns(:nav_item)).to eq 'plans'
+          expect(assigns(:nav_item)).to eq 'plan'
         end
 
         it 'it renders the errors/cancel template' do
@@ -610,7 +606,6 @@ RSpec.describe Settings::PlansController, type: :controller do
   describe 'DELETE #destroy' do
     before(:each) do
       @account = FactoryGirl.create(:account)
-      @controller.instance_variable_set(:@current_account, @account)
     end
 
     context 'as anonymous user' do
@@ -657,7 +652,7 @@ RSpec.describe Settings::PlansController, type: :controller do
           delete :destroy, path: @account.id, account: { cancellation_category: 'xxx',
                                                          cancellation_message: 'xxx',
                                                          cancellation_reason: 'xxx' }
-          expect(assigns(:nav_item)).to eq 'plans'
+          expect(assigns(:nav_item)).to eq 'plan'
         end
 
         it 'it redirects to plans' do
@@ -678,23 +673,31 @@ RSpec.describe Settings::PlansController, type: :controller do
 
       context 'with invalid attributes' do
         it 'sets the nav_item to plans' do
-          delete :destroy, path: @account.id, account: { cancellation_category: '', cancellation_message: '', cancellation_reason: '' }
-          expect(assigns(:nav_item)).to eq 'plans'
+          delete :destroy, path: @account.id, account: { cancellation_category: '',
+                                                         cancellation_message: '',
+                                                         cancellation_reason: '' }
+          expect(assigns(:nav_item)).to eq 'plan'
         end
 
         it 'it renders the cancel template' do
-          delete :destroy, path: @account.id, account: { cancellation_category: '', cancellation_message: '', cancellation_reason: '' }
+          delete :destroy, path: @account.id, account: { cancellation_category: '',
+                                                         cancellation_message: '',
+                                                         cancellation_reason: '' }
           expect(response).to render_template('cancel')
           expect(response).to render_template('layouts/settings')
         end
 
         it 'sets an alert' do
-          delete :destroy, path: @account.id, account: { cancellation_category: '', cancellation_message: '', cancellation_reason: '' }
+          delete :destroy, path: @account.id, account: { cancellation_category: '',
+                                                         cancellation_message: '',
+                                                         cancellation_reason: '' }
           expect(request.flash[:alert]).to eq 'Unable to cancel the account.'
         end
 
         it 'it pass an existing account' do
-          delete :destroy, path: @account.id, account: { cancellation_category: '', cancellation_message: '', cancellation_reason: '' }
+          delete :destroy, path: @account.id, account: { cancellation_category: '',
+                                                         cancellation_message: '',
+                                                         cancellation_reason: '' }
           account = assigns(:account)
           expect(account).to eq @account
         end
@@ -712,7 +715,7 @@ RSpec.describe Settings::PlansController, type: :controller do
           delete :destroy, path: @account.id, account: { cancellation_category: 'xxx',
                                                          cancellation_message: 'xxx',
                                                          cancellation_reason: 'xxx' }
-          expect(assigns(:nav_item)).to eq 'plans'
+          expect(assigns(:nav_item)).to eq 'plan'
         end
 
         it 'it redirects to plans' do
@@ -733,23 +736,31 @@ RSpec.describe Settings::PlansController, type: :controller do
 
       context 'with invalid attributes' do
         it 'sets the nav_item to plans' do
-          delete :destroy, path: @account.id, account: { cancellation_category: '', cancellation_message: '', cancellation_reason: '' }
-          expect(assigns(:nav_item)).to eq 'plans'
+          delete :destroy, path: @account.id, account: { cancellation_category: '',
+                                                         cancellation_message: '',
+                                                         cancellation_reason: '' }
+          expect(assigns(:nav_item)).to eq 'plan'
         end
 
         it 'it renders the cancel template' do
-          delete :destroy, path: @account.id, account: { cancellation_category: '', cancellation_message: '', cancellation_reason: '' }
+          delete :destroy, path: @account.id, account: { cancellation_category: '',
+                                                         cancellation_message: '',
+                                                         cancellation_reason: '' }
           expect(response).to render_template('cancel')
           expect(response).to render_template('layouts/settings')
         end
 
         it 'sets an alert' do
-          delete :destroy, path: @account.id, account: { cancellation_category: '', cancellation_message: '', cancellation_reason: '' }
+          delete :destroy, path: @account.id, account: { cancellation_category: '',
+                                                         cancellation_message: '',
+                                                         cancellation_reason: '' }
           expect(request.flash[:alert]).to eq 'Unable to cancel the account.'
         end
 
         it 'it pass an existing account' do
-          delete :destroy, path: @account.id, account: { cancellation_category: '', cancellation_message: '', cancellation_reason: '' }
+          delete :destroy, path: @account.id, account: { cancellation_category: '',
+                                                         cancellation_message: '',
+                                                         cancellation_reason: '' }
           account = assigns(:account)
           expect(account).to eq @account
         end

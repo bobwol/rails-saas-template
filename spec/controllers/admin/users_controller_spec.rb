@@ -41,9 +41,7 @@ RSpec.describe Admin::UsersController, type: :controller do
       end
 
       it 'does not create a user' do
-        expect {
-          post :create, user: FactoryGirl.attributes_for(:user)
-        }.to change { User.count }.by(0)
+        expect { post :create, user: FactoryGirl.attributes_for(:user) }.to change { User.count }.by(0)
       end
     end
 
@@ -65,9 +63,7 @@ RSpec.describe Admin::UsersController, type: :controller do
       end
 
       it 'does not create a user' do
-        expect {
-          post :create, user: FactoryGirl.attributes_for(:user)
-        }.to change { User.count }.by(0)
+        expect { post :create, user: FactoryGirl.attributes_for(:user) }.to change { User.count }.by(0)
       end
     end
 
@@ -96,9 +92,7 @@ RSpec.describe Admin::UsersController, type: :controller do
         end
 
         it 'creates a user' do
-          expect {
-            post :create, user: FactoryGirl.attributes_for(:user)
-          }.to change { User.count }.by(1)
+          expect { post :create, user: FactoryGirl.attributes_for(:user) }.to change { User.count }.by(1)
         end
       end
 
@@ -122,9 +116,7 @@ RSpec.describe Admin::UsersController, type: :controller do
         end
 
         it 'does not create a user' do
-          expect {
-            post :create, user: FactoryGirl.attributes_for(:user, email: '')
-          }.to change { User.count }.by(0)
+          expect { post :create, user: FactoryGirl.attributes_for(:user, email: '') }.to change { User.count }.by(0)
         end
       end
     end
@@ -143,9 +135,7 @@ RSpec.describe Admin::UsersController, type: :controller do
       end
 
       it 'does not delete a user' do
-        expect {
-          delete :destroy, id: @user.id
-        }.to change { User.count }.by(0)
+        expect { delete :destroy, id: @user.id }.to change { User.count }.by(0)
       end
     end
 
@@ -166,9 +156,7 @@ RSpec.describe Admin::UsersController, type: :controller do
       end
 
       it 'does not delete a user' do
-        expect {
-          delete :destroy, id: @user.id
-        }.to change { User.count }.by(0)
+        expect { delete :destroy, id: @user.id }.to change { User.count }.by(0)
       end
     end
 
@@ -191,9 +179,7 @@ RSpec.describe Admin::UsersController, type: :controller do
         end
 
         it 'deletes a user' do
-          expect {
-            delete :destroy, id: @user.id
-          }.to change { User.count }.by(-1)
+          expect { delete :destroy, id: @user.id }.to change { User.count }.by(-1)
         end
       end
 
@@ -210,9 +196,7 @@ RSpec.describe Admin::UsersController, type: :controller do
         end
 
         it 'does not delete a user' do
-          expect {
-            delete :destroy, id: @admin.id
-          }.to change { User.count }.by(0)
+          expect { delete :destroy, id: @admin.id }.to change { User.count }.by(0)
         end
       end
     end

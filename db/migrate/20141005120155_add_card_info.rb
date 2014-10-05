@@ -28,42 +28,11 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# Allows the account admin to manage account details in the settings
-class Settings::AccountsController < Settings::ApplicationController
-  authorize_resource
-
-  def edit
-  end
-
-  def show
-  end
-
-  def update
-    if @account.update_attributes(accounts_params)
-      StripeGateway.account_update(@account.id)
-      AppEvent.success('Updated account details', current_account, current_user)
-      redirect_to settings_root_path, notice: 'Account was successfully updated.'
-    else
-      render 'edit'
-    end
-  end
-
-  private
-
-  def set_nav_item
-    @nav_item = 'account'
-  end
-
-  def accounts_params
-    params.require(:account).permit(:address_city,
-                                    :address_country,
-                                    :address_line1,
-                                    :address_line2,
-                                    :address_state,
-                                    :address_zip,
-                                    :company_name,
-                                    :email,
-                                    :hostname,
-                                    :subdomain)
+# Migration to add card info for account
+class AddCardInfo < ActiveRecord::Migration
+  def change
+    add_column :accounts, :card_brand, :string, limit: 25, null: true, after: :card_token
+    add_column :accounts, :card_last4, :string, limit: 4, null: true, after: :card_brand
+    add_column :accounts, :card_exp, :string, limit: 7, null: true, after: :card_last4
   end
 end

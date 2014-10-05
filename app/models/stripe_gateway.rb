@@ -54,6 +54,12 @@ class StripeGateway
       account.stripe_customer_id = customer.id
       account.stripe_subscription_id = subscription.id
       account.save!
+
+      card = customer.cards.retrieve(customer.default_card)
+      account.card_brand = card.brand
+      account.card_last4 = card.last4
+      account.card_exp = "#{card.exp_month}/#{card.exp_year}"
+      account.save!
     end
     handle_asynchronously :account_create, priority: 50, queue: 'stripe'
 
@@ -77,6 +83,12 @@ class StripeGateway
       account.card_token = 'dummy'
       account.expires_at = Time.at(subscription.current_period_end)
       account.save
+
+      card = customer.cards.retrieve(customer.default_card)
+      account.card_brand = card.brand
+      account.card_last4 = card.last4
+      account.card_exp = "#{card.exp_month}/#{card.exp_year}"
+      account.save!
     end
     handle_asynchronously :account_update, priority: 55, queue: 'stripe'
 
@@ -88,6 +100,9 @@ class StripeGateway
       subscription.delete
 
       account.card_token = 'dummy'
+      account.card_brand = nil
+      account.card_last4 = nil
+      account.card_exp = nil
       account.expires_at = Time.at(subscription.canceled_at)
       account.stripe_subscription_id = nil
       account.save

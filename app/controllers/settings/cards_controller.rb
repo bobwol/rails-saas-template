@@ -28,58 +28,44 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# The users abilities
-class Ability
-  include CanCan::Ability
+# Allows the account admin to manage cards in the settings
+class Settings::CardsController < Settings::ApplicationController
+  before_action :find_account, only: [:show, :edit, :update]
 
-  def initialize(user, account)
-    # Define abilities for the passed in user here. For example:
-    #
-    #   user ||= User.new # guest user (not logged in)
-    #   if user.admin?
-    #     can :manage, :all
-    #   else
-    #     can :read, :all
-    #   end
-    #
-    # The first argument to `can` is the action you are giving the user
-    # permission to do.
-    # If you pass :manage it will apply to every action. Other common actions
-    # here are :read, :create, :update and :destroy.
-    #
-    # The second argument is the resource the user can perform the action on.
-    # If you pass :all it will apply to every resource. Otherwise pass a Ruby
-    # class of the resource.
-    #
-    # The third argument is an optional hash of conditions to further filter the
-    # objects.
-    # For example, here the user can only update published articles.
-    #
-    #   can :update, Article, :published => true
-    #
-    # See the wiki for details:
-    # https://github.com/CanCanCommunity/cancancan/wiki/Defining-Abilities
-    return if user.nil?
+  before_action do
+    authorize!(params[:action], @account || Account)
+  end
 
-    if account
-      permissions = user.user_permissions.where(account: account).first
+  def show
+  end
+
+  def edit
+    @account.card_token = nil
+  end
+
+  def update
+    if @account.update_attributes(accounts_params)
+      StripeGateway.account_update(@account.id)
+      AppEvent.success('Updated credit card', current_account, current_user)
+      redirect_to settings_root_path,
+                  notice: 'Credit card was successfully updated.'
     else
-      permissions = nil
+      @account.card_token = nil
+      render 'edit'
     end
+  end
 
-    if user.super_admin?
-      can :manage, :dashboard
-      can :manage, :admin_dashboard
-      can :manage, Account
-      can :manage, Plan
-      can :manage, User
-    end
+  private
 
-    if !permissions.nil? && permissions.account_admin?
-      can :manage, Account, id: account.id
-      can :index, :dashboard
-    end
+  def set_nav_item
+    @nav_item = 'card'
+  end
 
-    cannot :pause, Account, plan: { paused_plan: nil }
+  def find_account
+    @account = current_account
+  end
+
+  def accounts_params
+    params.require(:account).permit(:card_token)
   end
 end

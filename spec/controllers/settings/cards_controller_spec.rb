@@ -30,8 +30,8 @@
 
 require 'rails_helper'
 
-# Tests for the settings accounts
-RSpec.describe Settings::AccountsController, type: :controller do
+# Tests for the settings cards
+RSpec.describe Settings::CardsController, type: :controller do
   describe 'GET #edit' do
     before(:each) do
       @account = FactoryGirl.create(:account)
@@ -78,7 +78,7 @@ RSpec.describe Settings::AccountsController, type: :controller do
 
       it 'sets the nav_item to accounts' do
         get :edit, path: @account.id
-        expect(assigns(:nav_item)).to eq 'account'
+        expect(assigns(:nav_item)).to eq 'card'
       end
 
       it 'renders the edit template' do
@@ -92,6 +92,7 @@ RSpec.describe Settings::AccountsController, type: :controller do
         a = assigns(:account)
         expect(a).to_not be_nil
         expect(a.id).to eq @account.id
+        expect(a.card_token).to be_nil
       end
     end
 
@@ -109,7 +110,7 @@ RSpec.describe Settings::AccountsController, type: :controller do
 
       it 'sets the nav_item to accounts' do
         get :edit, path: @account.id
-        expect(assigns(:nav_item)).to eq 'account'
+        expect(assigns(:nav_item)).to eq 'card'
       end
 
       it 'renders the edit template' do
@@ -123,6 +124,7 @@ RSpec.describe Settings::AccountsController, type: :controller do
         a = assigns(:account)
         expect(a).to_not be_nil
         expect(a.id).to eq @account.id
+        expect(a.card_token).to be_nil
       end
     end
   end
@@ -173,7 +175,7 @@ RSpec.describe Settings::AccountsController, type: :controller do
 
       it 'sets the nav_item to accounts' do
         get :show, path: @account.id
-        expect(assigns(:nav_item)).to eq 'account'
+        expect(assigns(:nav_item)).to eq 'card'
       end
 
       it 'renders the show template' do
@@ -204,7 +206,7 @@ RSpec.describe Settings::AccountsController, type: :controller do
 
       it 'sets the nav_item to accounts' do
         get :show, path: @account.id
-        expect(assigns(:nav_item)).to eq 'account'
+        expect(assigns(:nav_item)).to eq 'card'
       end
 
       it 'renders the show template' do
@@ -229,7 +231,7 @@ RSpec.describe Settings::AccountsController, type: :controller do
 
     context 'as anonymous user' do
       it 'redirects to login page' do
-        patch :update, path: @account.id, account: FactoryGirl.attributes_for(:account)
+        patch :update, path: @account.id, account: { card_token: 'dummy' }
         expect(response).to be_redirect
         expect(response).to redirect_to(new_user_session_path)
       end
@@ -242,12 +244,12 @@ RSpec.describe Settings::AccountsController, type: :controller do
       end
 
       it 'responds with forbidden' do
-        patch :update, path: @account.id, account: FactoryGirl.attributes_for(:account)
+        patch :update, path: @account.id, account: { card_token: 'dummy' }
         expect(response).to be_forbidden
       end
 
       it 'renders the forbidden' do
-        patch :update, path: @account.id, account: FactoryGirl.attributes_for(:account)
+        patch :update, path: @account.id, account: { card_token: 'dummy' }
         expect(response).to render_template('errors/forbidden')
         expect(response).to render_template('layouts/errors')
       end
@@ -262,39 +264,40 @@ RSpec.describe Settings::AccountsController, type: :controller do
 
       context 'with valid attributes' do
         it 'sets the nav_item to accounts' do
-          patch :update, path: @account.id, account: FactoryGirl.attributes_for(:account)
-          expect(assigns(:nav_item)).to eq 'account'
+          patch :update, path: @account.id, account: { card_token: 'dummy' }
+          expect(assigns(:nav_item)).to eq 'card'
         end
 
         it 'it redirects to account' do
-          patch :update, path: @account.id, account: FactoryGirl.attributes_for(:account)
+          patch :update, path: @account.id, account: { card_token: 'dummy' }
           expect(response).to be_redirect
           expect(response).to redirect_to(settings_root_path)
         end
 
         it 'sets a notice' do
-          patch :update, path: @account.id, account: FactoryGirl.attributes_for(:account)
-          expect(request.flash[:notice]).to eq 'Account was successfully updated.'
+          patch :update, path: @account.id, account: { card_token: 'dummy' }
+          expect(request.flash[:notice]).to eq 'Credit card was successfully updated.'
         end
       end
 
       context 'with invalid attributes' do
         it 'sets the nav_item to accounts' do
-          patch :update, path: @account.id, account: FactoryGirl.attributes_for(:account)
-          expect(assigns(:nav_item)).to eq 'account'
+          patch :update, path: @account.id, account: { card_token: '' }
+          expect(assigns(:nav_item)).to eq 'card'
         end
 
         it 'it renders the edit template' do
-          patch :update, path: @account.id, account: FactoryGirl.attributes_for(:account, company_name: '')
+          patch :update, path: @account.id, account: { card_token: '' }
           expect(response).to render_template('edit')
           expect(response).to render_template('layouts/settings')
         end
 
         it 'it pass an existing account' do
-          patch :update, path: @account.id, account: FactoryGirl.attributes_for(:account, company_name: '')
+          patch :update, path: @account.id, account: { card_token: '' }
           account = assigns(:account)
           expect(account).to_not be_nil
           expect(account).to_not be_new_record
+          expect(account.card_token).to be_nil
         end
       end
     end
@@ -307,36 +310,36 @@ RSpec.describe Settings::AccountsController, type: :controller do
 
       context 'with valid attributes' do
         it 'sets the nav_item to accounts' do
-          patch :update, path: @account.id, account: FactoryGirl.attributes_for(:account)
-          expect(assigns(:nav_item)).to eq 'account'
+          patch :update, path: @account.id, account: { card_token: 'dummy' }
+          expect(assigns(:nav_item)).to eq 'card'
         end
 
         it 'it redirects to account' do
-          patch :update, path: @account.id, account: FactoryGirl.attributes_for(:account)
+          patch :update, path: @account.id, account: { card_token: 'dummy' }
           expect(response).to be_redirect
           expect(response).to redirect_to(settings_root_path)
         end
 
         it 'sets a notice' do
-          patch :update, path: @account.id, account: FactoryGirl.attributes_for(:account)
-          expect(request.flash[:notice]).to eq 'Account was successfully updated.'
+          patch :update, path: @account.id, account: { card_token: 'dummy' }
+          expect(request.flash[:notice]).to eq 'Credit card was successfully updated.'
         end
       end
 
       context 'with invalid attributes' do
         it 'sets the nav_item to accounts' do
-          patch :update, path: @account.id, account: FactoryGirl.attributes_for(:account)
-          expect(assigns(:nav_item)).to eq 'account'
+          patch :update, path: @account.id, account: { card_token: '' }
+          expect(assigns(:nav_item)).to eq 'card'
         end
 
         it 'it renders the edit template' do
-          patch :update, path: @account.id, account: FactoryGirl.attributes_for(:account, company_name: '')
+          patch :update, path: @account.id, account: { card_token: '' }
           expect(response).to render_template('edit')
           expect(response).to render_template('layouts/settings')
         end
 
         it 'it pass an existing account' do
-          patch :update, path: @account.id, account: FactoryGirl.attributes_for(:account, company_name: '')
+          patch :update, path: @account.id, account: { card_token: '' }
           account = assigns(:account)
           expect(account).to_not be_nil
           expect(account).to_not be_new_record

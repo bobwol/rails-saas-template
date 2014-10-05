@@ -142,7 +142,7 @@ class Account < ActiveRecord::Base
 
   def self.find_by_path!(path)
     account = Account.find_by_path(path)
-    raise ActiveRecord::RecordNotFound if account.nil?
+    fail ActiveRecord::RecordNotFound if account.nil?
     account
   end
 

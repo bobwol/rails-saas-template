@@ -28,42 +28,31 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# Allows the account admin to manage account details in the settings
-class Settings::AccountsController < Settings::ApplicationController
-  authorize_resource
+require 'rails_helper'
 
-  def edit
+# Tests for settings/accounts routing
+RSpec.describe 'routing for the settings cards', type: :routing do
+  it 'routes GET /path/settings/card to settings/cards#show' do
+    expect(get: '/path/settings/card').to route_to(
+      controller: 'settings/cards',
+      action: 'show',
+      path: 'path'
+    )
   end
 
-  def show
+  it 'routes GET /path/settings/card/edit to settings/cards#edit' do
+    expect(get: '/path/settings/card/edit').to route_to(
+      controller: 'settings/cards',
+      action: 'edit',
+      path: 'path'
+    )
   end
 
-  def update
-    if @account.update_attributes(accounts_params)
-      StripeGateway.account_update(@account.id)
-      AppEvent.success('Updated account details', current_account, current_user)
-      redirect_to settings_root_path, notice: 'Account was successfully updated.'
-    else
-      render 'edit'
-    end
-  end
-
-  private
-
-  def set_nav_item
-    @nav_item = 'account'
-  end
-
-  def accounts_params
-    params.require(:account).permit(:address_city,
-                                    :address_country,
-                                    :address_line1,
-                                    :address_line2,
-                                    :address_state,
-                                    :address_zip,
-                                    :company_name,
-                                    :email,
-                                    :hostname,
-                                    :subdomain)
+  it 'routes PATCH /path/settings/card to settings/cards#update' do
+    expect(patch: '/path/settings/card').to route_to(
+      controller: 'settings/cards',
+      action: 'update',
+      path: 'path'
+    )
   end
 end
