@@ -28,21 +28,18 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# User model
-class User < ActiveRecord::Base
-  has_many :app_events
-  has_many :user_permissions
-  has_many :accounts, through: :user_permissions
+# UserInvitation model
+class UserInvitation < ActiveRecord::Base
+  belongs_to :account
 
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :lockable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable
+  before_validation do |ui|
+    ui.invite_code = SecureRandom.uuid unless ui.invite_code?
+  end
 
-  validates :email, length: { maximum: 255 }, presence: true
   validates :first_name, length: { maximum: 60 }, presence: true, allow_blank: true
   validates :last_name, length: { maximum: 60 }, presence: true
-  validates :password, confirmation: true, presence: true, on: :create
+  validates :email, length: { maximum: 255 }, uniqueness: { scope: :account }, presence: true
+  validates :invite_code, length: { maximum: 36 }, uniqueness: true, presence: true
 
   def to_s
     if first_name.empty?

@@ -28,35 +28,22 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# User model
-class User < ActiveRecord::Base
-  has_many :app_events
-  has_many :user_permissions
-  has_many :accounts, through: :user_permissions
+# Migration to user invitations
+class CreateUserInvitations < ActiveRecord::Migration
+  def change
+    create_table :user_invitations do |t|
+      t.references :account
+      t.string :first_name, limit: 60
+      t.string :last_name, limit: 60
+      t.string :email, limit: 60, null: false
+      t.string :invite_code, limit: 36, null: false
 
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :lockable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable
-
-  validates :email, length: { maximum: 255 }, presence: true
-  validates :first_name, length: { maximum: 60 }, presence: true, allow_blank: true
-  validates :last_name, length: { maximum: 60 }, presence: true
-  validates :password, confirmation: true, presence: true, on: :create
-
-  def to_s
-    if first_name.empty?
-      if last_name.empty?
-        '(unknown)'
-      else
-        last_name
-      end
-    else
-      if last_name.empty?
-        first_name
-      else
-        first_name + ' ' + last_name
-      end
+      t.timestamps
     end
+
+    add_index :user_invitations, [:account_id, :email], unique: true
+    add_index :user_invitations, [:account_id], unique: false
+    add_index :user_invitations, [:email], unique: false
+    add_index :user_invitations, [:invite_code], unique: true
   end
 end

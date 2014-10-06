@@ -52,6 +52,7 @@ class Account < ActiveRecord::Base
 
   has_many :app_events
   has_many :users, through: :user_permissions
+  has_many :user_invitations
   has_many :user_permissions
 
   delegate :currency, :allow_custom_path, :allow_hostname, :allow_subdomain, :stripe_id, to: :plan, prefix: true
@@ -89,7 +90,7 @@ class Account < ActiveRecord::Base
             format: { with: /\A[a-z0-9]+\Z/i, message: 'can only contain letters and numbers' },
             unless: 'custom_path.nil?'
   validates :custom_path,
-            format: { with: /[a-z]/i, message: 'must contain at least one letter' },
+            format: { with: /\A.*[a-z].*\Z/i, message: 'must contain at least one letter' },
             unless: 'custom_path.nil?'
   validates :email, length: { maximum: 255 }, presence: true
   validates :hostname, length: { maximum: 255 }

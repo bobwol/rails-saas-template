@@ -854,6 +854,17 @@ RSpec.describe Account, type: :model do
     end
   end
 
+  describe '.user_invitationss' do
+    it 'connects to User Invitation' do
+      account = FactoryGirl.create(:account)
+      user_invitation1 = FactoryGirl.create(:user_invitation, account: account)
+      user_invitation2 = FactoryGirl.create(:user_invitation, account: account)
+      expect(account.user_invitations.count).to eq 2
+      expect(account.user_invitations).to include user_invitation1
+      expect(account.user_invitations).to include user_invitation2
+    end
+  end
+
   describe '.user_permissions' do
     it 'connects to User Permission' do
       user1 = FactoryGirl.create(:user)

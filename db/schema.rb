@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141005120155) do
+ActiveRecord::Schema.define(version: 20141006010115) do
 
   create_table "accounts", force: true do |t|
     t.string   "company_name",                                      null: false
@@ -103,6 +103,21 @@ ActiveRecord::Schema.define(version: 20141005120155) do
 
   add_index "plans", ["paused_plan_id"], name: "index_plans_on_paused_plan_id", using: :btree
   add_index "plans", ["stripe_id"], name: "index_plans_on_stripe_id", unique: true, using: :btree
+
+  create_table "user_invitations", force: true do |t|
+    t.integer  "account_id"
+    t.string   "first_name",  limit: 60
+    t.string   "last_name",   limit: 60
+    t.string   "email",       limit: 60, null: false
+    t.string   "invite_code", limit: 36, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "user_invitations", ["account_id", "email"], name: "index_user_invitations_on_account_id_and_email", unique: true, using: :btree
+  add_index "user_invitations", ["account_id"], name: "index_user_invitations_on_account_id", using: :btree
+  add_index "user_invitations", ["email"], name: "index_user_invitations_on_email", using: :btree
+  add_index "user_invitations", ["invite_code"], name: "index_user_invitations_on_invite_code", unique: true, using: :btree
 
   create_table "user_permissions", force: true do |t|
     t.integer  "user_id",                       null: false

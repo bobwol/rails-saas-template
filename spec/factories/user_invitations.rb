@@ -28,35 +28,12 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# User model
-class User < ActiveRecord::Base
-  has_many :app_events
-  has_many :user_permissions
-  has_many :accounts, through: :user_permissions
-
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :lockable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable
-
-  validates :email, length: { maximum: 255 }, presence: true
-  validates :first_name, length: { maximum: 60 }, presence: true, allow_blank: true
-  validates :last_name, length: { maximum: 60 }, presence: true
-  validates :password, confirmation: true, presence: true, on: :create
-
-  def to_s
-    if first_name.empty?
-      if last_name.empty?
-        '(unknown)'
-      else
-        last_name
-      end
-    else
-      if last_name.empty?
-        first_name
-      else
-        first_name + ' ' + last_name
-      end
-    end
+# UserInvite factories
+FactoryGirl.define do
+  factory :user_invitation do
+    first_name { Faker::Name.first_name }
+    last_name { Faker::Name.last_name }
+    email { Faker::Internet.safe_email }
+    invite_code { SecureRandom.uuid }
   end
 end

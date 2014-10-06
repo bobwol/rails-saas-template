@@ -60,16 +60,37 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe '.email' do
+    it 'is required' do
+      user = FactoryGirl.build(:user, email: '')
+      expect(user).to_not be_valid
+    end
+
+    it 'must be less than 255 characters' do
+      email = Faker::Lorem.characters(244) + '@example.com'
+      user = FactoryGirl.build(:user, email: email)
+      expect(user).to_not be_valid
+      expect(user.errors[:email]).to include 'is too long (maximum is 255 characters)'
+    end
+
+    it 'must be unique' do
+      FactoryGirl.create(:user, email: 'john@example.com')
+      user = FactoryGirl.build(:user, email: 'john@example.com')
+      expect(user).to_not be_valid
+      expect(user.errors[:email]).to include 'has already been taken'
+    end
+  end
+
   describe '.first_name' do
     it 'is not required' do
       user = FactoryGirl.build(:user, first_name: '')
       expect(user).to be_valid
     end
 
-    it 'must be less than 80 characters' do
-      user = FactoryGirl.build(:user, first_name: Faker::Lorem.characters(81))
+    it 'must be less than 60 characters' do
+      user = FactoryGirl.build(:user, first_name: Faker::Lorem.characters(61))
       expect(user).to_not be_valid
-      expect(user.errors[:first_name]).to include 'is too long (maximum is 80 characters)'
+      expect(user.errors[:first_name]).to include 'is too long (maximum is 60 characters)'
     end
   end
 
@@ -80,10 +101,10 @@ RSpec.describe User, type: :model do
       expect(user.errors[:last_name]).to include 'can\'t be blank'
     end
 
-    it 'must be less than 80 characters' do
-      user = FactoryGirl.build(:user, last_name: Faker::Lorem.characters(81))
+    it 'must be less than 60 characters' do
+      user = FactoryGirl.build(:user, last_name: Faker::Lorem.characters(61))
       expect(user).to_not be_valid
-      expect(user.errors[:last_name]).to include 'is too long (maximum is 80 characters)'
+      expect(user.errors[:last_name]).to include 'is too long (maximum is 60 characters)'
     end
   end
 
