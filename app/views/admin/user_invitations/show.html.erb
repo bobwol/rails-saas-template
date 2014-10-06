@@ -1,0 +1,29 @@
+﻿<%
+@title = 'User Invitations'
+@heading = 'User Invitations'
+@subheading = @user_invitation
+%>
+
+<ul class="nav nav-tabs">
+  <% if can?(:index, @account) %><li><%= link_to "Account", admin_account_path(@account) %></li><% end %>
+  <% if can?(:users, @account) %><li><%= link_to "Users", admin_account_users_path(@account) %></li><% end %>
+  <% if can?(:index, @account) %><li><%= link_to "User Invitations", admin_account_user_invitations_path(@account) %></li><% end %>
+  <li class="active"><%= link_to "User Invitation: #{@user_invitation}", admin_account_user_invitation_path(@account, @user_invitation) %></li>
+  <% if can?(:events, @account) %><li><%= link_to "Events", admin_account_events_path(@account) %></li><% end %>
+</ul>
+
+<div style="text-align: right; padding: 10px 0px;">
+  <% if can? :edit, @user_invitation %><%= link_to "Edit User Invitation", edit_admin_account_user_invitation_path(@user_invitation.account, @user_invitation), class: "btn btn-primary" %><% end %>
+  <% if can? :destroy, @user_invitation %><%= link_to "Delete User Invitation", admin_account_user_invitation_path(@user_invitation.account, @user_invitation), method: :delete, class: "btn btn-danger" %><% end %>
+</div>
+
+<dl class="dl-horizontal">
+  <dt>First Name</dt>
+  <dd><%= @user_invitation.first_name %></dd>
+  <dt>Last Name</dt>
+  <dd><%= @user_invitation.last_name %></dd>
+  <dt>Email</dt>
+  <dd><%= @user_invitation.email %> <a href="mailto:<%= @user_invitation.email %>"><span class="glyphicon glyphicon-envelope"></span></a></dd>
+  <dt>Invite Code</dt>
+  <dd><%= @user_invitation.invite_code %></dd>
+</dl>

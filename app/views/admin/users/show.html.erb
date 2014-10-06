@@ -20,7 +20,7 @@
   <dt>Last Name</dt>
   <dd><%= @user.last_name %></dd>
   <dt>Email</dt>
-  <dd><%= @user.email %></dd>
+  <dd><%= @user.email %>  <a href="mailto:<%= @user.email %>"><span class="glyphicon glyphicon-envelope"></span></a></dd>
   <dt>Super Admin</dt>
   <dd><%if @user.super_admin %><span class="label label-success">Yes</span><% end %></dd>
 </dl>

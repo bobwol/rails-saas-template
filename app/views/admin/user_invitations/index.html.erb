@@ -1,0 +1,45 @@
+﻿<%
+@title = 'User Invitations'
+@heading = 'User Invitations'
+@subheading = 'List'
+@nav_item = 'user_invitations' unless @account
+%>
+
+<% if @account %>
+<ul class="nav nav-tabs">
+  <% if can?(:index, @account) %><li><%= link_to "Account", admin_account_path(@account) %></li><% end %>
+  <% if can?(:users, @account) %><li><%= link_to "Users", admin_account_users_path(@account) %></li><% end %>
+  <li class="active"><%= link_to "User Invitations", admin_account_user_invitations_path(@account) %></li>
+  <% if can?(:events, @account) %><li><%= link_to "Events", admin_account_events_path(@account) %></li><% end %>
+</ul>
+
+<div style="text-align: right; padding: 10px 0px;">
+  <% if can? :new, UserInvitation %><%= link_to "New User Invitation", new_admin_account_user_invitation_path(@account), class: "btn btn-primary" %><% end %>
+</div>
+<% end %>
+
+<% if @user_invitations.empty? then %>
+<p>No user invitations found</p>
+<% else %>
+<table class="table table-condensed table-striped">
+	<thead>
+		<tr>
+			<th>First Name</th>
+			<th>Last Name</th>
+			<th>Email</th>
+			<th>Code</th>
+		</tr>
+	</thead>
+	<tbody>
+<% @user_invitations.each do |user_invitation| %>
+		<tr>
+			<td><%= link_to_if can?(:show, user_invitation), user_invitation.first_name, admin_account_user_invitation_path(user_invitation.account, user_invitation) %></td>
+			<td><%= link_to_if can?(:show, user_invitation), user_invitation.last_name, admin_account_user_invitation_path(user_invitation.account, user_invitation) %></td>
+			<td><%= user_invitation.email %> <a href="mailto:<%= user_invitation.email %>"><span class="glyphicon glyphicon-envelope"></span></a></td>
+			<td><%= user_invitation.invite_code %></td>
+		</tr>
+<% end %>
+	</tbody>
+</table>
+<%= paginate @user_invitations %>
+<% end %>

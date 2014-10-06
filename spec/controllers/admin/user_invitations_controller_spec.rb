@@ -30,18 +30,22 @@
 
 require 'rails_helper'
 
-# Tests for the admin users controller
-RSpec.describe Admin::UsersController, type: :controller do
+# Tests for the admin user invitations controller
+RSpec.describe Admin::UserInvitationsController, type: :controller do
+  before :each do
+    @account = FactoryGirl.create(:account)
+  end
+
   describe 'POST #create' do
     context 'as anonymous user' do
       it 'redirects to login page' do
-        post :create, user: FactoryGirl.attributes_for(:user)
+        post :create, account_id: @account.id, user_invitation: FactoryGirl.attributes_for(:user_invitation)
         expect(response).to be_redirect
         expect(response).to redirect_to(new_user_session_path)
       end
 
       it 'does not create a user' do
-        expect { post :create, user: FactoryGirl.attributes_for(:user) }.to change { User.count }.by(0)
+        expect { post :create, account_id: @account.id, user_invitation: FactoryGirl.attributes_for(:user_invitation) }.to change { UserInvitation.count }.by(0)
       end
     end
 
@@ -52,18 +56,18 @@ RSpec.describe Admin::UsersController, type: :controller do
       end
 
       it 'responds with forbidden' do
-        post :create, user: FactoryGirl.attributes_for(:user)
+        post :create, account_id: @account.id, user_invitation: FactoryGirl.attributes_for(:user_invitation)
         expect(response).to be_forbidden
       end
 
       it 'renders the forbidden' do
-        post :create, user: FactoryGirl.attributes_for(:user)
+        post :create, account_id: @account.id, user_invitation: FactoryGirl.attributes_for(:user_invitation)
         expect(response).to render_template('errors/forbidden')
         expect(response).to render_template('layouts/errors')
       end
 
       it 'does not create a user' do
-        expect { post :create, user: FactoryGirl.attributes_for(:user) }.to change { User.count }.by(0)
+        expect { post :create, account_id: @account.id, user_invitation: FactoryGirl.attributes_for(:user_invitation) }.to change { UserInvitation.count }.by(0)
       end
     end
 
@@ -75,48 +79,48 @@ RSpec.describe Admin::UsersController, type: :controller do
 
       context 'with valid attributes' do
         it 'sets the nav_item to users' do
-          post :create, user: FactoryGirl.attributes_for(:user)
-          expect(assigns(:nav_item)).to eq 'users'
+          post :create, account_id: @account.id, user_invitation: FactoryGirl.attributes_for(:user_invitation)
+          expect(assigns(:nav_item)).to eq 'accounts'
         end
 
-        it 'it redirects to user' do
-          post :create, user: FactoryGirl.attributes_for(:user)
-          user = assigns(:user)
+        it 'it redirects to user_invitation' do
+          post :create, account_id: @account.id, user_invitation: FactoryGirl.attributes_for(:user_invitation)
+          user_invitation = assigns(:user_invitation)
           expect(response).to be_redirect
-          expect(response).to redirect_to(admin_user_path(user))
+          expect(response).to redirect_to(admin_account_user_invitation_path(user_invitation.account, user_invitation))
         end
 
         it 'sets a notice' do
-          post :create, user: FactoryGirl.attributes_for(:user)
-          expect(request.flash[:notice]).to eq 'User was successfully created.'
+          post :create, account_id: @account.id, user_invitation: FactoryGirl.attributes_for(:user_invitation)
+          expect(request.flash[:notice]).to eq 'User invitation was successfully created.'
         end
 
-        it 'creates a user' do
-          expect { post :create, user: FactoryGirl.attributes_for(:user) }.to change { User.count }.by(1)
+        it 'creates a user invitation' do
+          expect { post :create, account_id: @account.id, user_invitation: FactoryGirl.attributes_for(:user_invitation) }.to change { UserInvitation.count }.by(1)
         end
       end
 
       context 'with invalid attributes' do
         it 'sets the nav_item to users' do
-          post :create, user: FactoryGirl.attributes_for(:user)
-          expect(assigns(:nav_item)).to eq 'users'
+          post :create, account_id: @account.id, user_invitation: FactoryGirl.attributes_for(:user_invitation)
+          expect(assigns(:nav_item)).to eq 'accounts'
         end
 
         it 'it renders the new template' do
-          post :create, user: FactoryGirl.attributes_for(:user, email: '')
+          post :create, account_id: @account.id, user_invitation: FactoryGirl.attributes_for(:user_invitation, email: '')
           expect(response).to render_template('new')
           expect(response).to render_template('layouts/admin')
         end
 
-        it 'it pass a new user' do
-          post :create, user: FactoryGirl.attributes_for(:user, email: '')
-          user = assigns(:user)
+        it 'it pass a new user invitation' do
+          post :create, account_id: @account.id, user_invitation: FactoryGirl.attributes_for(:user_invitation, email: '')
+          user = assigns(:user_invitation)
           expect(user).to_not be_nil
           expect(user).to be_new_record
         end
 
-        it 'does not create a user' do
-          expect { post :create, user: FactoryGirl.attributes_for(:user, email: '') }.to change { User.count }.by(0)
+        it 'does not create a user invitation' do
+          expect { post :create, account_id: @account.id, user_invitation: FactoryGirl.attributes_for(:user_invitation, email: '') }.to change { UserInvitation.count }.by(0)
         end
       end
     end
@@ -124,39 +128,40 @@ RSpec.describe Admin::UsersController, type: :controller do
 
   describe 'DELETE #destroy' do
     before(:each) do
-      @user = FactoryGirl.create(:user)
+      @user_invitation = FactoryGirl.create(:user_invitation, account: @account)
     end
 
     context 'as anonymous user' do
       it 'redirects to login page' do
-        delete :destroy, id: @user.id
+        delete :destroy, account_id: @account.id, id: @user_invitation.id
         expect(response).to be_redirect
         expect(response).to redirect_to(new_user_session_path)
       end
 
-      it 'does not delete a user' do
-        expect { delete :destroy, id: @user.id }.to change { User.count }.by(0)
+      it 'does not delete a user invitation' do
+        expect { delete :destroy, account_id: @account.id, id: @user_invitation.id }.to change { UserInvitation.count }.by(0)
       end
     end
 
-    context 'as unauthorized users' do
+    context 'as unauthorized user invitations' do
       before(:each) do
-        sign_in :user, @user
+        user = FactoryGirl.create(:user)
+        sign_in :user, user
       end
 
       it 'responds with forbidden' do
-        delete :destroy, id: @user.id
+        delete :destroy, account_id: @account.id, id: @user_invitation.id
         expect(response).to be_forbidden
       end
 
       it 'renders the forbidden' do
-        delete :destroy, id: @user.id
+        delete :destroy, account_id: @account.id, id: @user_invitation.id
         expect(response).to render_template('errors/forbidden')
         expect(response).to render_template('layouts/errors')
       end
 
-      it 'does not delete a user' do
-        expect { delete :destroy, id: @user.id }.to change { User.count }.by(0)
+      it 'does not delete a user invitation' do
+        expect { delete :destroy, account_id: @account.id, id: @user_invitation.id }.to change { UserInvitation.count }.by(0)
       end
     end
 
@@ -166,105 +171,31 @@ RSpec.describe Admin::UsersController, type: :controller do
         sign_in :user, @admin
       end
 
-      context 'deleting another user' do
-        it 'it redirects to users' do
-          delete :destroy, id: @user.id
-          expect(response).to be_redirect
-          expect(response).to redirect_to(admin_users_path)
-        end
-
-        it 'sets a notice' do
-          delete :destroy, id: @user.id
-          expect(request.flash[:notice]).to eq 'User was successfully removed.'
-        end
-
-        it 'deletes a user' do
-          expect { delete :destroy, id: @user.id }.to change { User.count }.by(-1)
-        end
-      end
-
-      context 'deleting yourself' do
-        it 'it redirects to users' do
-          delete :destroy, id: @admin.id
-          expect(response).to be_redirect
-          expect(response).to redirect_to(admin_user_path(@admin))
-        end
-
-        it 'sets a notice' do
-          delete :destroy, id: @admin.id
-          expect(request.flash[:alert]).to eq 'You cannot delete yourself.'
-        end
-
-        it 'does not delete a user' do
-          expect { delete :destroy, id: @admin.id }.to change { User.count }.by(0)
-        end
-      end
-    end
-  end
-
-  describe 'GET #accounts' do
-    before(:each) do
-      @user = FactoryGirl.create(:user)
-    end
-
-    context 'as anonymous user' do
-      it 'redirects to login page' do
-        get :accounts, user_id: @user.id
+      it 'it redirects to users' do
+        delete :destroy, account_id: @account.id, id: @user_invitation.id
         expect(response).to be_redirect
-        expect(response).to redirect_to(new_user_session_path)
-      end
-    end
-
-    context 'as unauthorized users' do
-      before(:each) do
-        sign_in :user, @user
+        expect(response).to redirect_to(admin_account_user_invitations_path(@account))
       end
 
-      it 'responds with forbidden' do
-        get :accounts, user_id: @user.id
-        expect(response).to be_forbidden
+      it 'sets a notice' do
+        delete :destroy, account_id: @account.id, id: @user_invitation.id
+        expect(request.flash[:notice]).to eq 'User invitation was successfully removed.'
       end
 
-      it 'renders the forbidden' do
-        get :accounts, user_id: @user.id
-        expect(response).to render_template('errors/forbidden')
-        expect(response).to render_template('layouts/errors')
-      end
-    end
-
-    context 'as super admin user' do
-      before(:each) do
-        admin = FactoryGirl.create(:admin)
-        sign_in :user, admin
-      end
-
-      it 'responds successfully with an HTTP 200 status code' do
-        get :accounts, user_id: @user.id
-        expect(response).to be_success
-        expect(response).to have_http_status(:success)
-      end
-
-      it 'sets the nav_item to users' do
-        get :accounts, user_id: @user.id
-        expect(assigns(:nav_item)).to eq 'users'
-      end
-
-      it 'renders the accounts template' do
-        get :accounts, user_id: @user.id
-        expect(response).to render_template('accounts')
-        expect(response).to render_template('layouts/admin')
+      it 'deletes a user' do
+        expect { delete :destroy, account_id: @account.id, id: @user_invitation.id }.to change { UserInvitation.count }.by(-1)
       end
     end
   end
 
   describe 'GET #edit' do
     before(:each) do
-      @user = FactoryGirl.create(:user)
+      @user_invitation = FactoryGirl.create(:user_invitation)
     end
 
     context 'as anonymous user' do
       it 'redirects to login page' do
-        get :edit, id: @user.id
+        get :edit, account_id: @account.id, id: @user_invitation.id
         expect(response).to be_redirect
         expect(response).to redirect_to(new_user_session_path)
       end
@@ -272,16 +203,17 @@ RSpec.describe Admin::UsersController, type: :controller do
 
     context 'as unauthorized users' do
       before(:each) do
-        sign_in :user, @user
+        user = FactoryGirl.create(:user)
+        sign_in :user, user
       end
 
       it 'responds with forbidden' do
-        get :edit, id: @user.id
+        get :edit, account_id: @account.id, id: @user_invitation.id
         expect(response).to be_forbidden
       end
 
       it 'renders the forbidden' do
-        get :edit, id: @user.id
+        get :edit, account_id: @account.id, id: @user_invitation.id
         expect(response).to render_template('errors/forbidden')
         expect(response).to render_template('layouts/errors')
       end
@@ -294,32 +226,32 @@ RSpec.describe Admin::UsersController, type: :controller do
       end
 
       it 'responds successfully with an HTTP 200 status code' do
-        get :edit, id: @user.id
+        get :edit, account_id: @account.id, id: @user_invitation.id
         expect(response).to be_success
         expect(response).to have_http_status(:success)
       end
 
       it 'sets the nav_item to users' do
-        get :edit, id: @user.id
-        expect(assigns(:nav_item)).to eq 'users'
+        get :edit, account_id: @account.id, id: @user_invitation.id
+        expect(assigns(:nav_item)).to eq 'accounts'
       end
 
       it 'renders the edit template' do
-        get :edit, id: @user.id
+        get :edit, account_id: @account.id, id: @user_invitation.id
         expect(response).to render_template('edit')
         expect(response).to render_template('layouts/admin')
       end
 
-      it 'assigns a edit user' do
-        get :edit, id: @user.id
-        u = assigns(:user)
-        expect(u).to_not be_nil
-        expect(u.id).to eq @user.id
+      it 'assigns a edit user invitation' do
+        get :edit, account_id: @account.id, id: @user_invitation.id
+        ui = assigns(:user_invitation)
+        expect(ui).to_not be_nil
+        expect(ui.id).to eq @user_invitation.id
       end
     end
   end
 
-  describe 'GET #index' do
+  describe 'GET #index without account_id' do
     context 'as anonymous user' do
       it 'redirects to login page' do
         get :index
@@ -359,7 +291,7 @@ RSpec.describe Admin::UsersController, type: :controller do
 
       it 'sets the nav_item to users' do
         get :index
-        expect(assigns(:nav_item)).to eq 'users'
+        expect(assigns(:nav_item)).to eq 'accounts'
       end
 
       it 'renders the index template' do
@@ -369,16 +301,78 @@ RSpec.describe Admin::UsersController, type: :controller do
       end
 
       it 'assigns users correctly' do
-        user = FactoryGirl.create(:user)
-        user2 = FactoryGirl.create(:user, email: 'john-2@example.com')
+        user_invitation = FactoryGirl.create(:user_invitation, account: @account)
+        user_invitation2 = FactoryGirl.create(:user_invitation, account: @account, email: 'john-2@example.com')
 
         get :index
-        users = assigns(:users)
-        expect(users).to_not be_nil
-        # Remember that we've already created the admin so it's 3 not 2
-        expect(users.count).to eq 3
-        expect(users).to include user
-        expect(users).to include user2
+        user_invitations = assigns(:user_invitations)
+        expect(user_invitations).to_not be_nil
+        expect(user_invitations.count).to eq 2
+        expect(user_invitations).to include user_invitation
+        expect(user_invitations).to include user_invitation2
+      end
+    end
+  end
+
+  describe 'GET #index with account_id' do
+    context 'as anonymous user' do
+      it 'redirects to login page' do
+        get :index, account_id: @account.id
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+
+    context 'as unauthorized users' do
+      before(:each) do
+        user = FactoryGirl.create(:user)
+        sign_in :user, user
+      end
+
+      it 'responds with forbidden' do
+        get :index, account_id: @account.id
+        expect(response).to be_forbidden
+      end
+
+      it 'renders the forbidden' do
+        get :index, account_id: @account.id
+        expect(response).to render_template('errors/forbidden')
+        expect(response).to render_template('layouts/errors')
+      end
+    end
+
+    context 'as super admin user' do
+      before(:each) do
+        admin = FactoryGirl.create(:admin)
+        sign_in :user, admin
+      end
+
+      it 'responds successfully with an HTTP 200 status code' do
+        get :index, account_id: @account.id
+        expect(response).to be_success
+        expect(response).to have_http_status(200)
+      end
+
+      it 'sets the nav_item to accounts' do
+        get :index, account_id: @account.id
+        expect(assigns(:nav_item)).to eq 'accounts'
+      end
+
+      it 'renders the index template' do
+        get :index, account_id: @account.id
+        expect(response).to render_template('index')
+        expect(response).to render_template('layouts/admin')
+      end
+
+      it 'assigns users correctly' do
+        user_invitation = FactoryGirl.create(:user_invitation, account: @account)
+        user_invitation2 = FactoryGirl.create(:user_invitation, account: @account, email: 'john-2@example.com')
+
+        get :index, account_id: @account.id
+        user_invitations = assigns(:user_invitations)
+        expect(user_invitations).to_not be_nil
+        expect(user_invitations.count).to eq 2
+        expect(user_invitations).to include user_invitation
+        expect(user_invitations).to include user_invitation2
       end
     end
   end
@@ -386,7 +380,7 @@ RSpec.describe Admin::UsersController, type: :controller do
   describe 'GET #new' do
     context 'as anonymous user' do
       it 'redirects to login page' do
-        get :new
+        get :new, account_id: @account.id
         expect(response).to be_redirect
         expect(response).to redirect_to(new_user_session_path)
       end
@@ -399,12 +393,12 @@ RSpec.describe Admin::UsersController, type: :controller do
       end
 
       it 'responds with forbidden' do
-        get :new
+        get :new, account_id: @account.id
         expect(response).to be_forbidden
       end
 
       it 'renders the forbidden' do
-        get :new
+        get :new, account_id: @account.id
         expect(response).to render_template('errors/forbidden')
         expect(response).to render_template('layouts/errors')
       end
@@ -417,39 +411,39 @@ RSpec.describe Admin::UsersController, type: :controller do
       end
 
       it 'responds successfully with an HTTP 200 status code' do
-        get :new
+        get :new, account_id: @account.id
         expect(response).to be_success
         expect(response).to have_http_status(200)
       end
 
       it 'sets the nav_item to users' do
-        get :new
-        expect(assigns(:nav_item)).to eq 'users'
+        get :new, account_id: @account.id
+        expect(assigns(:nav_item)).to eq 'accounts'
       end
 
       it 'renders the new template' do
-        get :new
+        get :new, account_id: @account.id
         expect(response).to render_template('new')
         expect(response).to render_template('layouts/admin')
       end
 
       it 'assigns a new user' do
-        get :new
-        user = assigns(:user)
-        expect(user).to_not be_nil
-        expect(user).to be_new_record
+        get :new, account_id: @account.id
+        user_invitation = assigns(:user_invitation)
+        expect(user_invitation).to_not be_nil
+        expect(user_invitation).to be_new_record
       end
     end
   end
 
   describe 'GET #show' do
     before(:each) do
-      @user = FactoryGirl.create(:user)
+      @user_invitation = FactoryGirl.create(:user_invitation, account: @account)
     end
 
     context 'as anonymous user' do
       it 'redirects to login page' do
-        get :show, id: @user.id
+        get :show, account_id: @account.id, id: @user_invitation.id
         expect(response).to be_redirect
         expect(response).to redirect_to(new_user_session_path)
       end
@@ -457,16 +451,17 @@ RSpec.describe Admin::UsersController, type: :controller do
 
     context 'as unauthorized users' do
       before(:each) do
-        sign_in :user, @user
+        user = FactoryGirl.create(:user)
+        sign_in :user, user
       end
 
       it 'responds with forbidden' do
-        get :show, id: @user.id
+        get :show, account_id: @account.id, id: @user_invitation.id
         expect(response).to be_forbidden
       end
 
       it 'renders the forbidden' do
-        get :show, id: @user.id
+        get :show, account_id: @account.id, id: @user_invitation.id
         expect(response).to render_template('errors/forbidden')
         expect(response).to render_template('layouts/errors')
       end
@@ -479,39 +474,39 @@ RSpec.describe Admin::UsersController, type: :controller do
       end
 
       it 'responds successfully with an HTTP 200 status code' do
-        get :show, id: @user.id
+        get :show, account_id: @account.id, id: @user_invitation.id
         expect(response).to be_success
         expect(response).to have_http_status(200)
       end
 
       it 'sets the nav_item to users' do
-        get :show, id: @user.id
-        expect(assigns(:nav_item)).to eq 'users'
+        get :show, account_id: @account.id, id: @user_invitation.id
+        expect(assigns(:nav_item)).to eq 'accounts'
       end
 
       it 'renders the show template' do
-        get :show, id: @user.id
+        get :show, account_id: @account.id, id: @user_invitation.id
         expect(response).to render_template('show')
         expect(response).to render_template('layouts/admin')
       end
 
-      it 'assigns a show user' do
-        get :show, id: @user.id
-        u = assigns(:user)
-        expect(u).to_not be_nil
-        expect(u.id).to eq @user.id
+      it 'assigns a show user invitation' do
+        get :show, account_id: @account.id, id: @user_invitation.id
+        ui = assigns(:user_invitation)
+        expect(ui).to_not be_nil
+        expect(ui.id).to eq @user_invitation.id
       end
     end
   end
 
   describe 'PATCH #update' do
     before(:each) do
-      @user = FactoryGirl.create(:user)
+      @user_invitation = FactoryGirl.create(:user_invitation, account: @account)
     end
 
     context 'as anonymous user' do
       it 'redirects to login page' do
-        patch :update, id: @user.id, user: FactoryGirl.attributes_for(:user)
+        patch :update, account_id: @account.id, id: @user_invitation.id, user_invitation: FactoryGirl.attributes_for(:user_invitation)
         expect(response).to be_redirect
         expect(response).to redirect_to(new_user_session_path)
       end
@@ -519,16 +514,17 @@ RSpec.describe Admin::UsersController, type: :controller do
 
     context 'as unauthorized users' do
       before(:each) do
-        sign_in :user, @user
+        user = FactoryGirl.create(:user)
+        sign_in :user, user
       end
 
       it 'responds with forbidden' do
-        patch :update, id: @user.id, user: FactoryGirl.attributes_for(:user)
+        patch :update, account_id: @account.id, id: @user_invitation.id, user_invitation: FactoryGirl.attributes_for(:user_invitation)
         expect(response).to be_forbidden
       end
 
       it 'renders the forbidden' do
-        patch :update, id: @user.id, user: FactoryGirl.attributes_for(:user)
+        patch :update, account_id: @account.id, id: @user_invitation.id, user_invitation: FactoryGirl.attributes_for(:user_invitation)
         expect(response).to render_template('errors/forbidden')
         expect(response).to render_template('layouts/errors')
       end
@@ -542,40 +538,40 @@ RSpec.describe Admin::UsersController, type: :controller do
 
       context 'with valid attributes' do
         it 'sets the nav_item to users' do
-          patch :update, id: @user.id, user: FactoryGirl.attributes_for(:user)
-          expect(assigns(:nav_item)).to eq 'users'
+          patch :update, account_id: @account.id, id: @user_invitation.id, user_invitation: FactoryGirl.attributes_for(:user_invitation)
+          expect(assigns(:nav_item)).to eq 'accounts'
         end
 
         it 'it redirects to user' do
-          patch :update, id: @user.id, user: FactoryGirl.attributes_for(:user)
-          user = assigns(:user)
+          patch :update, account_id: @account.id, id: @user_invitation.id, user_invitation: FactoryGirl.attributes_for(:user_invitation)
+          user = assigns(:user_invitation)
           expect(response).to be_redirect
-          expect(response).to redirect_to(admin_user_path(user))
+          expect(response).to redirect_to(admin_account_user_invitation_path(@user_invitation.account, @user_invitation))
         end
 
         it 'sets a notice' do
-          patch :update, id: @user.id, user: FactoryGirl.attributes_for(:user)
-          expect(request.flash[:notice]).to eq 'User was successfully updated.'
+          patch :update, account_id: @account.id, id: @user_invitation.id, user_invitation: FactoryGirl.attributes_for(:user_invitation)
+          expect(request.flash[:notice]).to eq 'User invitation was successfully updated.'
         end
       end
 
       context 'with invalid attributes' do
         it 'sets the nav_item to users' do
-          patch :update, id: @user.id, user: FactoryGirl.attributes_for(:user, email: '')
-          expect(assigns(:nav_item)).to eq 'users'
+          patch :update, account_id: @account.id, id: @user_invitation.id, user_invitation: FactoryGirl.attributes_for(:user_invitation, email: '')
+          expect(assigns(:nav_item)).to eq 'accounts'
         end
 
         it 'it renders the new template' do
-          patch :update, id: @user.id, user: FactoryGirl.attributes_for(:user, email: '')
+          patch :update, account_id: @account.id, id: @user_invitation.id, user_invitation: FactoryGirl.attributes_for(:user_invitation, email: '')
           expect(response).to render_template('edit')
           expect(response).to render_template('layouts/admin')
         end
 
-        it 'it pass a new user' do
-          patch :update, id: @user.id, user: FactoryGirl.attributes_for(:user, email: '')
-          user = assigns(:user)
-          expect(user).to_not be_nil
-          expect(user).to_not be_new_record
+        it 'it pass a new user invite' do
+          patch :update, account_id: @account.id, id: @user_invitation.id, user_invitation: FactoryGirl.attributes_for(:user_invitation, email: '')
+          user_invitation = assigns(:user_invitation)
+          expect(user_invitation).to_not be_nil
+          expect(user_invitation).to_not be_new_record
         end
       end
     end

@@ -8,6 +8,7 @@
 <ul class="nav nav-tabs">
   <li class="active"><%= link_to "Account", admin_account_path(@account) %></li>
   <% if can?(:users, @account) %><li><%= link_to "Users", admin_account_users_path(@account) %></li><% end %>
+  <% if can?(:index, @account) %><li><%= link_to "User Invitations", admin_account_user_invitations_path(@account) %></li><% end %>
   <% if can?(:events, @account) %><li><%= link_to "Events", admin_account_events_path(@account) %></li><% end %>
 </ul>
 

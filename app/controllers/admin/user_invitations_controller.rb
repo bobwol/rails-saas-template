@@ -29,20 +29,26 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 # Provides plans administration in the admin section
-class Admin::UsersController < Admin::ApplicationController
-  before_action :find_user, only: [:destroy, :edit, :show, :update, :accounts]
+class Admin::UserInvitationsController < Admin::ApplicationController
+  before_action :find_account
+  before_action :find_user_invitation, only: [:destroy, :edit, :show, :update]
 
   authorize_resource
 
   def index
-    @users = User.page(params[:page])
+    if @account
+      @user_invitations = @account.user_invitations.page(params[:page])
+    else
+      @user_invitations = UserInvitation.page(params[:page])
+    end
   end
 
   def create
-    @user = User.new(users_create_params)
-    if @user.save
-      AppEvent.success("Created user #{@user}", nil, current_user)
-      redirect_to admin_user_path(@user), notice: 'User was successfully created.'
+    @user_invitation = @account.user_invitations.build(user_invitations_params)
+    if @user_invitation.save
+      AppEvent.success("Created user invitation #{@user_invitation}", @user_invitation.account, current_user)
+      redirect_to admin_account_user_invitation_path(@user_invitation.account, @user_invitation),
+                  notice: 'User invitation was successfully created.'
     else
       render 'new'
     end
@@ -52,38 +58,31 @@ class Admin::UsersController < Admin::ApplicationController
   end
 
   def new
-    @user = User.new
+    @user_invitation = @account.user_invitations.build
   end
 
   def show
   end
 
   def update
-    p = users_update_params
-    if p[:password].blank? && p[:password_confirmation].blank?
-      p.delete(:password)
-      p.delete(:password_confirmation)
-    end
-    if @user.update_attributes(p)
-      AppEvent.success("Updated user #{@user}", nil, current_user)
-      redirect_to admin_user_path(@user), notice: 'User was successfully updated.'
+    p = user_invitations_params
+    if @user_invitation.update_attributes(p)
+      # StripeGateway.delay.plan_update(@plan.id)
+      AppEvent.success("Updated user invitation #{@user_invitation}", @user_invitation.account, current_user)
+      redirect_to admin_account_user_invitation_path(@user_invitation.account, @user_invitation),
+                  notice: 'User invitation was successfully updated.'
     else
       render 'edit'
     end
   end
 
   def destroy
-    # Prevent the user from deleting themselves
-    if @user.id == current_user.id
-      redirect_to admin_user_path(@user), alert: 'You cannot delete yourself.'
-      return
-    end
-
-    if @user.destroy
-      AppEvent.info("Deleted user #{@user}", nil, current_user)
-      redirect_to admin_users_path, notice: 'User was successfully removed.'
+    account = @user_invitation.account
+    if @user_invitation.destroy
+      AppEvent.info("Deleted user #{@user_invitation}", @user_invitation.account, current_user)
+      redirect_to admin_account_user_invitations_path(account), notice: 'User invitation was successfully removed.'
     else
-      redirect_to admin_user_path(@user), alert: 'User could not be removed.'
+      redirect_to admin_account_user_invitation_path(account, @user), alert: 'User invitation could not be removed.'
     end
   end
 
@@ -93,23 +92,23 @@ class Admin::UsersController < Admin::ApplicationController
 
   private
 
-  def find_user
-    if params[:user_id]
-      @user = User.find(params[:user_id])
+  def find_account
+    @account = Account.find(params[:account_id]) if params[:account_id]
+  end
+
+  def find_user_invitation
+    if params[:user_invitation_id]
+      @user_invitation = UserInvitation.find(params[:user_invitation_id])
     else
-      @user = User.find(params[:id])
+      @user_invitation = UserInvitation.find(params[:id])
     end
   end
 
-  def users_create_params
-    params.require(:user).permit(:email, :first_name, :last_name, :password, :password_confirmation, :current_password)
-  end
-
-  def users_update_params
-    params.require(:user).permit(:email, :first_name, :last_name, :password, :password_confirmation, :current_password)
+  def user_invitations_params
+    params.require(:user_invitation).permit(:email, :first_name, :last_name)
   end
 
   def set_nav_item
-    @nav_item = 'users'
+    @nav_item = 'accounts'
   end
 end

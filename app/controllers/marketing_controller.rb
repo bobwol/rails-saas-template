@@ -46,6 +46,7 @@ class MarketingController < ApplicationController
     @plans = Plan.available_for_currency(currency)
   end
 
+  # rubocop:disable Metrics/CyclomaticComplexity, PerceivedComplexity
   def register
     @plan = Plan.available.where(id: params[:account][:plan_id]).first
 
@@ -76,6 +77,7 @@ class MarketingController < ApplicationController
       render 'signup'
     end
   end
+  # rubocop:enable Metrics/CyclomaticComplexity, PerceivedComplexity
 
   def signup
     @plan = Plan.available.where(id: params[:plan_id]).first

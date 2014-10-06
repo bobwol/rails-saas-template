@@ -73,10 +73,12 @@ class Ability
       can :manage, Account
       can :manage, Plan
       can :manage, User
+      can :manage, UserInvitation
     end
 
     if !permissions.nil? && permissions.account_admin?
       can :manage, Account, id: account.id
+      can :manage, UserInvitation, account_id: account.id
       can :index, :dashboard
     end
 

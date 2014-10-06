@@ -88,6 +88,7 @@ Rails.application.routes.draw do
 
   namespace :admin do
     resources :accounts, except: [:destroy] do
+      resources :user_invitations
       get 'cancel' => 'accounts#confirm_cancel'
       patch 'cancel' => 'accounts#cancel'
       get 'events' => 'accounts#events'
@@ -103,6 +104,7 @@ Rails.application.routes.draw do
     end
     get 'events' => 'dashboard#events'
     get 'jobs' => 'dashboard#jobs'
+    get 'user_invitations' => 'user_invitations#index'
     root to: 'dashboard#index'
   end
 
