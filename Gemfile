@@ -65,6 +65,7 @@ gem 'stripe_event', '~> 1.3.0'
 
 # Code quality tools
 group :development do
+  gem 'bullet', '~> 4.14.0'
   gem 'rails_best_practices', '~> 1.15.4'
   gem 'brakeman', '~> 2.6.2'
   gem 'rubocop', '~> 0.26.1'
