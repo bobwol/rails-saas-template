@@ -121,7 +121,8 @@ Rails.application.routes.draw do
         patch 'pause'
         get ':id' => 'plans#edit', as: :edit
       end
-      # resources :users
+      resources :user_permissions, except: [:create, :new]
+      resources :user_invitations
       root to: 'accounts#home'
     end
     root to: 'dashboard#index', as: :tenant_root

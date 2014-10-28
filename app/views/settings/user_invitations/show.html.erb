@@ -1,0 +1,21 @@
+﻿<%
+@title = 'User Invitations'
+@heading = 'User Invitations'
+@subheading = @user_invitation
+%>
+
+<div style="text-align: right; padding: 10px 0px;">
+  <% if can? :edit, @user_invitation %><%= link_to "Edit User Invitation", edit_settings_user_invitation_path(@user_invitation), class: "btn btn-primary" %><% end %>
+  <% if can? :destroy, @user_invitation %><%= link_to "Delete User Invitation", settings_user_invitation_path(@user_invitation), method: :delete, class: "btn btn-danger" %><% end %>
+</div>
+
+<dl class="dl-horizontal">
+  <dt>First Name</dt>
+  <dd><%= @user_invitation.first_name %></dd>
+  <dt>Last Name</dt>
+  <dd><%= @user_invitation.last_name %></dd>
+  <dt>Email</dt>
+  <dd><%= @user_invitation.email %> <a href="mailto:<%= @user_invitation.email %>"><span class="glyphicon glyphicon-envelope"></span></a></dd>
+  <dt>Invite Code</dt>
+  <dd><%= @user_invitation.invite_code %></dd>
+</dl>

@@ -35,6 +35,11 @@ class Admin::ApplicationController < ApplicationController
 
   before_action :set_nav_item
 
+  # Return the ability model. It needs to know about the user and the account.
+  def current_ability
+    Ability.new(current_user, current_account, :admin)
+  end
+
   private
 
   def set_nav_item

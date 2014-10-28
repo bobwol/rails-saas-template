@@ -1,0 +1,22 @@
+﻿<%= render_errors user_invitation %>
+
+<%= form_for [:settings, user_invitation] do |f| %>
+  <div class="form-group">
+    <%= f.label :first_name, class: "control-label" %>
+	<%= f.text_field :first_name, class: "form-control" %>
+  </div>
+  <div class="form-group">
+    <%= f.label :last_name, class: "control-label" %>
+	<%= f.text_field :last_name, class: "form-control" %>
+  </div>
+  <div class="form-group">
+    <%= f.label :email, class: "control-label" %>
+	<%= f.text_field :email, class: "form-control" %>
+  </div>
+		<%= f.submit "Save", class: "btn btn-primary" %>
+<% if user_invitation.new_record? %>
+		<%= link_to "Discard Changes", settings_user_invitations_path %>
+<% else %>
+		<%= link_to "Discard Changes", settings_user_invitation_path(user_invitation) %>
+<% end %>
+<% end %>

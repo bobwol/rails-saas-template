@@ -45,7 +45,13 @@ RSpec.describe Admin::UserInvitationsController, type: :controller do
       end
 
       it 'does not create a user' do
-        expect { post :create, account_id: @account.id, user_invitation: FactoryGirl.attributes_for(:user_invitation) }.to change { UserInvitation.count }.by(0)
+        # rubocop:disable Style/Blocks
+        expect {
+          post :create,
+               account_id: @account.id,
+               user_invitation: FactoryGirl.attributes_for(:user_invitation)
+        }.to change { UserInvitation.count }.by(0)
+        # rubocop:enable Style/Blocks
       end
     end
 
@@ -67,7 +73,13 @@ RSpec.describe Admin::UserInvitationsController, type: :controller do
       end
 
       it 'does not create a user' do
-        expect { post :create, account_id: @account.id, user_invitation: FactoryGirl.attributes_for(:user_invitation) }.to change { UserInvitation.count }.by(0)
+        # rubocop:disable Style/Blocks
+        expect {
+          post :create,
+               account_id: @account.id,
+               user_invitation: FactoryGirl.attributes_for(:user_invitation)
+        }.to change { UserInvitation.count }.by(0)
+        # rubocop:enable Style/Blocks
       end
     end
 
@@ -96,7 +108,13 @@ RSpec.describe Admin::UserInvitationsController, type: :controller do
         end
 
         it 'creates a user invitation' do
-          expect { post :create, account_id: @account.id, user_invitation: FactoryGirl.attributes_for(:user_invitation) }.to change { UserInvitation.count }.by(1)
+          # rubocop:disable Style/Blocks
+          expect {
+            post :create,
+                 account_id: @account.id,
+                 user_invitation: FactoryGirl.attributes_for(:user_invitation)
+          }.to change { UserInvitation.count }.by(1)
+          # rubocop:enable Style/Blocks
         end
       end
 
@@ -107,20 +125,30 @@ RSpec.describe Admin::UserInvitationsController, type: :controller do
         end
 
         it 'it renders the new template' do
-          post :create, account_id: @account.id, user_invitation: FactoryGirl.attributes_for(:user_invitation, email: '')
+          post :create,
+               account_id: @account.id,
+               user_invitation: FactoryGirl.attributes_for(:user_invitation, email: '')
           expect(response).to render_template('new')
           expect(response).to render_template('layouts/admin')
         end
 
         it 'it pass a new user invitation' do
-          post :create, account_id: @account.id, user_invitation: FactoryGirl.attributes_for(:user_invitation, email: '')
+          post :create,
+               account_id: @account.id,
+               user_invitation: FactoryGirl.attributes_for(:user_invitation, email: '')
           user = assigns(:user_invitation)
           expect(user).to_not be_nil
           expect(user).to be_new_record
         end
 
         it 'does not create a user invitation' do
-          expect { post :create, account_id: @account.id, user_invitation: FactoryGirl.attributes_for(:user_invitation, email: '') }.to change { UserInvitation.count }.by(0)
+          # rubocop:disable Style/Blocks
+          expect {
+            post :create,
+                 account_id: @account.id,
+                 user_invitation: FactoryGirl.attributes_for(:user_invitation, email: '')
+          }.to change { UserInvitation.count }.by(0)
+          # rubocop:enable Style/Blocks
         end
       end
     end
@@ -139,7 +167,11 @@ RSpec.describe Admin::UserInvitationsController, type: :controller do
       end
 
       it 'does not delete a user invitation' do
-        expect { delete :destroy, account_id: @account.id, id: @user_invitation.id }.to change { UserInvitation.count }.by(0)
+        # rubocop:disable Style/Blocks
+        expect {
+          delete :destroy, account_id: @account.id, id: @user_invitation.id
+        }.to change { UserInvitation.count }.by(0)
+        # rubocop:enable Style/Blocks
       end
     end
 
@@ -161,7 +193,11 @@ RSpec.describe Admin::UserInvitationsController, type: :controller do
       end
 
       it 'does not delete a user invitation' do
-        expect { delete :destroy, account_id: @account.id, id: @user_invitation.id }.to change { UserInvitation.count }.by(0)
+        # rubocop:disable Style/Blocks
+        expect {
+          delete :destroy, account_id: @account.id, id: @user_invitation.id
+        }.to change { UserInvitation.count }.by(0)
+        # rubocop:enable Style/Blocks
       end
     end
 
@@ -183,7 +219,11 @@ RSpec.describe Admin::UserInvitationsController, type: :controller do
       end
 
       it 'deletes a user' do
-        expect { delete :destroy, account_id: @account.id, id: @user_invitation.id }.to change { UserInvitation.count }.by(-1)
+        # rubocop:disable Style/Blocks
+        expect {
+          delete :destroy, account_id: @account.id, id: @user_invitation.id
+        }.to change { UserInvitation.count }.by(-1)
+        # rubocop:enable Style/Blocks
       end
     end
   end
@@ -506,7 +546,10 @@ RSpec.describe Admin::UserInvitationsController, type: :controller do
 
     context 'as anonymous user' do
       it 'redirects to login page' do
-        patch :update, account_id: @account.id, id: @user_invitation.id, user_invitation: FactoryGirl.attributes_for(:user_invitation)
+        patch :update,
+              account_id: @account.id,
+              id: @user_invitation.id,
+              user_invitation: FactoryGirl.attributes_for(:user_invitation)
         expect(response).to be_redirect
         expect(response).to redirect_to(new_user_session_path)
       end
@@ -519,12 +562,18 @@ RSpec.describe Admin::UserInvitationsController, type: :controller do
       end
 
       it 'responds with forbidden' do
-        patch :update, account_id: @account.id, id: @user_invitation.id, user_invitation: FactoryGirl.attributes_for(:user_invitation)
+        patch :update,
+              account_id: @account.id,
+              id: @user_invitation.id,
+              user_invitation: FactoryGirl.attributes_for(:user_invitation)
         expect(response).to be_forbidden
       end
 
       it 'renders the forbidden' do
-        patch :update, account_id: @account.id, id: @user_invitation.id, user_invitation: FactoryGirl.attributes_for(:user_invitation)
+        patch :update,
+              account_id: @account.id,
+              id: @user_invitation.id,
+              user_invitation: FactoryGirl.attributes_for(:user_invitation)
         expect(response).to render_template('errors/forbidden')
         expect(response).to render_template('layouts/errors')
       end
@@ -538,37 +587,56 @@ RSpec.describe Admin::UserInvitationsController, type: :controller do
 
       context 'with valid attributes' do
         it 'sets the nav_item to users' do
-          patch :update, account_id: @account.id, id: @user_invitation.id, user_invitation: FactoryGirl.attributes_for(:user_invitation)
+          patch :update,
+                account_id: @account.id,
+                id: @user_invitation.id,
+                user_invitation: FactoryGirl.attributes_for(:user_invitation)
           expect(assigns(:nav_item)).to eq 'accounts'
         end
 
         it 'it redirects to user' do
-          patch :update, account_id: @account.id, id: @user_invitation.id, user_invitation: FactoryGirl.attributes_for(:user_invitation)
-          user = assigns(:user_invitation)
+          patch :update,
+                account_id: @account.id,
+                id: @user_invitation.id,
+                user_invitation: FactoryGirl.attributes_for(:user_invitation)
           expect(response).to be_redirect
+          # rubocop:disable Metrics/LineLength
           expect(response).to redirect_to(admin_account_user_invitation_path(@user_invitation.account, @user_invitation))
+          # rubocop:enable Metrics/LineLength
         end
 
         it 'sets a notice' do
-          patch :update, account_id: @account.id, id: @user_invitation.id, user_invitation: FactoryGirl.attributes_for(:user_invitation)
+          patch :update,
+                account_id: @account.id,
+                id: @user_invitation.id,
+                user_invitation: FactoryGirl.attributes_for(:user_invitation)
           expect(request.flash[:notice]).to eq 'User invitation was successfully updated.'
         end
       end
 
       context 'with invalid attributes' do
         it 'sets the nav_item to users' do
-          patch :update, account_id: @account.id, id: @user_invitation.id, user_invitation: FactoryGirl.attributes_for(:user_invitation, email: '')
+          patch :update,
+                account_id: @account.id,
+                id: @user_invitation.id,
+                user_invitation: FactoryGirl.attributes_for(:user_invitation, email: '')
           expect(assigns(:nav_item)).to eq 'accounts'
         end
 
         it 'it renders the new template' do
-          patch :update, account_id: @account.id, id: @user_invitation.id, user_invitation: FactoryGirl.attributes_for(:user_invitation, email: '')
+          patch :update,
+                account_id: @account.id,
+                id: @user_invitation.id,
+                user_invitation: FactoryGirl.attributes_for(:user_invitation, email: '')
           expect(response).to render_template('edit')
           expect(response).to render_template('layouts/admin')
         end
 
         it 'it pass a new user invite' do
-          patch :update, account_id: @account.id, id: @user_invitation.id, user_invitation: FactoryGirl.attributes_for(:user_invitation, email: '')
+          patch :update,
+                account_id: @account.id,
+                id: @user_invitation.id,
+                user_invitation: FactoryGirl.attributes_for(:user_invitation, email: '')
           user_invitation = assigns(:user_invitation)
           expect(user_invitation).to_not be_nil
           expect(user_invitation).to_not be_new_record

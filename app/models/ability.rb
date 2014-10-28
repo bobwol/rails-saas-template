@@ -32,7 +32,8 @@
 class Ability
   include CanCan::Ability
 
-  def initialize(user, account)
+  # rubocop:disable Metrics/CyclomaticComplexity, PerceivedComplexity
+  def initialize(user, account, section)
     # Define abilities for the passed in user here. For example:
     #
     #   user ||= User.new # guest user (not logged in)
@@ -67,21 +68,30 @@ class Ability
       permissions = nil
     end
 
-    if user.super_admin?
-      can :manage, :dashboard
-      can :manage, :admin_dashboard
-      can :manage, Account
-      can :manage, Plan
-      can :manage, User
-      can :manage, UserInvitation
+    # Super Admin's can do anything
+    can :manage, :all if user.super_admin?
+
+    # We really don't want people accessing these things via the admin if they can guess the URL
+    unless section == :admin
+      # Account Admin's get additional privileges
+      if !permissions.nil? && permissions.account_admin?
+        can :manage, Account, id: account.id
+        # Only if the logged in user is an account_admin in EVERY account the user belongs to
+        # can :manage, User, account_id: account.id
+        can :manage, UserInvitation, account_id: account.id
+        can :manage, UserPermission, account_id: account.id
+        can :index, :dashboard
+      end
+
+      # Regular users can do some things BUT not in the settings section
+      unless section == :settings
+        can :manage, User, id: user.id
+        can :manage, UserPermission, user_id: user.id
+      end
     end
 
-    if !permissions.nil? && permissions.account_admin?
-      can :manage, Account, id: account.id
-      can :manage, UserInvitation, account_id: account.id
-      can :index, :dashboard
-    end
-
+    # Enforce plan restrictions against everyone (including Super Admin's)
     cannot :pause, Account, plan: { paused_plan: nil }
   end
+  # rubocop:enable Metrics/CyclomaticComplexity, PerceivedComplexity
 end

@@ -1,0 +1,36 @@
+﻿<%
+@title = 'User Invitations'
+@heading = 'User Invitations'
+@subheading = 'List'
+@nav_item = 'user_invitations' unless @account
+%>
+
+<div style="text-align: right; padding: 10px 0px;">
+  <% if can? :new, UserInvitation %><%= link_to "New User Invitation", new_settings_user_invitation_path, class: "btn btn-primary" %><% end %>
+</div>
+
+<% if @user_invitations.empty? then %>
+<p>No user invitations found</p>
+<% else %>
+<table class="table table-condensed table-striped">
+	<thead>
+		<tr>
+			<th>First Name</th>
+			<th>Last Name</th>
+			<th>Email</th>
+			<th>Code</th>
+		</tr>
+	</thead>
+	<tbody>
+<% @user_invitations.each do |user_invitation| %>
+		<tr>
+			<td><%= link_to_if can?(:show, user_invitation), user_invitation.first_name, settings_user_invitation_path(user_invitation.account, user_invitation) %></td>
+			<td><%= link_to_if can?(:show, user_invitation), user_invitation.last_name, settings_user_invitation_path(user_invitation.account, user_invitation) %></td>
+			<td><%= user_invitation.email %> <a href="mailto:<%= user_invitation.email %>"><span class="glyphicon glyphicon-envelope"></span></a></td>
+			<td><%= user_invitation.invite_code %></td>
+		</tr>
+<% end %>
+	</tbody>
+</table>
+<%= paginate @user_invitations %>
+<% end %>

@@ -28,30 +28,6 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# Base class for all settings section controllers that provides common functionality
-class Settings::ApplicationController < ApplicationController
-  before_action :find_account
-
-  # before_action :check_account_or_super_admin
-
-  before_action :set_nav_item
-
-  layout 'settings'
-
-  # Return the ability model. It needs to know about the user and the account.
-  def current_ability
-    Ability.new(current_user, current_account, :settings)
-  end
-
-  def set_nav_item
-    @nav_item = 'dashboard'
-  end
-
-  def find_account
-    @account = current_account
-  end
-
-  # def check_account_or_super_admin
-  #   fail CanCan::AccessDenied if !current_user.super_admin && !current_user.account_admin
-  # end
+# View helpers for the settings/plans controller
+module Settings::UserInvitationsHelper
 end

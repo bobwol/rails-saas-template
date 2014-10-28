@@ -60,7 +60,7 @@ class ApplicationController < ActionController::Base
 
   # Return the ability model. It needs to know about the user and the account.
   def current_ability
-    Ability.new(current_user, current_account)
+    Ability.new(current_user, current_account, :none)
   end
 
   # This makes sure we retain the :path value for routes that require it
