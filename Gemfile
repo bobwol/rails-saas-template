@@ -69,6 +69,7 @@ group :development do
   gem 'rails_best_practices', '~> 1.15.4'
   gem 'brakeman', '~> 2.6.2'
   gem 'rubocop', '~> 0.26.1'
+  gem 'pry', '~> 0.10.1'
 end
 
 # Testing tools

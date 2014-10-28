@@ -54,6 +54,7 @@ GEM
     cancancan (1.9.2)
     code_analyzer (0.4.5)
       sexp_processor
+    coderay (1.1.0)
     coffee-rails (4.0.1)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0, < 5.0)
@@ -115,6 +116,7 @@ GEM
       activesupport (>= 3.0.0)
     mail (2.6.1)
       mime-types (>= 1.16, < 3)
+    method_source (0.8.2)
     mime-types (2.3)
     minitest (5.4.2)
     multi_json (1.10.1)
@@ -125,6 +127,11 @@ GEM
       ast (>= 1.1, < 3.0)
       slop (~> 3.4, >= 3.4.5)
     powerpack (0.0.9)
+    pry (0.10.1-x86-mingw32)
+      coderay (~> 1.1.0)
+      method_source (~> 0.8.1)
+      slop (~> 3.4)
+      win32console (~> 1.3)
     rack (1.5.2)
     rack-test (0.6.2)
       rack (>= 1.0)
@@ -245,6 +252,7 @@ GEM
     uniform_notifier (1.6.2)
     warden (1.2.3)
       rack (>= 1.0)
+    win32console (1.3.2-x86-mingw32)
 
 PLATFORMS
   x86-mingw32
@@ -268,6 +276,7 @@ DEPENDENCIES
   jquery-rails
   kaminari (~> 0.16.1)
   mysql2 (~> 0.3.16)
+  pry (~> 0.10.1)
   rails (= 4.1.6)
   rails_best_practices (~> 1.15.4)
   rspec (~> 3.1.0)
