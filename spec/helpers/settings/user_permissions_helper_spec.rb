@@ -28,11 +28,17 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# User Permission factories
-FactoryGirl.define do
-  factory :user_permission do
-    association :user, factory: :user
-    association :account, factory: :account
-    account_admin false
-  end
+require 'rails_helper'
+
+# Specs in this file have access to a helper object that includes
+# the Settings::UsersHelper. For example:
+#
+# describe Settings::UsersHelper do
+#   describe "string concat" do
+#     it "concats two strings with spaces" do
+#       expect(helper.concat_strings("this","that")).to eq("this that")
+#     end
+#   end
+# end
+RSpec.describe Settings::UserPermissionsHelper, type: :helper do
 end

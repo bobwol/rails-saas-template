@@ -35,7 +35,7 @@ class UserPermission < ActiveRecord::Base
 
   delegate :email, to: :user, prefix: true
 
-  validates :account_admin, presence: false, allow_nil: false
+  validates :account_admin, inclusion: { in: [true, false] }, presence: false, allow_blank: false
   validates :account_id, presence: true
   validates :user_id, uniqueness: { scope: :account_id }, presence: true
 end

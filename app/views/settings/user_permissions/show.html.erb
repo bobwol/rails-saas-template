@@ -1,0 +1,21 @@
+﻿<%
+@title = 'User Permissions'
+@heading = 'User Permissions'
+@subheading = @user
+%>
+
+<div style="text-align: right; padding: 10px 0px;">
+  <% if can? :edit, @user %><%= link_to "Edit User", edit_settings_user_permission_path(@user_permission), class: "btn btn-primary" %><% end %>
+  <% if can? :destroy, @user %><%= link_to "Delete User", settings_user_permission_path(@user_permission), method: :delete, class: "btn btn-danger" %><% end %>
+</div>
+
+<dl class="dl-horizontal">
+  <dt>First Name</dt>
+  <dd><%= @user.first_name %></dd>
+  <dt>Last Name</dt>
+  <dd><%= @user.last_name %></dd>
+  <dt>Email</dt>
+  <dd><%= @user.email %>  <a href="mailto:<%= @user.email %>"><span class="glyphicon glyphicon-envelope"></span></a></dd>
+  <dt>Account Admin</dt>
+  <dd><%if @user_permission.account_admin %><span class="label label-success">Yes</span><% end %></dd>
+</dl>

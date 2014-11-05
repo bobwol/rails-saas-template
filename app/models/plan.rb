@@ -68,6 +68,10 @@ class Plan < ActiveRecord::Base
           available.where('currency = ?', for_currency).order('amount DESC, name ASC')
         }
 
+  validates :active, inclusion: { in: [true, false] }, presence: false, allow_blank: false
+  validates :allow_custom_path, inclusion: { in: [true, false] }, presence: false, allow_blank: false
+  validates :allow_hostname, inclusion: { in: [true, false] }, presence: false, allow_blank: false
+  validates :allow_subdomain, inclusion: { in: [true, false] }, presence: false, allow_blank: false
   validates :amount,
             presence: true,
             numericality: { greater_than_or_equal_to: 0, integer_only: true }
@@ -85,6 +89,7 @@ class Plan < ActiveRecord::Base
             presence: true,
             numericality: { greater_than_or_equal_to: 1, integer_only: true }
   validates :name, length: { maximum: 150 }, presence: true
+  validates :public, inclusion: { in: [true, false] }, presence: false, allow_blank: false
   validates :statement_description, length: { maximum: 150 }
   validates :stripe_id, length: { maximum: 80 }
   validates :trial_period_days,

@@ -28,11 +28,6 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# User Permission factories
-FactoryGirl.define do
-  factory :user_permission do
-    association :user, factory: :user
-    association :account, factory: :account
-    account_admin false
-  end
+# View helpers for the settings/user_permissions controller
+module Settings::UserPermissionsHelper
 end

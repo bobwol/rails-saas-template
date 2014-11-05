@@ -1,0 +1,14 @@
+﻿<%= render_errors user_permission %>
+
+<%= form_for [:settings, user_permission] do |f| %>
+  <div class="form-group">
+    <%= f.label :account_admin, class: "control-label" %>
+    <%= f.check_box :account_admin %>
+  </div>
+		<%= f.submit "Save", class: "btn btn-primary" %>
+<% if user_permission.new_record? %>
+		<%= link_to "Discard Changes", settings_user_permissions_path %>
+<% else %>
+		<%= link_to "Discard Changes", settings_user_permission_path(user_permission) %>
+<% end %>
+<% end %>

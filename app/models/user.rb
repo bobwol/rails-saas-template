@@ -43,6 +43,7 @@ class User < ActiveRecord::Base
   validates :first_name, length: { maximum: 60 }, presence: true, allow_blank: true
   validates :last_name, length: { maximum: 60 }, presence: true
   validates :password, confirmation: true, presence: true, on: :create
+  validates :super_admin, inclusion: { in: [true, false] }, presence: false, allow_blank: false
 
   def to_s
     if first_name.empty?

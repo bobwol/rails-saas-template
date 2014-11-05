@@ -33,6 +33,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # Don't require authorization for Devise controllers
   skip_authorization_check
 
+  def new
+    @user = User.new(first_name: 'John', last_name: 'Smith')
+  end
+
   private
 
   def sign_up_params

@@ -70,6 +70,7 @@ class Account < ActiveRecord::Base
     end
   end
 
+  validates :active, inclusion: { in: [true, false] }, presence: false, allow_blank: false
   validates :address_city, length: { maximum: 120 }
   validates :address_country, length: { maximum: 2 }
   validates :address_line1, length: { maximum: 120 }
