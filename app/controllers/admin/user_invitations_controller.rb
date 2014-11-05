@@ -39,7 +39,7 @@ class Admin::UserInvitationsController < Admin::ApplicationController
     if @account
       @user_invitations = @account.user_invitations.page(params[:page])
     else
-      @user_invitations = UserInvitation.page(params[:page])
+      @user_invitations = UserInvitation.includes(:account).page(params[:page])
     end
   end
 

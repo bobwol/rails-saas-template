@@ -43,7 +43,7 @@ class Admin::AccountsController < Admin::ApplicationController
   authorize_resource
 
   def index
-    @accounts = Account.page(params[:page])
+    @accounts = Account.includes(:plan).page(params[:page])
   end
 
   def create
@@ -81,7 +81,7 @@ class Admin::AccountsController < Admin::ApplicationController
   end
 
   def events
-    @app_events = @account.app_events.page(params[:page])
+    @app_events = @account.app_events.includes(:user).page(params[:page])
   end
 
   def cancel

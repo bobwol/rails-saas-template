@@ -36,7 +36,7 @@ class Admin::DashboardController < Admin::ApplicationController
 
   def events
     authorize! :events, :admin_dashboard
-    @app_events = AppEvent.page(params[:page])
+    @app_events = AppEvent.includes(:account, :user).page(params[:page])
     @nav_item = 'events'
   end
 

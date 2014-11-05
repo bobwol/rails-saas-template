@@ -45,7 +45,7 @@ class Admin::PlansController < Admin::ApplicationController
   end
 
   def accounts
-    @accounts = Account.where('plan_id = ? or paused_plan_id = ?', @plan.id, @plan.id).page(params[:page])
+    @accounts = Account.includes(:plan).where('plan_id = ? or paused_plan_id = ?', @plan.id, @plan.id).page(params[:page])
   end
 
   def create
