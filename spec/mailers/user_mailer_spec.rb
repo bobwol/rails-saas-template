@@ -32,5 +32,26 @@ require 'rails_helper'
 
 # Tests for the user mailer
 RSpec.describe UserMailer, type: :mailer do
-  pending "add some examples to (or delete) #{__FILE__}"
+  describe '.user_invitation' do
+    before :each do
+      @user_invitation = FactoryGirl.create(:user_invitation)
+      @mail = UserMailer.user_invitation(@user_invitation)
+    end
+
+    it 'renders a subject' do
+      expect(@mail.subject).to eq 'Your invitation has arrived'
+    end
+
+    it 'renders the receiver email' do
+      expect(@mail.to).to eq [@user_invitation.email]
+    end
+
+    it 'renders the sender email' do
+      expect(@mail.from).to eq ['no-reply@example.com']
+    end
+
+    it 'assigns the invite code' do
+      expect(@mail.body.encoded).to match @user_invitation.invite_code
+    end
+  end
 end
