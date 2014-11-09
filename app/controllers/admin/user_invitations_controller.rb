@@ -44,8 +44,9 @@ class Admin::UserInvitationsController < Admin::ApplicationController
   end
 
   def create
-    @user_invitation = @account.user_invitations.build(user_invitations_params)
+    @user_invitation = @account.user_invitations.build(user_invitation_params)
     if @user_invitation.save
+      UserMailer.user_invitation(@user_invitation).deliver
       AppEvent.success("Created user invitation #{@user_invitation}", @user_invitation.account, current_user)
       redirect_to admin_account_user_invitation_path(@user_invitation.account, @user_invitation),
                   notice: 'User invitation was successfully created.'
@@ -65,9 +66,10 @@ class Admin::UserInvitationsController < Admin::ApplicationController
   end
 
   def update
-    p = user_invitations_params
+    p = user_invitation_params
     if @user_invitation.update_attributes(p)
       # StripeGateway.delay.plan_update(@plan.id)
+      UserMailer.user_invitation(@user_invitation).deliver
       AppEvent.success("Updated user invitation #{@user_invitation}", @user_invitation.account, current_user)
       redirect_to admin_account_user_invitation_path(@user_invitation.account, @user_invitation),
                   notice: 'User invitation was successfully updated.'
@@ -104,7 +106,7 @@ class Admin::UserInvitationsController < Admin::ApplicationController
     end
   end
 
-  def user_invitations_params
+  def user_invitation_params
     params.require(:user_invitation).permit(:email, :first_name, :last_name)
   end
 

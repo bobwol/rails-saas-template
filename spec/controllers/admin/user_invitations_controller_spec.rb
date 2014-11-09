@@ -84,12 +84,18 @@ RSpec.describe Admin::UserInvitationsController, type: :controller do
     end
 
     context 'as super admin user' do
-      before(:each) do
-        admin = FactoryGirl.create(:admin)
-        sign_in :user, admin
+      before :each do
+        @admin = FactoryGirl.create(:admin)
+        sign_in :user, @admin
       end
 
       context 'with valid attributes' do
+        before(:each) do
+          mailer = double(ActionMailer::Base)
+          expect(mailer).to receive(:deliver).once
+          expect(UserMailer).to receive(:user_invitation).with(kind_of(UserInvitation)).once.and_return(mailer)
+        end
+
         it 'sets the nav_item to users' do
           post :create, account_id: @account.id, user_invitation: FactoryGirl.attributes_for(:user_invitation)
           expect(assigns(:nav_item)).to eq 'accounts'
@@ -136,9 +142,9 @@ RSpec.describe Admin::UserInvitationsController, type: :controller do
           post :create,
                account_id: @account.id,
                user_invitation: FactoryGirl.attributes_for(:user_invitation, email: '')
-          user = assigns(:user_invitation)
-          expect(user).to_not be_nil
-          expect(user).to be_new_record
+          user_invitation = assigns(:user_invitation)
+          expect(user_invitation).to_not be_nil
+          expect(user_invitation).to be_new_record
         end
 
         it 'does not create a user invitation' do
@@ -586,6 +592,12 @@ RSpec.describe Admin::UserInvitationsController, type: :controller do
       end
 
       context 'with valid attributes' do
+        before :each do
+          mailer = double(ActionMailer::Base)
+          expect(mailer).to receive(:deliver).once
+          expect(UserMailer).to receive(:user_invitation).with(kind_of(UserInvitation)).once.and_return(mailer)
+        end
+
         it 'sets the nav_item to users' do
           patch :update,
                 account_id: @account.id,

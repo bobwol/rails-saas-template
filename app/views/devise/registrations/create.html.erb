@@ -1,15 +1,16 @@
 <%
-@title = 'Edit User'
+@title = 'New User'
 @heading = 'Users'
-@subheading = 'Edit User'
+@subheading = 'New User'
 %>
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+<%= render_errors resource %>
+
 <div class="panel panel-primary">
   <div class="panel-heading">
     <h3 class="panel-title">Edit User</h3>
   </div>
   <div class="panel-body">
-    <%= devise_error_messages! %>
     <div class="form-group">
       <%= f.label :first_name, class: "control-label" %>
       <%= f.text_field :first_name, class: "form-control" %>

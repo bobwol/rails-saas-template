@@ -28,8 +28,6 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-require 'pry'
-
 # Allows the account admin to manage user invitations in the settings
 class Settings::UserInvitationsController < Settings::ApplicationController
   before_action :find_user_invitation, only: [:destroy, :edit, :show, :update]
@@ -41,8 +39,9 @@ class Settings::UserInvitationsController < Settings::ApplicationController
   end
 
   def create
-    @user_invitation = current_account.user_invitations.build(user_invitations_params)
+    @user_invitation = current_account.user_invitations.build(user_invitation_params)
     if @user_invitation.save
+      UserMailer.user_invitation(@user_invitation).deliver
       AppEvent.success("Created user invitation #{@user_invitation}", current_account, current_user)
       redirect_to settings_user_invitation_path(@user_invitation),
                   notice: 'User invitation was successfully created.'
@@ -62,8 +61,9 @@ class Settings::UserInvitationsController < Settings::ApplicationController
   end
 
   def update
-    p = user_invitations_params
+    p = user_invitation_params
     if @user_invitation.update_attributes(p)
+      UserMailer.user_invitation(@user_invitation).deliver
       # StripeGateway.delay.plan_update(@plan.id)
       AppEvent.success("Updated user invitation #{@user_invitation}", current_account, current_user)
       redirect_to settings_user_invitation_path(@user_invitation),
@@ -92,7 +92,7 @@ class Settings::UserInvitationsController < Settings::ApplicationController
     @user_invitation = current_account.user_invitations.find(params[:id])
   end
 
-  def user_invitations_params
+  def user_invitation_params
     params.require(:user_invitation).permit(:email, :first_name, :last_name)
   end
 

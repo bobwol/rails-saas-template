@@ -5,13 +5,13 @@
 %>
 
 <%= form_for(resource, as: resource_name, url: unlock_path(resource_name), html: { method: :post }) do |f| %>
+<%= render_errors resource %>
+
 <div class="panel panel-primary">
   <div class="panel-heading">
     <h3 class="panel-title">Resend Unlock Instructions</h3>
   </div>
   <div class="panel-body">
-    <%= devise_error_messages! %>
-
     <div class="form-group">
       <%= f.label :email, class: "control-label" %>
       <div class="input-group">

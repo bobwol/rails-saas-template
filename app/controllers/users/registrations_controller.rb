@@ -33,8 +33,34 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # Don't require authorization for Devise controllers
   skip_authorization_check
 
+  before_action :find_invitation
+
+  def create
+    @user = User.new
+    if @user_invitation
+      super
+      if @user.errors.count == 0
+        @user_invitation.destroy
+        user_permission = @user_invitation.account.user_permissions.build(user: @user)
+        if user_permission.save
+          AppEvent.success("New user #{@user} for #{@account}", @account, nil)
+        else
+          AppEvent.alert("New user #{@user} for #{@account} but permission not created", @account, nil)
+        end
+      end
+    else
+      @user.errors.add(:base, 'Missing invite code') unless params[:invite_code]
+    end
+  end
+
   def new
-    @user = User.new(first_name: 'John', last_name: 'Smith')
+    @user = User.new
+
+    return unless @user_invitation
+
+    @user.first_name = @user_invitation.first_name
+    @user.last_name = @user_invitation.last_name
+    @user.email = @user_invitation.email
   end
 
   private
@@ -45,5 +71,16 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def account_update_params
     params.require(:user).permit(:email, :first_name, :last_name, :password, :password_confirmation, :current_password)
+  end
+
+  def find_invitation
+    @user_invitation = nil
+    @invite_code = ''
+
+    return unless params[:invite_code]
+
+    @invite_code = params[:invite_code]
+    @user_invitation = UserInvitation.where(invite_code: @invite_code).first
+    @user.errors.add(:base, 'Invalid invite code') unless @user_invitation
   end
 end

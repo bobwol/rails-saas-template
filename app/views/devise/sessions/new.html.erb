@@ -5,6 +5,8 @@
 %>
 
 <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+<%= render_errors resource %>
+
 <div class="panel panel-primary">
 	<div class="panel-heading">
 		<h3 class="panel-title">Log in</h3>

@@ -15,7 +15,7 @@
   </div>
 		<%= f.submit "Save", class: "btn btn-primary" %>
 <% if user_invitation.new_record? %>
-		<%= link_to "Discard Changes", admin_account_user_invitations_path(@account) %>
+		<%= link_to "Discard Changes", admin_account_user_invitations_path(account) %>
 <% else %>
 		<%= link_to "Discard Changes", admin_account_user_invitation_path(user_invitation.account, user_invitation) %>
 <% end %>

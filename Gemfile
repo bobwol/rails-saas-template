@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.1.6'
+gem 'rails', '4.1.7'
 # Use MySQL as the database for Active Record
 gem 'mysql2', '~> 0.3.16'
 # Use SCSS for stylesheets
@@ -70,6 +70,7 @@ group :development do
   gem 'brakeman', '~> 2.6.2'
   gem 'rubocop', '~> 0.26.1'
   gem 'pry', '~> 0.10.1'
+  gem 'pry-debugger', '~> 0.2.3'
 end
 
 # Testing tools
@@ -79,5 +80,6 @@ group :test, :development do
   gem 'database_cleaner', '~> 1.3.0'
   gem 'rspec', '~> 3.1.0'
   gem 'rspec-rails', '~> 3.1.0'
+  gem 'rspec-mocks', '~> 3.1.3'
   gem 'stripe-ruby-mock', '~> 1.10.1.7'
 end

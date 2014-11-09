@@ -54,10 +54,10 @@
     </div>
   </div>
 
-<% if @account.card_brand.nil? %>
-  <%= f.submit "Add Card", class: "btn btn-primary" %>
-<% else %>
+<% if @account.card_brand? %>
   <%= f.submit "Update Card", class: "btn btn-primary" %>
+<% else %>
+  <%= f.submit "Add Card", class: "btn btn-primary" %>
 <% end %>
   <%= link_to "Discard Changes", settings_plan_path %>
 <% end %>

@@ -87,6 +87,12 @@ RSpec.describe Settings::UserInvitationsController, type: :controller do
       end
 
       context 'with valid attributes' do
+        before(:each) do
+          mailer = double(ActionMailer::Base)
+          expect(mailer).to receive(:deliver).once
+          expect(UserMailer).to receive(:user_invitation).with(kind_of(UserInvitation)).once.and_return(mailer)
+        end
+
         it 'sets the nav_item to users' do
           post :create, path: @account.id, user_invitation: FactoryGirl.attributes_for(:user_invitation)
           expect(assigns(:nav_item)).to eq 'user_invitations'
@@ -151,6 +157,12 @@ RSpec.describe Settings::UserInvitationsController, type: :controller do
       end
 
       context 'with valid attributes' do
+        before(:each) do
+          mailer = double(ActionMailer::Base)
+          expect(mailer).to receive(:deliver).once
+          expect(UserMailer).to receive(:user_invitation).with(kind_of(UserInvitation)).once.and_return(mailer)
+        end
+
         it 'sets the nav_item to users' do
           post :create, path: @account.id, user_invitation: FactoryGirl.attributes_for(:user_invitation)
           expect(assigns(:nav_item)).to eq 'user_invitations'
@@ -721,6 +733,12 @@ RSpec.describe Settings::UserInvitationsController, type: :controller do
       end
 
       context 'with valid attributes' do
+        before(:each) do
+          mailer = double(ActionMailer::Base)
+          expect(mailer).to receive(:deliver).once
+          expect(UserMailer).to receive(:user_invitation).with(kind_of(UserInvitation)).once.and_return(mailer)
+        end
+
         it 'sets the nav_item to users' do
           patch :update,
                 path: @account.id,
@@ -784,6 +802,12 @@ RSpec.describe Settings::UserInvitationsController, type: :controller do
       end
 
       context 'with valid attributes' do
+        before(:each) do
+          mailer = double(ActionMailer::Base)
+          expect(mailer).to receive(:deliver).once
+          expect(UserMailer).to receive(:user_invitation).with(kind_of(UserInvitation)).once.and_return(mailer)
+        end
+
         it 'sets the nav_item to users' do
           patch :update,
                 path: @account.id,

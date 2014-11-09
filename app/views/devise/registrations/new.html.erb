@@ -5,12 +5,13 @@
 %>
 
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+<%= render_errors resource %>
+
 <div class="panel panel-primary">
   <div class="panel-heading">
     <h3 class="panel-title">Sign Up</h3>
   </div>
   <div class="panel-body">
-    <%= devise_error_messages! %>
     <div class="form-group">
       <%= f.label :first_name, class: "control-label" %>
       <%= f.text_field :first_name, class: "form-control" %>
@@ -30,6 +31,10 @@
     <div class="form-group">
       <%= f.label :password_confirmation, class: "control-label" %>
       <%= f.password_field :password_confirmation, autocomplete: "off", class: "form-control" %>
+    </div>
+    <div class="form-group">
+      <%= label_tag(:invite_code, "Invite code") %>
+      <%= text_field_tag :invite_code, @invite_code, class: "form-control" %>
     </div>
 
     <%= render "devise/shared/links" %>

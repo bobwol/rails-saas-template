@@ -4,12 +4,7 @@
 @subheading = 'Credit Card'
 %>
 
-<% if @account.card_brand.nil? %>
-<div style="text-align: right; padding: 10px 0px;">
-  <% if can? :edit, @account %><%= link_to "Add Card", edit_settings_card_path, class: "btn btn-primary" %><% end %>
-</div>
-<p>No card. <%= link_to "Add a card now", edit_settings_card_path %>.</p>
-<% else %>
+<% if @account.card_brand? %>
 <div style="text-align: right; padding: 10px 0px;">
   <% if can? :edit, @account %><%= link_to "Edit Card", edit_settings_card_path, class: "btn btn-primary" %><% end %>
 </div>
@@ -40,4 +35,9 @@
     </div>
   </div>
 </form>
+<% else %>
+<div style="text-align: right; padding: 10px 0px;">
+  <% if can? :edit, @account %><%= link_to "Add Card", edit_settings_card_path, class: "btn btn-primary" %><% end %>
+</div>
+<p>No card. <%= link_to "Add a card now", edit_settings_card_path %>.</p>
 <% end %>
