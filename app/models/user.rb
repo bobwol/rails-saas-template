@@ -31,7 +31,7 @@
 # User model
 class User < ActiveRecord::Base
   has_many :app_events
-  has_many :user_permissions
+  has_many :user_permissions, dependent: :destroy
   has_many :accounts, through: :user_permissions
 
   # Include default devise modules. Others available are:

@@ -50,10 +50,10 @@ class Account < ActiveRecord::Base
   belongs_to :plan
   belongs_to :paused_plan, class_name: 'Plan'
 
-  has_many :app_events
+  has_many :app_events, dependent: :destroy
   has_many :users, through: :user_permissions
-  has_many :user_invitations
-  has_many :user_permissions
+  has_many :user_invitations, dependent: :destroy
+  has_many :user_permissions, dependent: :destroy
 
   delegate :currency, :allow_custom_path, :allow_hostname, :allow_subdomain, :stripe_id, to: :plan, prefix: true
   delegate :stripe_id, to: :paused_plan, prefix: true, allow_nil: true

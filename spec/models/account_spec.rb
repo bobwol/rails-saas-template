@@ -334,6 +334,38 @@ RSpec.describe Account, type: :model do
     end
   end
 
+  describe '.destroy' do
+    it 'destroys related AppEvents' do
+      account = FactoryGirl.create(:account)
+      FactoryGirl.create(:app_event, account: account)
+      expect { account.destroy }.to change { AppEvent.count }.by(-1)
+      expect(AppEvent.where(account_id: account.id).count).to eq 0
+    end
+
+    it 'destroys related UserInvitations' do
+      account = FactoryGirl.create(:account)
+      FactoryGirl.create(:user_invitation, account: account)
+      expect { account.destroy }.to change { UserInvitation.count }.by(-1)
+      expect(UserInvitation.where(account_id: account.id).count).to eq 0
+    end
+
+    it 'destroys related UserPermissions' do
+      account = FactoryGirl.create(:account)
+      user = FactoryGirl.create(:user)
+      FactoryGirl.create(:user_permission, account: account, user: user)
+      expect { account.destroy }.to change { UserPermission.count }.by(-1)
+      expect(UserPermission.where(account_id: account.id).count).to eq 0
+    end
+
+    it 'does not destroy related Users' do
+      account = FactoryGirl.create(:account)
+      user = FactoryGirl.create(:user)
+      FactoryGirl.create(:user_permission, account: account, user: user)
+      expect { account.destroy }.to change { User.count }.by(0)
+      expect(User.where(id: user.id).count).to eq 1
+    end
+  end
+
   describe '.email' do
     it 'must be 255 characters or less' do
       account = FactoryGirl.build(:account, email: Faker::Lorem.characters(256))

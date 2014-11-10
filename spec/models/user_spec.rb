@@ -60,6 +60,24 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe '.destroy' do
+    it 'destroys related UserPermissions' do
+      account = FactoryGirl.create(:account)
+      user = FactoryGirl.create(:user)
+      FactoryGirl.create(:user_permission, account: account, user: user)
+      expect { user.destroy }.to change { UserPermission.count }.by(-1)
+      expect(UserPermission.where(user_id: user.id).count).to eq 0
+    end
+
+    it 'does not destroy related Accounts' do
+      account = FactoryGirl.create(:account)
+      user = FactoryGirl.create(:user)
+      FactoryGirl.create(:user_permission, account: account, user: user)
+      expect { user.destroy }.to change { Account.count }.by(0)
+      expect(Account.where(id: account.id).count).to eq 1
+    end
+  end
+
   describe '.email' do
     it 'is required' do
       user = FactoryGirl.build(:user, email: '')
