@@ -42,7 +42,7 @@ class StripeGateway
           account_id: account.id
         }
       }
-      data[:card] = account.card_token unless account.card_token.blank? || account.card_token == 'dummy'
+      data[:card] = account.card_token if account.card_token? && account.card_token != 'dummy'
       data[:plan] = account.plan_stripe_id
       data[:plan] = account.paused_plan_stripe_id unless account.paused_plan_stripe_id.nil?
       customer = Stripe::Customer.create(data)
@@ -67,7 +67,7 @@ class StripeGateway
       account = Account.find(id)
 
       customer = Stripe::Customer.retrieve(account.stripe_customer_id)
-      customer.card = account.card_token unless account.card_token.blank? || account.card_token == 'dummy'
+      customer.card = account.card_token if account.card_token? && account.card_token != 'dummy'
       customer.description = account.company_name
       customer.email = account.email
       customer.save
@@ -113,7 +113,7 @@ class StripeGateway
       account = Account.find(id)
 
       customer = Stripe::Customer.retrieve(account.stripe_customer_id)
-      customer.card = account.card_token unless account.card_token.blank? || account.card_token == 'dummy'
+      customer.card = account.card_token if account.card_token? && account.card_token != 'dummy'
       customer.description = account.company_name
       customer.email = account.email
       customer.save
@@ -142,7 +142,7 @@ class StripeGateway
         trial_period_days: plan.trial_period_days
       }
 
-      data[:statement_description] = plan.statement_description unless plan.statement_description.blank?
+      data[:statement_description] = plan.statement_description if plan.statement_description?
 
       Stripe::Plan.create(data)
 
@@ -160,10 +160,10 @@ class StripeGateway
       plan = Plan.find(id)
       p = Stripe::Plan.retrieve(plan.stripe_id)
       p.name = plan.name
-      if plan.statement_description.blank?
-        p.statement_description = nil
-      else
+      if plan.statement_description?
         p.statement_description = plan.statement_description
+      else
+        p.statement_description = nil
       end
       p.save
     end
