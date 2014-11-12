@@ -36,20 +36,22 @@ class Users::RegistrationsController < Devise::RegistrationsController
   before_action :find_invitation
 
   def create
-    @user = User.new
     if @user_invitation
-      super
-      if @user.errors.count == 0
-        @user_invitation.destroy
-        user_permission = @user_invitation.account.user_permissions.build(user: @user)
-        if user_permission.save
-          AppEvent.success("New user #{@user} for #{@account}", @account, nil)
-        else
-          AppEvent.alert("New user #{@user} for #{@account} but permission not created", @account, nil)
+      super do |resource|
+        if resource.errors.count == 0
+          UserMailer.welcome(resource).deliver
+          user_permission = @user_invitation.account.user_permissions.build(user: resource)
+          if user_permission.save
+            AppEvent.success("New user #{resource} for #{@account}", @account, nil)
+          else
+            AppEvent.alert("New user #{resource} for #{@account} but permission not created", @account, nil)
+          end
+          @user_invitation.destroy
         end
       end
     else
-      @user.errors.add(:base, 'Missing invite code') unless params[:invite_code]
+      resource = User.new(sign_up_params)
+      resource.errors.add(:base, 'Missing invite code') unless params[:invite_code]
     end
   end
 

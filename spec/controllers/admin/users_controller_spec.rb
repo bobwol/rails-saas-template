@@ -74,6 +74,12 @@ RSpec.describe Admin::UsersController, type: :controller do
       end
 
       context 'with valid attributes' do
+        before :each do
+          mailer = double(ActionMailer::Base)
+          expect(mailer).to receive(:deliver).once
+          expect(UserMailer).to receive(:welcome).with(kind_of(User)).once.and_return(mailer)
+        end
+
         it 'sets the nav_item to users' do
           post :create, user: FactoryGirl.attributes_for(:user)
           expect(assigns(:nav_item)).to eq 'users'

@@ -36,4 +36,9 @@ class UserMailer < ActionMailer::Base
     @user_invitation = user_invitation
     mail(to: @user_invitation.email, subject: 'Your invitation has arrived')
   end
+
+  def welcome(user)
+    @user = user
+    mail(to: @user.email, subject: 'Welcome')
+  end
 end

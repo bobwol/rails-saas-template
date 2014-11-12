@@ -50,12 +50,16 @@ RSpec.describe Users::RegistrationsController, type: :controller do
   end
 
   describe 'POST #create' do
+    before :each do
+      account = FactoryGirl.create(:account)
+      @user_invitation = FactoryGirl.create(:user_invitation, account: account)
+      mailer = double(ActionMailer::Base)
+      expect(mailer).to receive(:deliver).once
+      expect(UserMailer).to receive(:welcome).with(kind_of(User)).once.and_return(mailer)
+    end
+
     it 'responds successfully with an HTTP 200 status code' do
-      post :create, user: { email: 'john@example.com',
-                            first_name: 'John',
-                            last_name: 'Doe',
-                            password: 'abcd1234',
-                            password_confirmation: 'abc12345' }
+      post :create, user: FactoryGirl.attributes_for(:user), invite_code: @user_invitation.invite_code
       expect(response).to be_success
       expect(response).to have_http_status(200)
     end

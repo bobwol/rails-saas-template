@@ -54,4 +54,23 @@ RSpec.describe UserMailer, type: :mailer do
       expect(@mail.body.encoded).to match @user_invitation.invite_code
     end
   end
+
+  describe '.welcome' do
+    before :each do
+      @user = FactoryGirl.create(:user)
+      @mail = UserMailer.welcome(@user)
+    end
+
+    it 'renders a subject' do
+      expect(@mail.subject).to eq 'Welcome'
+    end
+
+    it 'renders the receiver email' do
+      expect(@mail.to).to eq [@user.email]
+    end
+
+    it 'renders the sender email' do
+      expect(@mail.from).to eq ['no-reply@example.com']
+    end
+  end
 end
