@@ -2,12 +2,12 @@ Welcome <%= @user_invitation %>
 
 Someone has invited you to join. You can join by following the link below:
 
-http://localhost:3000/users/register?invite_code=<%= @user_invitation.invite_code %>
+<%= new_user_invitation_url(invite_code: @user_invitation.invite_code) %>
 
 If you are not a member then you can sign up or you can log use an existing
 account if you have one.
 
-If the link doesn't work then go to http://localhost:3000/users/register
+If the link doesn't work then go to <%= new_user_invitation_url  %>
 and enter the invitation code <%= @user_invitation.invite_code %>
 
 Thanks for joining and have a great day!

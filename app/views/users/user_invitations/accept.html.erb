@@ -1,0 +1,7 @@
+<%
+@title = 'User Invitation'
+@heading = 'User Invitation'
+@subheading = 'Accepted'
+%>
+
+<p>Great. You now have access to <%= link_to @account, tenant_root_path(path: @account.id) %>.</p>

@@ -1,0 +1,28 @@
+<%
+@title = 'User Invitation'
+@heading = 'User Invitation'
+@subheading = 'Accepted'
+%>
+
+<div class="row">
+    <div class="col-md-6">
+      <h2>Already got an account?</h2>
+      <p>You can link this invitation to an existing account.</p>
+<% if user_signed_in? %>
+      <%= form_for(@user_invitation, url: accept_user_invitation_path, method: :post) do |f| %>
+        <div class="form-group">
+          <%= label_tag(:invite_code, "Invite code") %>
+          <%= text_field_tag :invite_code, @user_invitation.invite_code, class: "form-control" %>
+        </div>
+        <%= f.submit "Accept Invitation", class: "btn btn-primary" %>
+      <% end %>
+<% else %>
+        <%= link_to 'Sign in first', new_user_session_path, class: 'btn btn-primary' %>
+<% end %>
+    </div>
+    <div class="col-md-6">
+      <h2>Need a new account?</h2>
+      <p>If you don't already have an account you can create one for free.</p>
+      <p><%= link_to 'Create Account', new_user_registration_path(invite_code: @user_invitation.invite_code), class: 'btn btn-primary' %></p>
+    </div>
+</div>

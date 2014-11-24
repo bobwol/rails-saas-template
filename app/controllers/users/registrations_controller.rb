@@ -41,12 +41,13 @@ class Users::RegistrationsController < Devise::RegistrationsController
         if resource.errors.count == 0
           UserMailer.welcome(resource).deliver
           user_permission = @user_invitation.account.user_permissions.build(user: resource)
+          sign_in resource
           if user_permission.save
+            @user_invitation.destroy
             AppEvent.success("New user #{resource} for #{@account}", @account, nil)
           else
             AppEvent.alert("New user #{resource} for #{@account} but permission not created", @account, nil)
           end
-          @user_invitation.destroy
         end
       end
     else
@@ -83,6 +84,5 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
     @invite_code = params[:invite_code]
     @user_invitation = UserInvitation.where(invite_code: @invite_code).first
-    @user.errors.add(:base, 'Invalid invite code') unless @user_invitation
   end
 end

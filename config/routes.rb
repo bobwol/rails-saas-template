@@ -86,6 +86,8 @@ Rails.application.routes.draw do
                             registrations: 'users/registrations',
                             unlocks: 'users/unlocks' }
 
+  get 'users/invitation' => 'users/user_invitations#show', as: :new_user_invitation
+  post 'users/invitation/accept' => 'users/user_invitations#accept', as: :accept_user_invitation
   namespace :admin do
     resources :accounts, except: [:destroy] do
       resources :user_invitations
