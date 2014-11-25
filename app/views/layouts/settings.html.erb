@@ -16,9 +16,7 @@
   <![endif]-->
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-<% if @require_stripe_js %>
-  <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
-<% end %>
+  <%= yield :head %>
   <%= csrf_meta_tags %>
 </head>
 <body id="app-body">
@@ -48,5 +46,6 @@
   </div>
 </div>
 
+<%= yield :footer %>
 </body>
 </html>

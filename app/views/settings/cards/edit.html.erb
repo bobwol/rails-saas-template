@@ -2,8 +2,10 @@
 @title = 'Account Credit Card'
 @heading = 'Settings'
 @subheading = 'Credit Card'
-@require_stripe_js = true
 %>
+<% content_for :head do %>
+<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+<% end %>
 
 <div id="stripe_errors" class="alert alert-danger" style="display:none"></div>
 
@@ -59,12 +61,13 @@
 <% else %>
   <%= f.submit "Add Card", class: "btn btn-primary" %>
 <% end %>
-  <%= link_to "Discard Changes", settings_plan_path %>
+  <%= link_to "Discard Changes", settings_card_path %>
 <% end %>
 
+<% content_for :footer do %>
 <script type="text/javascript">
+  // Handle the response from Stripe
   function stripeResponseHandler(status, response) {
-  console.log(response);
     var form = $('form.edit_account');
     if (response.error) {
       var stripe_errors = $('#stripe_errors');
@@ -96,11 +99,39 @@
     Stripe.setPublishableKey('<%= ENV['STRIPE_PUBLISHABLE_KEY'] %>');
 
     var form = $('form.edit_account');
+
     form.submit(function(e) {
       e.preventDefault();
       var form = $(this);
       form.find('input[type=submit]').prop('disabled', true);
       Stripe.card.createToken(form, stripeResponseHandler);
     });
+
+    // Change the icon in the credit card number based on the credit card presented
+    $('#cc_number').on("keyup", function () {
+      var url = "<%= image_url("cards/credit_small.png") %>";
+      switch(Stripe.card.cardType($('#cc_number').val()).toLowerCase()) {
+        case "american express":
+          url = "<%= image_url("cards/amex_small.png") %>";
+          break;
+        case "diners club":
+          url = "<%= image_url("cards/diners_small.png") %>";
+          break;
+        case "discover":
+          url = "<%= image_url("cards/discover_small.png") %>";
+          break;
+        case "jcb":
+          url = "<%= image_url("cards/jcb_small.png") %>";
+          break;
+        case "mastercard":
+          url = "<%= image_url("cards/mastercard_small.png") %>";
+          break;
+        case "visa":
+          url = "<%= image_url("cards/visa_small.png") %>";
+          break;
+      }
+      $('#cc_image').attr('src', url);
+    });
   });
-</script> 
+</script>
+<% end %>

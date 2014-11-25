@@ -15,9 +15,7 @@
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
   <![endif]-->
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
-<% if @require_stripe_js %>
-  <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
-<% end %>
+  <%= yield :head %>
   <%= csrf_meta_tags %>
 </head>
 <body id="app-body">
@@ -37,5 +35,6 @@
   </div>
 </div>
 
+<%= yield :footer %>
 </body>
 </html>

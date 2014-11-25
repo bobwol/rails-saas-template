@@ -2,8 +2,10 @@
 @title = 'Accounts'
 @heading = 'Accounts'
 @subheading = 'New'
-@require_stripe_js = true
 %>
+<% content_for :head do %>
+<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+<% end %>
 
 <div id="stripe_errors" class="alert alert-danger" style="display:none"></div>
 
@@ -161,6 +163,7 @@
   <%= f.submit "Sign Up", class: "btn btn-primary" %>
 <% end %>
 
+<% content_for :footer do %>
 <script type="text/javascript">
   // Handle the response from Stripe
   function stripeResponseHandler(status, response) {
@@ -194,7 +197,7 @@
   $(function() {
     Stripe.setPublishableKey('<%= ENV['STRIPE_PUBLISHABLE_KEY'] %>');
 
-    var form = $('form#new_account');
+    var form = $('form.new_account');
 
 <% unless @account.card_token? %>
     // If we have a card_token then someone previously submitted the form with a valid token so
@@ -251,3 +254,4 @@
     });
   });
 </script>
+<% end %>
