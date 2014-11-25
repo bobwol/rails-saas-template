@@ -52,7 +52,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
       end
     else
       resource = User.new(sign_up_params)
-      resource.errors.add(:base, 'Missing invite code') unless params[:invite_code]
+      resource.errors.add(:invite_code, 'missing or invalid')
+      render locals: { resource: resource }
     end
   end
 
