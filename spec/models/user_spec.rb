@@ -49,6 +49,18 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe '.active_for_authentication?' do
+    it 'is true when user is active' do
+      user = FactoryGirl.build(:user, active: true)
+      expect(user.active_for_authentication?).to eq true
+    end
+
+    it 'is false when user is not active' do
+      user = FactoryGirl.build(:user, active: false)
+      expect(user.active_for_authentication?).to eq false
+    end
+  end
+
   describe '.app_events' do
     it 'connects to AppEvent' do
       user = FactoryGirl.create(:user)

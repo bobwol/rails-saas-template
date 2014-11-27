@@ -22,6 +22,10 @@
 	<%= f.password_field :password_confirmation, class: "form-control" %>
   </div>
   <div class="form-group">
+    <%= f.label :active, class: "control-label" %>
+	<%= f.check_box :active %>
+  </div>
+  <div class="form-group">
     <%= f.label :super_admin, class: "control-label" %>
 	<%= f.check_box :super_admin %>
   </div>

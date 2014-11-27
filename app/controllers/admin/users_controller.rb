@@ -39,7 +39,7 @@ class Admin::UsersController < Admin::ApplicationController
   end
 
   def create
-    @user = User.new(users_create_params)
+    @user = User.new(users_params)
     if @user.save
       UserMailer.welcome(@user).deliver
       AppEvent.success("Created user #{@user}", nil, current_user)
@@ -60,7 +60,7 @@ class Admin::UsersController < Admin::ApplicationController
   end
 
   def update
-    p = users_update_params
+    p = users_params
     if p[:password].blank? && p[:password_confirmation].blank?
       p.delete(:password)
       p.delete(:password_confirmation)
@@ -102,12 +102,14 @@ class Admin::UsersController < Admin::ApplicationController
     end
   end
 
-  def users_create_params
-    params.require(:user).permit(:email, :first_name, :last_name, :password, :password_confirmation, :current_password)
-  end
-
-  def users_update_params
-    params.require(:user).permit(:email, :first_name, :last_name, :password, :password_confirmation, :current_password)
+  def users_params
+    params.require(:user).permit(:active,
+                                 :email,
+                                 :first_name,
+                                 :last_name,
+                                 :password,
+                                 :password_confirmation,
+                                 :current_password)
   end
 
   def set_nav_item

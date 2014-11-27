@@ -28,44 +28,9 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# User model
-class User < ActiveRecord::Base
-  has_many :app_events
-  has_many :user_permissions, dependent: :destroy
-  has_many :accounts, through: :user_permissions
-
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :lockable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable
-
-  validates :email, length: { maximum: 255 }, presence: true
-  validates :first_name, length: { maximum: 60 }, presence: true, allow_blank: true
-  validates :last_name, length: { maximum: 60 }, presence: true
-  validates :password, confirmation: true, presence: true, on: :create
-  validates :super_admin, inclusion: { in: [true, false] }, presence: false, allow_blank: false
-
-  def active_for_authentication?
-    super && active?
-  end
-
-  def inactive_message
-    'Account is inactive'
-  end
-
-  def to_s
-    if first_name.empty?
-      if last_name.empty?
-        '(unknown)'
-      else
-        last_name
-      end
-    else
-      if last_name.empty?
-        first_name
-      else
-        first_name + ' ' + last_name
-      end
-    end
+# Migration to add active property to users
+class AddActiveToUsers < ActiveRecord::Migration
+  def change
+    add_column :users, :active, :boolean, null: false, default: true, after: :email
   end
 end

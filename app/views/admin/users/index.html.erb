@@ -26,7 +26,10 @@
 			<td><%= link_to_if can?(:show, user), user.first_name, admin_user_path(user) %></td>
 			<td><%= link_to_if can?(:show, user), user.last_name, admin_user_path(user) %></td>
 			<td><%= user.email %> <a href="mailto:<%= user.email %>"><span class="glyphicon glyphicon-envelope"></span></a></td>
-			<td><% if user.super_admin %><span class="label label-success">Super</span><% end %></td>
+			<td>
+                          <% unless user.active %><span class="label label-danger">Inactive</span><% end %>
+                          <% if user.super_admin %><span class="label label-success">Super</span><% end %>
+                        </td>
 		</tr>
 <% end %>
 	</tbody>
