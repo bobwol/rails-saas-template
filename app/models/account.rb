@@ -83,7 +83,8 @@ class Account < ActiveRecord::Base
   validates :cancellation_message, length: { maximum: 255 }
   validates :cancellation_message, presence: true, if: :require_cancellation_message
   validates :cancellation_reason_id, presence: true, if: :require_cancellation_reason_id
-  validates :card_token, length: { maximum: 60 }, presence: true
+  validates :card_token, length: { maximum: 60 }
+  validates :card_token, presence: true, if: 'plan_id? && plan.require_card_upfront'
   validates :company_name, length: { maximum: 255 }, presence: true
   validates :custom_path, length: { in: 2..60 }, allow_nil: true
   validates :custom_path, uniqueness: true, unless: 'custom_path.nil?'

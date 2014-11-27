@@ -92,9 +92,13 @@ class Plan < ActiveRecord::Base
   validates :public, inclusion: { in: [true, false] }, presence: false, allow_blank: false
   validates :statement_description, length: { maximum: 150 }
   validates :stripe_id, length: { maximum: 80 }
+  validates :trial_period_days, presence: true
   validates :trial_period_days,
-            presence: true,
-            numericality: { greater_than_or_equal_to: 0, integer_only: true }
+            numericality: { greater_than_or_equal_to: 0, integer_only: true },
+            if: :require_card_upfront
+  validates :trial_period_days,
+            numericality: { greater_than_or_equal_to: 1, integer_only: true },
+            unless: :require_card_upfront
 
   def to_s
     name

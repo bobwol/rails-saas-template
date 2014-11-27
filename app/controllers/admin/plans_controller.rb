@@ -118,6 +118,7 @@ class Admin::PlansController < Admin::ApplicationController
                                  :name,
                                  :paused_plan_id,
                                  :public,
+                                 :require_card_upfront,
                                  :statement_description,
                                  :trial_period_days)
   end
@@ -132,6 +133,7 @@ class Admin::PlansController < Admin::ApplicationController
                                  :name,
                                  :paused_plan_id,
                                  :public,
+                                 :require_card_upfront,
                                  :statement_description)
   end
 

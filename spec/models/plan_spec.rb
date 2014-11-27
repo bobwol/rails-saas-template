@@ -331,9 +331,15 @@ RSpec.describe Plan, type: :model do
     end
 
     it 'must be greater than or equal to zero' do
-      plan = FactoryGirl.build(:plan, trial_period_days: -1)
+      plan = FactoryGirl.build(:plan, trial_period_days: -1, require_card_upfront: true)
       expect(plan).to_not be_valid
       expect(plan.errors[:trial_period_days]).to include 'must be greater than or equal to 0'
+    end
+
+    it 'must be greater than or equal to one if card not required upfront' do
+      plan = FactoryGirl.build(:plan, trial_period_days: 0, require_card_upfront: false)
+      expect(plan).to_not be_valid
+      expect(plan.errors[:trial_period_days]).to include 'must be greater than or equal to 1'
     end
 
     it 'cannot be changed' do

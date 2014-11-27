@@ -21,6 +21,7 @@
 			<th>Currency</th>
 			<th>Amount</th>
 			<th>Trial Period Days</th>
+			<th>Require Card Upfront</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -32,6 +33,7 @@
 			<td><%= plan.currency %></td>
 			<td><%= formatted_plan_price(plan) %></td>
 			<td><%= number_with_precision(plan.trial_period_days, :precision => 0) %></td>
+			<td><%= plan.require_card_upfront %></td>
 		</tr>
 <% end %>
 	</tbody>

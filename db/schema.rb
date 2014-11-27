@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141126052559) do
+ActiveRecord::Schema.define(version: 20141127040121) do
 
   create_table "accounts", force: true do |t|
     t.string   "company_name",                                        null: false
@@ -119,6 +119,7 @@ ActiveRecord::Schema.define(version: 20141126052559) do
     t.string   "interval",              limit: 5,   default: "month", null: false
     t.integer  "amount",                            default: 0,       null: false
     t.integer  "trial_period_days",                 default: 30,      null: false
+    t.boolean  "require_card_upfront",              default: false,   null: false
     t.integer  "max_users",                         default: 1,       null: false
     t.boolean  "allow_custom_path",                 default: false,   null: false
     t.boolean  "allow_hostname",                    default: false,   null: false

@@ -4,7 +4,9 @@
 @subheading = 'New'
 %>
 <% content_for :head do %>
+<% if @plan.require_card_upfront %>
 <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+<% end %>
 <% end %>
 
 <div id="stripe_errors" class="alert alert-danger" style="display:none"></div>
@@ -111,6 +113,7 @@
       </div>
     </div>
   </div>
+<% if @plan.require_card_upfront %>
 <% if ! (@account.card_token.nil? || @account.card_token.blank?)  %>
   <div class="form-group">
     <label class="control-label">Card</label>
@@ -157,6 +160,7 @@
       </div>
     </div>
   </div>
+<% end %>
 
 <% end %>
 
@@ -164,6 +168,7 @@
 <% end %>
 
 <% content_for :footer do %>
+<% if @plan.require_card_upfront %>
 <script type="text/javascript">
   // Handle the response from Stripe
   function stripeResponseHandler(status, response) {
@@ -254,4 +259,5 @@
     });
   });
 </script>
+<% end %>
 <% end %>

@@ -243,10 +243,17 @@ RSpec.describe Account, type: :model do
       expect(account.errors[:card_token]).to include 'is too long (maximum is 60 characters)'
     end
 
-    it 'is required' do
-      account = FactoryGirl.build(:account, card_token: '')
+    it 'is required if plan requires card upfront' do
+      plan = FactoryGirl.create(:plan, require_card_upfront: true)
+      account = FactoryGirl.build(:account, card_token: '', plan: plan)
       expect(account).to_not be_valid
       expect(account.errors[:card_token]).to include 'can\'t be blank'
+    end
+
+    it 'is not requried if plan does not requires card upfront' do
+      plan = FactoryGirl.create(:plan, require_card_upfront: false)
+      account = FactoryGirl.build(:account, card_token: '', plan: plan)
+      expect(account).to be_valid
     end
   end
 
@@ -736,12 +743,6 @@ RSpec.describe Account, type: :model do
   end
 
   describe '.plan_id' do
-    it 'must be an integer' do
-      account = FactoryGirl.build(:account, plan_id: 5.3)
-      expect(account).to be_valid
-      expect(account.plan_id).to eq 5
-    end
-
     it 'is required' do
       account = FactoryGirl.build(:account, plan_id: '')
       expect(account).to_not be_valid

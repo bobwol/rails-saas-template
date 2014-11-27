@@ -28,21 +28,9 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# User factories
-FactoryGirl.define do
-  factory :plan do
-    stripe_id { Faker::Lorem.characters(20) }
-    name { Faker::Lorem.word }
-    statement_description ''
-    active true
-    public true
-    paused_plan_id nil
-    currency 'USD'
-    interval_count 1
-    interval 'month'
-    amount 1999
-    trial_period_days 30
-    require_card_upfront true
-    max_users 10
+# Migration to add require_card_upfront to plans
+class CreateAddCardUpfrontToPlans < ActiveRecord::Migration
+  def change
+    add_column :plans, :require_card_upfront, :boolean, null: false, default: false, after: :trial_period_days
   end
 end

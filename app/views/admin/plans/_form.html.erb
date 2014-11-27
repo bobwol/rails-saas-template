@@ -73,6 +73,10 @@
 	<p class="form-control-static"><%= plan.trial_period_days %></p>
   </div>
 <% end %>
+  <div class="form-group">
+	<%= f.label :require_card_upfront, class: "control-label" %>
+	<%= f.check_box :require_card_upfront %>
+  </div>
   <h2>Features</h2>
   <div class="form-group">
 	<%= f.label :max_users, class: "control-label" %>
