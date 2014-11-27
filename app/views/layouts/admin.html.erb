@@ -29,6 +29,7 @@
       <ul class="nav nav-sidebar">
         <li<%if @nav_item == 'dashboard' %> class="active"<% end %>><%= link_to 'Dashboard', admin_root_path %></li>
         <li<%if @nav_item == 'accounts' %> class="active"<% end %>><%= link_to 'Accounts', admin_accounts_path %></li>
+        <li<%if @nav_item == 'cancellation_categories' %> class="active"<% end %>><%= link_to 'Cancellation Categories', admin_cancellation_categories_path %></li>
         <li<%if @nav_item == 'events' %> class="active"<% end %>><%= link_to 'Events', admin_events_path %></li>
         <li<%if @nav_item == 'jobs' %> class="active"<% end %>><%= link_to 'Jobs', admin_jobs_path %></li>
         <li<%if @nav_item == 'plans' %> class="active"<% end %>><%= link_to 'Plans', admin_plans_path %></li>

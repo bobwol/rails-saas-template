@@ -14,18 +14,26 @@
   <div class="row">
     <div class="col-md-12">
 <%= form_for [:admin, @account], url: admin_account_cancel_path(@account), method: :patch do |f| %>
-      <div class="form-group">
-      <%= f.label :cancellation_category, class: "control-label" %>
-      <%= f.select :cancellation_category, [['Found a better solution'], ['Too expensive'], ['No longer need it'], ['Other']], { class: "form-control" } %>
-      </div>
-      <div class="form-group">
-      <%= f.label :cancellation_reason, class: "control-label" %>
-      <%= f.select :cancellation_reason, [['Found a better solution'], ['Too expensive'], ['No longer need it'], ['Other']], { class: "form-control" } %>
-      </div>
-      <div class="form-group">
-      <%= f.label :cancellation_message, class: "control-label" %>
-      <%= f.text_field :cancellation_message, class: "form-control" %>
-      </div>
+  <div id="cancellation-reason-block" class="form-group">
+      <label>Cancellation Reason</label>
+      <ul style="list-style: none">
+          <% @cancellation_categories.each do |cancellation_category| %>
+          <li>
+            <%= f.radio_button(:cancellation_category_id, cancellation_category.id, class: "cancellation-category", data: { allow_message: cancellation_category.allow_message, require_message: cancellation_category.require_message }) %> <%= cancellation_category.name %>
+            <ul style="list-style: none;" id="cancellation_reason_for_category_<%= cancellation_category.id%>" class="cancellation-reasons">
+            <% cancellation_category.cancellation_reasons.each do |cancellation_reason| %>
+                <li><%= f.radio_button(:cancellation_reason_id, cancellation_reason.id, class: "cancellation-reason", data: { allow_message: cancellation_reason.allow_message, require_message: cancellation_reason.require_message }) %> <%= cancellation_reason.name %></li>
+            <% end %>
+            </ul>
+          </li>
+          <% end %>
+      </ul>
+  </div>
+
+  <div id="cancellation-message-block" class="form-group">
+    <%= f.label :cancellation_message %>
+    <%= f.text_field :cancellation_message, class: "form-control" %>
+  </div>
 
       <%= f.submit "Cancel Account", class: "btn btn-danger" %>
       <%= link_to "Keep account", admin_account_path(@account), class: "btn btn-primary" %>
@@ -33,3 +41,35 @@
     </div>
   </div>
 </div>
+
+<% content_for :footer do %>
+<script type="text/javascript">
+    $(function () {
+        // Hide cancellation message and all of the reasons
+        $("#cancellation-message-block").css("display", "none");
+        $(".cancellation-reasons").css("display", "none");
+        // When someone clicks on a category
+        $(".cancellation-category").on("click", function() {
+          // Hide and uncheck all reasons then show the reasons for this category only
+          $(".cancellation-reasons").css("display", "none");
+          $(".cancellation-reason").prop("checked", false);
+          $("#cancellation_reason_for_category_" + $(this).val()).css("display", "block");
+          // Figure out if we should be displaying the message box
+          var display = "none";
+          if ($(this).data('allow-message') || $(this).data('require-message')) {
+            display = "block";
+          }
+          $("#cancellation-message-block").css("display", display);
+        });
+        // When someone clicks on a reason
+        $(".cancellation-reason").on("click", function() {
+          // Figure out if we should be displaying the message box
+          var display = "none";
+          if ($(this).data('allow-message') || $(this).data('require-message')) {
+            display = "block";
+          }
+          $("#cancellation-message-block").css("display", display);
+        });
+    });
+</script>
+<% end %>

@@ -610,9 +610,10 @@ RSpec.describe Settings::PlansController, type: :controller do
 
     context 'as anonymous user' do
       it 'redirects to login page' do
-        delete :destroy, path: @account.id, account: { cancellation_category: 'xxx',
-                                                       cancellation_message: 'xxx',
-                                                       cancellation_reason: 'xxx' }
+        cancellation_category = FactoryGirl.create(:cancellation_category)
+        delete :destroy, path: @account.id, account: { cancellation_category_id: cancellation_category.id,
+                                                       cancellation_message: '',
+                                                       cancellation_reason_id: nil }
         expect(response).to be_redirect
         expect(response).to redirect_to(new_user_session_path)
       end
@@ -620,21 +621,22 @@ RSpec.describe Settings::PlansController, type: :controller do
 
     context 'as unauthorized users' do
       before(:each) do
+        @cancellation_category = FactoryGirl.create(:cancellation_category)
         user = FactoryGirl.create(:user)
         sign_in :user, user
       end
 
       it 'responds with forbidden' do
-        delete :destroy, path: @account.id, account: { cancellation_category: 'xxx',
-                                                       cancellation_message: 'xxx',
-                                                       cancellation_reason: 'xxx' }
+        delete :destroy, path: @account.id, account: { cancellation_category_id: @cancellation_category.id,
+                                                       cancellation_message: '',
+                                                       cancellation_reason_id: nil }
         expect(response).to be_forbidden
       end
 
       it 'renders the forbidden' do
-        delete :destroy, path: @account.id, account: { cancellation_category: 'xxx',
-                                                       cancellation_message: 'xxx',
-                                                       cancellation_reason: 'xxx' }
+        delete :destroy, path: @account.id, account: { cancellation_category_id: @cancellation_category.id,
+                                                       cancellation_message: '',
+                                                       cancellation_reason_id: nil }
         expect(response).to render_template('errors/forbidden')
         expect(response).to render_template('layouts/errors')
       end
@@ -642,6 +644,7 @@ RSpec.describe Settings::PlansController, type: :controller do
 
     context 'as account admin user' do
       before(:each) do
+        @cancellation_category = FactoryGirl.create(:cancellation_category)
         user = FactoryGirl.create(:user)
         FactoryGirl.create(:user_permission, account: @account, user: user, account_admin: true)
         sign_in :user, user
@@ -649,55 +652,55 @@ RSpec.describe Settings::PlansController, type: :controller do
 
       context 'with valid attributes' do
         it 'sets the nav_item to plans' do
-          delete :destroy, path: @account.id, account: { cancellation_category: 'xxx',
-                                                         cancellation_message: 'xxx',
-                                                         cancellation_reason: 'xxx' }
+          delete :destroy, path: @account.id, account: { cancellation_category_id: @cancellation_category.id,
+                                                         cancellation_message: '',
+                                                         cancellation_reason_id: nil }
           expect(assigns(:nav_item)).to eq 'plan'
         end
 
         it 'it redirects to plans' do
-          delete :destroy, path: @account.id, account: { cancellation_category: 'xxx',
-                                                         cancellation_message: 'xxx',
-                                                         cancellation_reason: 'xxx' }
+          delete :destroy, path: @account.id, account: { cancellation_category_id: @cancellation_category.id,
+                                                         cancellation_message: '',
+                                                         cancellation_reason_id: nil }
           expect(response).to be_redirect
           expect(response).to redirect_to(root_path)
         end
 
         it 'sets a notice' do
-          delete :destroy, path: @account.id, account: { cancellation_category: 'xxx',
-                                                         cancellation_message: 'xxx',
-                                                         cancellation_reason: 'xxx' }
+          delete :destroy, path: @account.id, account: { cancellation_category_id: @cancellation_category.id,
+                                                         cancellation_message: '',
+                                                         cancellation_reason_id: nil }
           expect(request.flash[:notice]).to eq 'Account cancelled.'
         end
       end
 
       context 'with invalid attributes' do
         it 'sets the nav_item to plans' do
-          delete :destroy, path: @account.id, account: { cancellation_category: '',
+          delete :destroy, path: @account.id, account: { cancellation_category_id: nil,
                                                          cancellation_message: '',
-                                                         cancellation_reason: '' }
+                                                         cancellation_reason_id: nil }
           expect(assigns(:nav_item)).to eq 'plan'
         end
 
         it 'it renders the cancel template' do
-          delete :destroy, path: @account.id, account: { cancellation_category: '',
+          delete :destroy, path: @account.id, account: { cancellation_category_id: nil,
                                                          cancellation_message: '',
-                                                         cancellation_reason: '' }
+                                                         cancellation_reason_id: nil }
           expect(response).to render_template('cancel')
           expect(response).to render_template('layouts/settings')
         end
 
         it 'sets an alert' do
-          delete :destroy, path: @account.id, account: { cancellation_category: '',
+          delete :destroy, path: @account.id, account: { cancellation_category_id: nil,
                                                          cancellation_message: '',
-                                                         cancellation_reason: '' }
+                                                         cancellation_reason_id: nil }
           expect(request.flash[:alert]).to eq 'Unable to cancel the account.'
         end
 
         it 'it pass an existing account' do
-          delete :destroy, path: @account.id, account: { cancellation_category: '',
+          delete :destroy, path: @account.id, account: { cancellation_category_id: nil,
                                                          cancellation_message: '',
-                                                         cancellation_reason: '' }
+                                                         cancellation_reason_id: nil }
           account = assigns(:account)
           expect(account).to eq @account
         end
@@ -706,61 +709,62 @@ RSpec.describe Settings::PlansController, type: :controller do
 
     context 'as super admin user' do
       before(:each) do
+        @cancellation_category = FactoryGirl.create(:cancellation_category)
         admin = FactoryGirl.create(:admin)
         sign_in :user, admin
       end
 
       context 'with valid attributes' do
         it 'sets the nav_item to plans' do
-          delete :destroy, path: @account.id, account: { cancellation_category: 'xxx',
-                                                         cancellation_message: 'xxx',
-                                                         cancellation_reason: 'xxx' }
+          delete :destroy, path: @account.id, account: { cancellation_category_id: @cancellation_category.id,
+                                                         cancellation_message: '',
+                                                         cancellation_reason_id: nil }
           expect(assigns(:nav_item)).to eq 'plan'
         end
 
         it 'it redirects to plans' do
-          delete :destroy, path: @account.id, account: { cancellation_category: 'xxx',
-                                                         cancellation_message: 'xxx',
-                                                         cancellation_reason: 'xxx' }
+          delete :destroy, path: @account.id, account: { cancellation_category_id: @cancellation_category.id,
+                                                         cancellation_message: '',
+                                                         cancellation_reason_id: nil }
           expect(response).to be_redirect
           expect(response).to redirect_to(root_path)
         end
 
         it 'sets a notice' do
-          delete :destroy, path: @account.id, account: { cancellation_category: 'xxx',
-                                                         cancellation_message: 'xxx',
-                                                         cancellation_reason: 'xxx' }
+          delete :destroy, path: @account.id, account: { cancellation_category_id: @cancellation_category.id,
+                                                         cancellation_message: '',
+                                                         cancellation_reason_id: nil }
           expect(request.flash[:notice]).to eq 'Account cancelled.'
         end
       end
 
       context 'with invalid attributes' do
         it 'sets the nav_item to plans' do
-          delete :destroy, path: @account.id, account: { cancellation_category: '',
+          delete :destroy, path: @account.id, account: { cancellation_category_id: nil,
                                                          cancellation_message: '',
-                                                         cancellation_reason: '' }
+                                                         cancellation_reason_id: nil }
           expect(assigns(:nav_item)).to eq 'plan'
         end
 
         it 'it renders the cancel template' do
-          delete :destroy, path: @account.id, account: { cancellation_category: '',
+          delete :destroy, path: @account.id, account: { cancellation_category_id: nil,
                                                          cancellation_message: '',
-                                                         cancellation_reason: '' }
+                                                         cancellation_reason_id: nil }
           expect(response).to render_template('cancel')
           expect(response).to render_template('layouts/settings')
         end
 
         it 'sets an alert' do
-          delete :destroy, path: @account.id, account: { cancellation_category: '',
+          delete :destroy, path: @account.id, account: { cancellation_category_id: nil,
                                                          cancellation_message: '',
-                                                         cancellation_reason: '' }
+                                                         cancellation_reason_id: nil }
           expect(request.flash[:alert]).to eq 'Unable to cancel the account.'
         end
 
         it 'it pass an existing account' do
-          delete :destroy, path: @account.id, account: { cancellation_category: '',
+          delete :destroy, path: @account.id, account: { cancellation_category_id: nil,
                                                          cancellation_message: '',
-                                                         cancellation_reason: '' }
+                                                         cancellation_reason_id: nil }
           account = assigns(:account)
           expect(account).to eq @account
         end

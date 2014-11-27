@@ -58,10 +58,14 @@
   <dd><% if @account.plan_allow_subdomain %><%= @account.subdomain %><% else %>Disabled by plan<% end %></dd>
   <dt>Card Token</dt>
   <dd><%= @account.card_token%></dd>
+<% if @account.cancelled_at %>
+  <dt>Cancellation Category</dt>
+  <dd><%= @account.cancellation_category %></dd>
   <dt>Cancellation Reason</dt>
   <dd><%= @account.cancellation_reason %></dd>
   <dt>Cancellation Message</dt>
   <dd><%= @account.cancellation_message %></dd>
   <dt>Cancelled At</dt>
   <dd><%= @account.cancelled_at %></dd>
+<% end %>
 </dl>

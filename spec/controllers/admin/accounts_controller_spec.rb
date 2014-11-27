@@ -628,9 +628,10 @@ RSpec.describe Admin::AccountsController, type: :controller do
 
     context 'as anonymous user' do
       it 'redirects to login page' do
-        patch :cancel, account_id: @account.id, account: { cancellation_category: 'xxx',
-                                                           cancellation_reason: 'yyy',
-                                                           cancellation_message: 'zzz' }
+        cancellation_category = FactoryGirl.create(:cancellation_category)
+        patch :cancel, account_id: @account.id, account: { cancellation_category_id: cancellation_category.id,
+                                                           cancellation_message: '',
+                                                           cancellation_reason_id: nil }
         expect(response).to be_redirect
         expect(response).to redirect_to(new_user_session_path)
       end
@@ -638,21 +639,22 @@ RSpec.describe Admin::AccountsController, type: :controller do
 
     context 'as unauthorized users' do
       before(:each) do
+        @cancellation_category = FactoryGirl.create(:cancellation_category)
         user = FactoryGirl.create(:user)
         sign_in :user, user
       end
 
       it 'responds with forbidden' do
-        patch :cancel, account_id: @account.id, account: { cancellation_category: 'xxx',
-                                                           cancellation_reason: 'yyy',
-                                                           cancellation_message: 'zzz' }
+        patch :cancel, account_id: @account.id, account: { cancellation_category_id: @cancellation_category.id,
+                                                           cancellation_message: '',
+                                                           cancellation_reason_id: nil }
         expect(response).to be_forbidden
       end
 
       it 'renders the forbidden' do
-        patch :cancel, account_id: @account.id, account: { cancellation_category: 'xxx',
-                                                           cancellation_reason: 'yyy',
-                                                           cancellation_message: 'zzz' }
+        patch :cancel, account_id: @account.id, account: { cancellation_category_id: @cancellation_category.id,
+                                                           cancellation_message: '',
+                                                           cancellation_reason_id: nil }
         expect(response).to render_template('errors/forbidden')
         expect(response).to render_template('layouts/errors')
       end
@@ -660,49 +662,56 @@ RSpec.describe Admin::AccountsController, type: :controller do
 
     context 'as super admin user' do
       before(:each) do
+        @cancellation_category = FactoryGirl.create(:cancellation_category)
         admin = FactoryGirl.create(:admin)
         sign_in :user, admin
       end
 
       context 'with valid attributes' do
         it 'sets the nav_item to accounts' do
-          patch :cancel, account_id: @account.id, account: { cancellation_category: 'xxx',
-                                                             cancellation_reason: 'yyy',
-                                                             cancellation_message: 'zzz' }
+          patch :cancel, account_id: @account.id, account: { cancellation_category_id: @cancellation_category.id,
+                                                             cancellation_message: '',
+                                                             cancellation_reason_id: nil }
           expect(assigns(:nav_item)).to eq 'accounts'
         end
 
         it 'it redirects to account' do
-          patch :cancel, account_id: @account.id, account: { cancellation_category: 'xxx',
-                                                             cancellation_reason: 'yyy',
-                                                             cancellation_message: 'zzz' }
+          patch :cancel, account_id: @account.id, account: { cancellation_category_id: @cancellation_category.id,
+                                                             cancellation_message: '',
+                                                             cancellation_reason_id: nil }
           account = assigns(:account)
           expect(response).to be_redirect
           expect(response).to redirect_to(admin_account_path(account))
         end
 
         it 'sets a notice' do
-          post :cancel, account_id: @account.id, account: { cancellation_category: 'xxx',
-                                                            cancellation_reason: 'yyy',
-                                                            cancellation_message: 'zzz' }
+          patch :cancel, account_id: @account.id, account: { cancellation_category_id: @cancellation_category.id,
+                                                             cancellation_message: '',
+                                                             cancellation_reason_id: nil }
           expect(request.flash[:notice]).to eq 'Account was successfully cancelled.'
         end
       end
 
       context 'with invalid attributes' do
         it 'sets the nav_item to accounts' do
-          patch :cancel, account_id: @account.id, account: { something: 'xxx' }
+          patch :cancel, account_id: @account.id, account: { cancellation_category_id: nil,
+                                                             cancellation_message: '',
+                                                             cancellation_reason_id: nil }
           expect(assigns(:nav_item)).to eq 'accounts'
         end
 
         it 'it renders the confirm_cancel template' do
-          patch :cancel, account_id: @account.id, account: { something: 'xxx' }
+          patch :cancel, account_id: @account.id, account: { cancellation_category_id: nil,
+                                                             cancellation_message: '',
+                                                             cancellation_reason_id: nil }
           expect(response).to render_template('confirm_cancel')
           expect(response).to render_template('layouts/admin')
         end
 
         it 'it pass a new account' do
-          patch :cancel, account_id: @account.id, account: { something: 'xxx' }
+          patch :cancel, account_id: @account.id, account: { cancellation_category_id: nil,
+                                                             cancellation_message: '',
+                                                             cancellation_reason_id: nil }
           account = assigns(:account)
           expect(account).to_not be_nil
           expect(account).to_not be_new_record

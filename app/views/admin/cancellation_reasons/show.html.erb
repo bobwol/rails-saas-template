@@ -1,0 +1,27 @@
+﻿<%
+@title = 'Cancellation Reasons'
+@heading = 'Cancellation Reason'
+@subheading = @cancellation_reason
+%>
+
+<ul class="nav nav-tabs">
+  <li><%= link_to "Categories", admin_cancellation_categories_path %></li>
+  <li><%= link_to "Category", admin_cancellation_category_path(@cancellation_category) %></li>
+  <li><%= link_to "Reasons", admin_cancellation_category_cancellation_reasons_path(@cancellation_category) %></li>
+  <li class="active"><%= link_to "Reason", admin_cancellation_category_cancellation_reason_path(@cancellation_category, @cancellation_reason) %></li>
+</ul>
+
+<div style="text-align: right; padding: 10px 0px;">
+  <% if can? :edit, @cancellation_reason %><%= link_to "Edit Cancellation Reason", edit_admin_cancellation_category_cancellation_reason_path(@cancellation_category, @cancellation_reason), class: "btn btn-primary" %><% end %>
+</div>
+
+<dl class="dl-horizontal">
+  <dt>Name</dt>
+  <dd><%= @cancellation_reason.name %></dd>
+  <dt>Active</dt>
+  <dd><%= @cancellation_reason.active %></dd>
+  <dt>Allow Message</dt>
+  <dd><%= @cancellation_reason.allow_message %></dd>
+  <dt>Require Message</dt>
+  <dd><%= @cancellation_reason.require_message %></dd>
+</dl>

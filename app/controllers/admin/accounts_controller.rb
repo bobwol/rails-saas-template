@@ -90,6 +90,7 @@ class Admin::AccountsController < Admin::ApplicationController
       AppEvent.info("Cancelled account #{@account}", @account, current_user)
       redirect_to admin_account_path(@account), notice: 'Account was successfully cancelled.'
     else
+      @cancellation_categories = CancellationCategory.available_with_reasons
       render 'confirm_cancel', notice: 'Unable to cancel the account.'
     end
   end
@@ -125,7 +126,7 @@ class Admin::AccountsController < Admin::ApplicationController
   end
 
   def cancel_params
-    params.require(:account).permit(:cancellation_category, :cancellation_message, :cancellation_reason)
+    params.require(:account).permit(:cancellation_category_id, :cancellation_message, :cancellation_reason_id)
   end
 
   def accounts_params

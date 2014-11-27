@@ -158,7 +158,7 @@ Style/ClassCheck:
 
 Metrics/ClassLength:
   CountComments: false  # count full line comments?
-  Max: 120
+  Max: 200
 
 # Align with the style guide.
 Style/CollectionMethods:

@@ -1,0 +1,41 @@
+﻿<%
+@title = 'Cancellation Reasons'
+@heading = 'Cancellation Reasons'
+@subheading = 'List'
+%>
+
+<ul class="nav nav-tabs">
+  <li><%= link_to "Categories", admin_cancellation_categories_path %></li>
+  <li><%= link_to "Category", admin_cancellation_category_path(@cancellation_category) %></li>
+  <li class="active"><%= link_to "Reasons", admin_cancellation_category_cancellation_reasons_path(@cancellation_category) %></li>
+</ul>
+
+<div style="text-align: right; padding: 10px 0px;">
+  <% if can? :new, CancellationReason %><%= link_to "New Cancellation Reason", new_admin_cancellation_category_cancellation_reason_path(@cancellation_category), class: "btn btn-primary" %><% end %>
+</div>
+
+<% if @cancellation_reasons.empty? then %>
+<p>No cancellation reasonss found</p>
+<% else %>
+<table class="table table-condensed table-striped">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Active</th>
+			<th>Allow Message</th>
+			<th>Require Message</th>
+		</tr>
+	</thead>
+	<tbody>
+<% @cancellation_reasons.each do |cancellation_reason| %>
+		<tr>
+			<td><%= link_to_if can?(:show, cancellation_reason), cancellation_reason.name, admin_cancellation_category_cancellation_reason_path(@cancellation_category, cancellation_reason) %></td>
+			<td><%= cancellation_reason.active %></td>
+			<td><%= cancellation_reason.allow_message %></td>
+			<td><%= cancellation_reason.require_message %></td>
+		</tr>
+<% end %>
+	</tbody>
+</table>
+<%= paginate @cancellation_reasons %>
+<% end %>

@@ -1,0 +1,39 @@
+﻿<%
+@title = 'Cancellation Categories'
+@heading = 'Cancellation Category'
+@subheading = 'List'
+%>
+
+<ul class="nav nav-tabs">
+  <li class="active"><%= link_to "Categories", admin_cancellation_categories_path %></li>
+</ul>
+
+<div style="text-align: right; padding: 10px 0px;">
+  <% if can? :new, CancellationCategory %><%= link_to "New Cancellation Category", new_admin_cancellation_category_path, class: "btn btn-primary" %><% end %>
+</div>
+
+<% if @cancellation_categories.empty? then %>
+<p>No cancellation categories found</p>
+<% else %>
+<table class="table table-condensed table-striped">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Active</th>
+			<th>Allow Message</th>
+			<th>Require Message</th>
+		</tr>
+	</thead>
+	<tbody>
+<% @cancellation_categories.each do |cancellation_category| %>
+		<tr>
+			<td><%= link_to_if can?(:show, cancellation_category), cancellation_category.name, admin_cancellation_category_path(cancellation_category) %></td>
+			<td><%= cancellation_category.active %></td>
+			<td><%= cancellation_category.allow_message %></td>
+			<td><%= cancellation_category.require_message %></td>
+		</tr>
+<% end %>
+	</tbody>
+</table>
+<%= paginate @cancellation_categories %>
+<% end %>

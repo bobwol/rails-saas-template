@@ -61,6 +61,7 @@ class Settings::PlansController < Settings::ApplicationController
   end
 
   def cancel
+    @cancellation_categories = CancellationCategory.available_with_reasons
   end
 
   def pause
@@ -81,6 +82,7 @@ class Settings::PlansController < Settings::ApplicationController
       redirect_to root_path, notice: 'Account cancelled.'
     else
       flash[:alert] = 'Unable to cancel the account.'
+      @cancellation_categories = CancellationCategory.available_with_reasons
       render 'cancel'
     end
   end
@@ -92,6 +94,6 @@ class Settings::PlansController < Settings::ApplicationController
   end
 
   def cancel_params
-    params.require(:account).permit(:cancellation_category, :cancellation_message, :cancellation_reason)
+    params.require(:account).permit(:cancellation_category_id, :cancellation_message, :cancellation_reason_id)
   end
 end

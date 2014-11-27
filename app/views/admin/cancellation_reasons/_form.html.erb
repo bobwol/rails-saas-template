@@ -1,0 +1,26 @@
+﻿<%= render_errors cancellation_reason %>
+
+<%= form_for [:admin, cancellation_category, cancellation_reason] do |f| %>
+  <div class="form-group">
+	<%= f.label :name, class: "control-label" %>
+	<%= f.text_field :name, class: "form-control" %>
+  </div>
+  <div class="form-group">
+	<%= f.label :active, class: "control-label" %>
+	<%= f.check_box :active %>
+  </div>
+  <div class="form-group">
+	<%= f.label :allow_message, class: "control-label" %>
+	<%= f.check_box :allow_message %>
+  </div>
+  <div class="form-group">
+	<%= f.label :require_message, class: "control-label" %>
+	<%= f.check_box :require_message %>
+  </div>
+		<%= f.submit "Save", class: "btn btn-primary" %>
+<% if cancellation_reason.new_record? %>
+		<%= link_to "Discard Changes", admin_cancellation_category_cancellation_reasons_path(cancellation_category) %>
+<% else %>
+		<%= link_to "Discard Changes", admin_cancellation_category_cancellation_reason_path(cancellation_category, cancellation_reason) %>
+<% end %>
+<% end %>

@@ -98,6 +98,9 @@ Rails.application.routes.draw do
       patch 'restore' => 'accounts#restore'
       get 'users' => 'accounts#users'
     end
+    resources :cancellation_categories, except: [:destroy] do
+      resources :cancellation_reasons, except: [:destroy]
+    end
     resources :plans do
       get 'accounts' => 'plans#accounts'
     end

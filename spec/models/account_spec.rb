@@ -131,29 +131,38 @@ RSpec.describe Account, type: :model do
   end
 
   describe '.cancel' do
+    before :each do
+      @cancellation_category = FactoryGirl.create(:cancellation_category)
+    end
     context 'on success' do
       it 'returns true on cancellation' do
         account = FactoryGirl.create(:account)
-        result = account.cancel(cancellation_category: 'xxx', cancellation_reason: 'xxx', cancellation_message: 'xxx')
+        result = account.cancel(cancellation_category: @cancellation_category,
+                                cancellation_reason: nil,
+                                cancellation_message: 'xxx')
         expect(result).to eq true
       end
 
-      it 'sets actvie to false' do
+      it 'sets active to false' do
         account = FactoryGirl.create(:account)
-        account.cancel(cancellation_category: 'xxx', cancellation_reason: 'xxx', cancellation_message: 'xxx')
+        account.cancel(cancellation_category: @cancellation_category,
+                       cancellation_reason: nil,
+                       cancellation_message: 'xxx')
         expect(account.active).to eq false
       end
 
       it 'sets cancelled_at' do
         account = FactoryGirl.create(:account)
-        account.cancel(cancellation_category: 'xxx', cancellation_reason: 'xxx', cancellation_message: 'xxx')
+        account.cancel(cancellation_category: @cancellation_category,
+                       cancellation_reason: nil,
+                       cancellation_message: 'xxx')
         expect(account.cancelled_at).to_not be_nil
       end
     end
 
     it 'returns false on failure' do
       account = FactoryGirl.create(:account)
-      result = account.cancel(cancellation_category: '', cancellation_reason: '', cancellation_message: '')
+      result = account.cancel(cancellation_category_id: nil, cancellation_reason_id: nil, cancellation_message: '')
       expect(result).to eq false
     end
   end
@@ -162,18 +171,10 @@ RSpec.describe Account, type: :model do
     # t.datetime :cancelled_at
   end
 
-  describe '.cancellation_category' do
-    it 'must be 255 characters or less' do
-      account = FactoryGirl.build(:account,
-                                  cancellation_category: Faker::Lorem.characters(256),
-                                  cancelled_at: '2014-01-01 00:00:00')
-      expect(account).to_not be_valid
-      expect(account.errors[:cancellation_category]).to include 'is too long (maximum is 255 characters)'
-    end
-
+  describe '.cancellation_category_id' do
     context 'when not cancelled' do
       it 'is not required' do
-        account = FactoryGirl.build(:account, cancellation_category: '', cancelled_at: '')
+        account = FactoryGirl.build(:account, cancellation_category_id: nil, cancelled_at: '')
         expect(account).to be_valid
       end
     end
@@ -181,12 +182,10 @@ RSpec.describe Account, type: :model do
     context 'when cancelled' do
       it 'is required' do
         account = FactoryGirl.build(:account,
-                                    cancellation_category: '',
-                                    cancellation_reason: 'xxx',
-                                    cancellation_message: 'xxx',
+                                    cancellation_category: nil,
                                     cancelled_at: '2014-01-01 00:00:00')
         expect(account).to_not be_valid
-        expect(account.errors[:cancellation_category]).to include 'can\'t be blank'
+        expect(account.errors[:cancellation_category_id]).to include 'can\'t be blank'
       end
     end
   end
@@ -200,51 +199,39 @@ RSpec.describe Account, type: :model do
       expect(account.errors[:cancellation_message]).to include 'is too long (maximum is 255 characters)'
     end
 
-    context 'when not cancelled' do
+    context 'when require_cancellation_message returns false' do
       it 'is not required' do
-        account = FactoryGirl.build(:account, cancellation_message: '', cancelled_at: '')
+        account = FactoryGirl.build(:account, cancellation_message: '')
+        allow(account).to receive(:require_cancellation_message).and_return(false)
         expect(account).to be_valid
       end
     end
 
-    context 'when cancelled' do
+    context 'when require_cancellation_message returns true' do
       it 'is required' do
-        account = FactoryGirl.build(:account,
-                                    cancellation_category: 'xxx',
-                                    cancellation_reason: 'xxx',
-                                    cancellation_message: '',
-                                    cancelled_at: '2014-01-01 00:00:00')
+        account = FactoryGirl.build(:account, cancellation_message: '')
+        allow(account).to receive(:require_cancellation_message).and_return(true)
         expect(account).to_not be_valid
         expect(account.errors[:cancellation_message]).to include 'can\'t be blank'
       end
     end
   end
 
-  describe '.cancellation_reason' do
-    it 'must be 255 characters or less' do
-      account = FactoryGirl.build(:account,
-                                  cancellation_reason: Faker::Lorem.characters(256),
-                                  cancelled_at: '2014-01-01 00:00:00')
-      expect(account).to_not be_valid
-      expect(account.errors[:cancellation_reason]).to include 'is too long (maximum is 255 characters)'
-    end
-
-    context 'when not cancelled' do
+  describe '.cancellation_reason_id' do
+    context 'when require_cancellation_reason_id returns false' do
       it 'is not required' do
-        account = FactoryGirl.build(:account, cancellation_reason: '', cancelled_at: '')
+        account = FactoryGirl.build(:account, cancellation_reason_id: nil)
+        allow(account).to receive(:require_cancellation_reason_id).and_return(false)
         expect(account).to be_valid
       end
     end
 
-    context 'when cancelled' do
+    context 'when require_cancellation_reason_id returns true' do
       it 'is required' do
-        account = FactoryGirl.build(:account,
-                                    cancellation_category: 'xxx',
-                                    cancellation_reason: '',
-                                    cancellation_message: 'xxx',
-                                    cancelled_at: '2014-01-01 00:00:00')
+        account = FactoryGirl.build(:account, cancellation_reason_id: nil)
+        allow(account).to receive(:require_cancellation_reason_id).and_return(true)
         expect(account).to_not be_valid
-        expect(account.errors[:cancellation_reason]).to include 'can\'t be blank'
+        expect(account.errors[:cancellation_reason_id]).to include 'can\'t be blank'
       end
     end
   end
@@ -773,20 +760,115 @@ RSpec.describe Account, type: :model do
     end
   end
 
+  describe '.require_cancellation_message' do
+    it 'is false if there cancelled_at is nil' do
+      cancellation_category = FactoryGirl.create(:cancellation_category, allow_message: true, require_message: true)
+      cancellation_reason = FactoryGirl.create(:cancellation_reason,
+                                               cancellation_category: cancellation_category,
+                                               allow_message: true,
+                                               require_message: true)
+      account = FactoryGirl.build(:account,
+                                  cancelled_at: nil,
+                                  cancellation_category: cancellation_category,
+                                  cancellation_reason: cancellation_reason)
+      expect(account.require_cancellation_message).to eq false
+    end
+
+    it 'is false if cancellation_category is nil' do
+      account = FactoryGirl.build(:account,
+                                  cancelled_at: DateTime.now,
+                                  cancellation_category: nil,
+                                  cancellation_reason: nil)
+      expect(account.require_cancellation_message).to eq false
+    end
+
+    it 'is true if cancellation_category requires message' do
+      cancellation_category = FactoryGirl.create(:cancellation_category, allow_message: true, require_message: true)
+      account = FactoryGirl.build(:account,
+                                  cancelled_at: DateTime.now,
+                                  cancellation_category: cancellation_category,
+                                  cancellation_reason: nil)
+      expect(account.require_cancellation_message).to eq true
+    end
+
+    it 'is false if cancellation_reason is nil' do
+      cancellation_category = FactoryGirl.create(:cancellation_category, allow_message: true, require_message: false)
+      account = FactoryGirl.build(:account,
+                                  cancelled_at: DateTime.now,
+                                  cancellation_category: cancellation_category,
+                                  cancellation_reason: nil)
+      expect(account.require_cancellation_message).to eq false
+    end
+
+    it 'is true if cancellation_reason requires message' do
+      cancellation_category = FactoryGirl.create(:cancellation_category, allow_message: true, require_message: false)
+      cancellation_reason = FactoryGirl.create(:cancellation_reason,
+                                               cancellation_category: cancellation_category,
+                                               allow_message: true,
+                                               require_message: true)
+      account = FactoryGirl.build(:account,
+                                  cancelled_at: DateTime.now,
+                                  cancellation_category: cancellation_category,
+                                  cancellation_reason: cancellation_reason)
+      expect(account.require_cancellation_message).to eq true
+    end
+
+    it 'is false if cancellation_category and cancellation_reason do not require message' do
+      cancellation_category = FactoryGirl.create(:cancellation_category, allow_message: true, require_message: false)
+      cancellation_reason = FactoryGirl.create(:cancellation_reason,
+                                               cancellation_category: cancellation_category,
+                                               allow_message: true,
+                                               require_message: false)
+      account = FactoryGirl.build(:account,
+                                  cancelled_at: DateTime.now,
+                                  cancellation_category: cancellation_category,
+                                  cancellation_reason: cancellation_reason)
+      expect(account.require_cancellation_message).to eq false
+    end
+  end
+
+  describe '.require_cancellation_reason_id' do
+    it 'is false if cancelled_at is nil' do
+      cancellation_category = FactoryGirl.create(:cancellation_category)
+      account = FactoryGirl.build(:account, cancelled_at: nil, cancellation_category: cancellation_category)
+      expect(account.require_cancellation_reason_id).to eq false
+    end
+
+    it 'is false if cancellation_category is nil' do
+      account = FactoryGirl.build(:account, cancelled_at: DateTime.now, cancellation_category: nil)
+      expect(account.require_cancellation_reason_id).to eq false
+    end
+
+    it 'is true if there are cancellation_reasons' do
+      cancellation_category = FactoryGirl.create(:cancellation_category)
+      FactoryGirl.create(:cancellation_reason, active: true, cancellation_category: cancellation_category)
+      account = FactoryGirl.build(:account, cancelled_at: DateTime.now, cancellation_category: cancellation_category)
+      expect(account.require_cancellation_reason_id).to eq true
+    end
+
+    it 'is false if there are no cancellation_reasons' do
+      cancellation_category = FactoryGirl.create(:cancellation_category)
+      account = FactoryGirl.build(:account, cancelled_at: DateTime.now, cancellation_category: cancellation_category)
+      expect(account.require_cancellation_reason_id).to eq false
+    end
+  end
+
   describe '.restore' do
     it 'removes the paused plan' do
+      cancellation_category = FactoryGirl.create(:cancellation_category)
+      cancellation_reason = FactoryGirl.create(:cancellation_reason, cancellation_category: cancellation_category)
       account = FactoryGirl.create(:account,
                                    active: false,
                                    cancelled_at: Time.now - 1.days,
-                                   cancellation_category: 'Something',
+                                   cancellation_category: cancellation_category,
                                    cancellation_message: 'Something',
-                                   cancellation_reason: 'Something')
+                                   cancellation_reason: cancellation_reason)
       expect(account.restore).to eq true
       expect(account.active).to eq true
       expect(account.cancelled_at).to be_nil
-      expect(account.cancellation_category).to be_nil
+      expect(account.cancellation_category_id).to be_nil
       expect(account.cancellation_message).to be_nil
-      expect(account.cancellation_reason).to be_nil
+      expect(account.cancellation_reason_id).to be_nil
     end
   end
 

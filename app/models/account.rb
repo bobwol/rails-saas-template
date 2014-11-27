@@ -49,6 +49,8 @@ class Account < ActiveRecord::Base
 
   belongs_to :plan
   belongs_to :paused_plan, class_name: 'Plan'
+  belongs_to :cancellation_category
+  belongs_to :cancellation_reason
 
   has_many :app_events, dependent: :destroy
   has_many :users, through: :user_permissions
@@ -77,12 +79,10 @@ class Account < ActiveRecord::Base
   validates :address_line2, length: { maximum: 120 }
   validates :address_state, length: { maximum: 60 }
   validates :address_zip, length: { maximum: 20 }
-  validates :cancellation_category, length: { maximum: 255 }
-  validates :cancellation_category, presence: true, if: '!cancelled_at.nil?'
+  validates :cancellation_category_id, presence: true, if: '!cancelled_at.nil?'
   validates :cancellation_message, length: { maximum: 255 }
-  validates :cancellation_message, presence: true, if: '!cancelled_at.nil?'
-  validates :cancellation_reason, length: { maximum: 255 }
-  validates :cancellation_reason, presence: true, if: '!cancelled_at.nil?'
+  validates :cancellation_message, presence: true, if: :require_cancellation_message
+  validates :cancellation_reason_id, presence: true, if: :require_cancellation_reason_id
   validates :card_token, length: { maximum: 60 }, presence: true
   validates :company_name, length: { maximum: 255 }, presence: true
   validates :custom_path, length: { in: 2..60 }, allow_nil: true
@@ -109,6 +109,20 @@ class Account < ActiveRecord::Base
             uniqueness: true,
             unless: 'subdomain.nil?'
   validates_associated :users, on: :create
+
+  def require_cancellation_reason_id
+    return false if cancelled_at.nil?
+    return false if cancellation_category.nil?
+    return true if cancellation_category.cancellation_reasons.available.count > 0
+    false
+  end
+
+  def require_cancellation_message
+    return false if cancelled_at.nil?
+    return true if cancellation_category_id? && cancellation_category.require_message
+    return true if cancellation_reason_id? && cancellation_reason.require_message
+    false
+  end
 
   def to_s
     company_name

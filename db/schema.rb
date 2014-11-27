@@ -11,31 +11,31 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141006010115) do
+ActiveRecord::Schema.define(version: 20141126052559) do
 
   create_table "accounts", force: true do |t|
-    t.string   "company_name",                                      null: false
-    t.string   "email",                                             null: false
-    t.integer  "plan_id",                                           null: false
+    t.string   "company_name",                                        null: false
+    t.string   "email",                                               null: false
+    t.integer  "plan_id",                                             null: false
     t.integer  "paused_plan_id"
-    t.boolean  "active",                             default: true, null: false
-    t.string   "custom_path",            limit: 60
+    t.boolean  "active",                               default: true, null: false
+    t.string   "custom_path",              limit: 60
     t.string   "hostname"
-    t.string   "subdomain",              limit: 64
-    t.string   "address_line1",          limit: 120
-    t.string   "address_line2",          limit: 120
-    t.string   "address_city",           limit: 120
-    t.string   "address_zip",            limit: 20
-    t.string   "address_state",          limit: 60
-    t.string   "address_country",        limit: 2
-    t.string   "card_token",             limit: 60
-    t.string   "card_brand",             limit: 25
-    t.string   "card_last4",             limit: 4
-    t.string   "card_exp",               limit: 7
-    t.string   "stripe_customer_id",     limit: 60
-    t.string   "stripe_subscription_id", limit: 60
-    t.string   "cancellation_category"
-    t.string   "cancellation_reason"
+    t.string   "subdomain",                limit: 64
+    t.string   "address_line1",            limit: 120
+    t.string   "address_line2",            limit: 120
+    t.string   "address_city",             limit: 120
+    t.string   "address_zip",              limit: 20
+    t.string   "address_state",            limit: 60
+    t.string   "address_country",          limit: 2
+    t.string   "card_token",               limit: 60
+    t.string   "card_brand",               limit: 25
+    t.string   "card_last4",               limit: 4
+    t.string   "card_exp",                 limit: 7
+    t.string   "stripe_customer_id",       limit: 60
+    t.string   "stripe_subscription_id",   limit: 60
+    t.integer  "cancellation_category_id"
+    t.integer  "cancellation_reason_id"
     t.string   "cancellation_message"
     t.datetime "cancelled_at"
     t.datetime "expires_at"
@@ -43,6 +43,8 @@ ActiveRecord::Schema.define(version: 20141006010115) do
     t.datetime "updated_at"
   end
 
+  add_index "accounts", ["cancellation_category_id"], name: "index_accounts_on_cancellation_category_id", using: :btree
+  add_index "accounts", ["cancellation_reason_id"], name: "index_accounts_on_cancellation_reason_id", using: :btree
   add_index "accounts", ["custom_path"], name: "index_accounts_on_custom_path", unique: true, using: :btree
   add_index "accounts", ["email"], name: "index_accounts_on_email", using: :btree
   add_index "accounts", ["hostname"], name: "index_accounts_on_hostname", unique: true, using: :btree
@@ -63,6 +65,30 @@ ActiveRecord::Schema.define(version: 20141006010115) do
 
   add_index "app_events", ["account_id"], name: "index_app_events_on_account_id", using: :btree
   add_index "app_events", ["user_id"], name: "index_app_events_on_user_id", using: :btree
+
+  create_table "cancellation_categories", force: true do |t|
+    t.string   "name",            limit: 120,                 null: false
+    t.boolean  "active",                      default: true,  null: false
+    t.boolean  "allow_message",               default: false, null: false
+    t.boolean  "require_message",             default: false, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "cancellation_categories", ["name"], name: "index_cancellation_categories_on_name", unique: true, using: :btree
+
+  create_table "cancellation_reasons", force: true do |t|
+    t.integer  "cancellation_category_id",                             null: false
+    t.string   "name",                     limit: 120,                 null: false
+    t.boolean  "active",                               default: true,  null: false
+    t.boolean  "allow_message",                        default: true,  null: false
+    t.boolean  "require_message",                      default: false, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "cancellation_reasons", ["cancellation_category_id", "name"], name: "index_cancellation_reasons_on_cancellation_category_id_and_name", unique: true, using: :btree
+  add_index "cancellation_reasons", ["cancellation_category_id"], name: "index_cancellation_reasons_on_cancellation_category_id", using: :btree
 
   create_table "delayed_jobs", force: true do |t|
     t.integer  "priority",   default: 0, null: false
