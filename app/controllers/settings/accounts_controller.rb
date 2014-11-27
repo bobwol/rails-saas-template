@@ -32,6 +32,9 @@
 class Settings::AccountsController < Settings::ApplicationController
   authorize_resource
 
+  def home
+  end
+
   def edit
   end
 

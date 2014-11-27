@@ -45,19 +45,8 @@ class Plan < ActiveRecord::Base
     false if plan.errors.count > 0
   end
 
-  # before_destroy do |plan|
-  #   # It should be self evident why deleting a plan with accounts using it is a
-  #   # bad thing
-  #   if plan.accounts.count > 0 || plan.paused_accounts.count > 0 || plan.paused_plans.count > 0
-  #     plan.errors.add :base, 'You cannot remove a plan that is in use'
-  #   end
-  #
-  #   false if plan.errors.count > 0
-  # end
-
   belongs_to :paused_plan, class_name: 'Plan'
 
-  # default_scope { order('name ASC, amount ASC') }
   scope :available,
         lambda {
           where('active = ? AND public = ? AND stripe_id IS NOT NULL', true, true)

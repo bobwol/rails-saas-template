@@ -74,17 +74,6 @@ class ApplicationController < ActionController::Base
 
   # Find the current account, returning it or nil if there is no current account
   def current_account
-    return @current_account unless @current_account.nil?
-
-    if params[:path]
-      # Assume that they're using http://www.example.com/ACCOUNT
-      @current_account = Account.find_by_path!(params[:path])
-    else
-      # Try http://ACCOUNT/ then http://ACCOUNT.example.com/
-      @current_account = Account.find_by_hostname(request.host)
-      @current_account = Account.find_by_subdomain(request.subdomains.last) if @current_account.nil?
-    end
-
-    @current_account
+    @current_account ||= Account.find_account(params[:path], request.host, request.subdomain.last)
   end
 end

@@ -32,8 +32,6 @@
 class Settings::ApplicationController < ApplicationController
   before_action :find_account
 
-  # before_action :check_account_or_super_admin
-
   before_action :set_nav_item
 
   layout 'settings'
@@ -50,8 +48,4 @@ class Settings::ApplicationController < ApplicationController
   def find_account
     @account = current_account
   end
-
-  # def check_account_or_super_admin
-  #   fail CanCan::AccessDenied if !current_user.super_admin && !current_user.account_admin
-  # end
 end

@@ -55,12 +55,6 @@ class Settings::UserPermissionsController < Settings::ApplicationController
   end
 
   def destroy
-    # Prevent the user from deleting themselves
-    if @user.id == current_user.id
-      redirect_to settings_user_permission_path(@user_permission), alert: 'You cannot delete yourself.'
-      return
-    end
-
     if @user_permission.destroy
       AppEvent.info("Deleted user_permission #{@user_permission.user}", current_account, current_user)
       redirect_to settings_user_permissions_path, notice: 'User was successfully removed.'
@@ -77,7 +71,6 @@ class Settings::UserPermissionsController < Settings::ApplicationController
     else
       id = params[:id]
     end
-    # @user_permission = current_account.user_permissions.includes(:user).where(users: { id: id }).first!
     @user_permission = current_account.user_permissions.includes(:user).find(id)
     @user = @user_permission.user
   end

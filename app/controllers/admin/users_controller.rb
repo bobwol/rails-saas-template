@@ -74,12 +74,6 @@ class Admin::UsersController < Admin::ApplicationController
   end
 
   def destroy
-    # Prevent the user from deleting themselves
-    if @user.id == current_user.id
-      redirect_to admin_user_path(@user), alert: 'You cannot delete yourself.'
-      return
-    end
-
     if @user.destroy
       AppEvent.info("Deleted user #{@user}", nil, current_user)
       redirect_to admin_users_path, notice: 'User was successfully removed.'

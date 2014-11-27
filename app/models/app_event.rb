@@ -27,8 +27,6 @@ class AppEvent < ActiveRecord::Base
   belongs_to :account
   belongs_to :user
 
-  # default_scope { order('created_at DESC, account_id ASC, user_id ASC') }
-
   validates :account_id, numericality: { integer_only: true }, allow_nil: true
   validates :level, inclusion: { in: %w( success info warning alert ) }, presence: true
   validates :message, length: { maximum: 255 }, presence: true

@@ -30,23 +30,6 @@
 
 # Account model
 class Account < ActiveRecord::Base
-  # before_update do |account|
-  #   if account.plan_id == account.paused_plan_id
-  #     account.errors.add :paused_plan_id, 'cannot be the same as the main plan'
-  #   end
-  #
-  #   if account.plan_id_changed?
-  #     old_plan = Plan.find(account.plan_id_was)
-  #     if old_plan.currency != account.plan.currency
-  #       account.errors.add :plan_id, 'cannot be changed to a plan with a different currency'
-  #     end
-  #   end
-  #
-  #   account.errors.add :base, 'Too many users for that plan' if account.users.count > account.plan.max_users
-  #
-  #   false if account.errors.count > 0
-  # end
-
   belongs_to :plan
   belongs_to :paused_plan, class_name: 'Plan'
   belongs_to :cancellation_category
@@ -143,6 +126,19 @@ class Account < ActiveRecord::Base
     params[:cancelled_at] = time.strftime('%Y-%m-%d %H:%M:%S')
     params[:active] = false
     update_attributes(params)
+  end
+
+  def self.find_account(path, host, subdomain)
+    if path
+      # Assume that they're using http://www.example.com/ACCOUNT
+      @current_account = Account.find_by_path!(path)
+    else
+      # Try http://ACCOUNT/ then http://ACCOUNT.example.com/
+      @current_account = Account.find_by_hostname(host)
+      @current_account = Account.find_by_subdomain(subdomain) if @current_account.nil?
+    end
+
+    @current_account
   end
 
   def self.find_by_hostname(hostname)

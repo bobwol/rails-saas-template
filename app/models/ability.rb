@@ -76,8 +76,6 @@ class Ability
       # Account Admin's get additional privileges
       if !permissions.nil? && permissions.account_admin?
         can :manage, Account, id: account.id
-        # Only if the logged in user is an account_admin in EVERY account the user belongs to
-        # can :manage, User, account_id: account.id
         can :manage, UserInvitation, account_id: account.id
         can :manage, UserPermission, account_id: account.id
         can :index, :dashboard
@@ -89,6 +87,12 @@ class Ability
         can :manage, UserPermission, user_id: user.id
       end
     end
+
+    # Prevent the user from deleting themselves
+    cannot :destroy, User, id: user.id
+
+    # Prevent non-super admins from removing permissions involving themselves
+    cannot :destroy, UserPermission, user_id: user.id unless user.super_admin
 
     # Enforce plan restrictions against everyone (including Super Admin's)
     cannot :pause, Account, plan: { paused_plan: nil }

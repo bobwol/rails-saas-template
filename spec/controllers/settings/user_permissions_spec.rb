@@ -84,23 +84,19 @@ RSpec.describe Settings::UserPermissionsController, type: :controller do
           sign_in :user, user
         end
 
-        it 'it redirects to users' do
+        it 'responds with forbidden' do
           delete :destroy, path: @account.id, id: @user_permission.id
-          expect(response).to be_redirect
-          expect(response).to redirect_to(settings_user_permission_path(@user_permission))
+          expect(response).to be_forbidden
         end
 
-        it 'sets an alert' do
+        it 'renders the forbidden' do
           delete :destroy, path: @account.id, id: @user_permission.id
-          expect(request.flash[:alert]).to eq 'You cannot delete yourself.'
+          expect(response).to render_template('errors/forbidden')
+          expect(response).to render_template('layouts/errors')
         end
 
-        it 'does not deletes a user' do
-          # rubocop:disable Style/Blocks
-          expect {
-            delete :destroy, path: @account.id, id: @user_permission.id
-          }.to change { UserPermission.count }.by(0)
-          # rubocop:enable Style/Blocks
+        it 'does not delete a user' do
+          expect { delete :destroy, path: @account.id, id: @user_permission.id }.to change { User.count }.by(0)
         end
       end
 

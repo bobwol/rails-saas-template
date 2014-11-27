@@ -190,15 +190,15 @@ RSpec.describe Admin::UsersController, type: :controller do
       end
 
       context 'deleting yourself' do
-        it 'it redirects to users' do
+        it 'responds with forbidden' do
           delete :destroy, id: @admin.id
-          expect(response).to be_redirect
-          expect(response).to redirect_to(admin_user_path(@admin))
+          expect(response).to be_forbidden
         end
 
-        it 'sets a notice' do
+        it 'renders the forbidden' do
           delete :destroy, id: @admin.id
-          expect(request.flash[:alert]).to eq 'You cannot delete yourself.'
+          expect(response).to render_template('errors/forbidden')
+          expect(response).to render_template('layouts/errors')
         end
 
         it 'does not delete a user' do
