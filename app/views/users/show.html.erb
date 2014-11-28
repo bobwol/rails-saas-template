@@ -1,0 +1,30 @@
+<%
+@title = 'Users'
+@heading = 'Users'
+@subheading = @user
+%>
+
+<ul class="nav nav-tabs">
+  <li class="active"><%= link_to "User", user_path(@user) %></li>
+  <% if can?(:accounts, @user) %><li><%= link_to "Accounts", user_accounts_path(@user) %></li><% end %>
+  <% if can?(:invitations, @user) %><li><%= link_to "Invitations", user_user_invitations_path(@user) %></li><% end %>
+</ul>
+
+<div style="text-align: right; padding: 10px 0px;">
+  <% if can? :edit, @user %><%= link_to "Edit User", edit_user_path(@user), class: "btn btn-primary" %><% end %>
+</div>
+
+<dl class="dl-horizontal">
+  <dt>First Name</dt>
+  <dd><%= @user.first_name %></dd>
+  <dt>Last Name</dt>
+  <dd><%= @user.last_name %></dd>
+  <dt>Email</dt>
+  <dd><%= @user.email %>  <a href="mailto:<%= @user.email %>"><span class="glyphicon glyphicon-envelope"></span></a></dd>
+  <dt>Active</dt>
+  <dd><%if @user.active %><span class="label label-success">Active</span><% else %> <span class="label label-danger">Inactive</span><% end %></dd>
+<%if @user.super_admin %>
+  <dt>Super Admin</dt>
+  <dd><span class="label label-success">Yes</span></dd>
+<% end %>
+</dl>

@@ -30,64 +30,50 @@
 
 require 'rails_helper'
 
-# Tests for admin/users routing
-RSpec.describe 'routing for the admin users', type: :routing do
-  it 'routes GET /admin/users to admin/users#index' do
-    expect(get: '/admin/users').to route_to(
-      controller: 'admin/users',
+# Tests for users routing
+RSpec.describe 'routing for the users', type: :routing do
+  it 'routes GET /users to users#index' do
+    expect(get: '/users').to route_to(
+      controller: 'users',
       action: 'index'
     )
   end
 
-  it 'routes GET /admin/users/1 to admin/users#show' do
-    expect(get: '/admin/users/1').to route_to(
-      controller: 'admin/users',
+  it 'routes GET /users/1 to users#show' do
+    expect(get: '/users/1').to route_to(
+      controller: 'users',
       action: 'show',
       id: '1'
     )
   end
 
-  it 'routes GET /admin/users/1/accounts to admin/users#accounts' do
-    expect(get: '/admin/users/1/accounts').to route_to(
-      controller: 'admin/users',
+  it 'routes GET /users/1/accounts to users#accounts' do
+    expect(get: '/users/1/accounts').to route_to(
+      controller: 'users',
       action: 'accounts',
       user_id: '1'
     )
   end
 
-  it 'routes GET /admin/users/1/edit to admin/users#edit' do
-    expect(get: '/admin/users/1/edit').to route_to(
-      controller: 'admin/users',
+  it 'routes GET /users/1/edit to users#edit' do
+    expect(get: '/users/1/edit').to route_to(
+      controller: 'users',
       action: 'edit',
       id: '1'
     )
   end
 
-  it 'routes GET /admin/users/new to admin/users#new' do
-    expect(get: '/admin/users/new').to route_to(
-      controller: 'admin/users',
-      action: 'new'
-    )
-  end
-
-  it 'routes PATCH /admin/users/1 to admin/users#update' do
-    expect(patch: '/admin/users/1').to route_to(
-      controller: 'admin/users',
+  it 'routes PATCH /users/1 to users#update' do
+    expect(patch: '/users/1').to route_to(
+      controller: 'users',
       action: 'update',
       id: '1'
     )
   end
 
-  it 'routes POST /admin/users to admin/users#create' do
-    expect(post: '/admin/users').to route_to(
-      controller: 'admin/users',
-      action: 'create'
-    )
-  end
-
-  it 'routes GET /admin/users/1/user_invitations to admin/users#user_invitations' do
-    expect(get: '/admin/users/1/user_invitations').to route_to(
-      controller: 'admin/users',
+  it 'routes GET /users/1/user_invitations to users#user_invitations' do
+    expect(get: '/users/1/user_invitations').to route_to(
+      controller: 'users',
       action: 'user_invitations',
       user_id: '1'
     )

@@ -1,6 +1,6 @@
 <%= render_errors user %>
 
-<%= form_for [:admin, account, user] do |f| %>
+<%= form_for [:admin, user] do |f| %>
   <div class="form-group">
     <%= f.label :first_name, class: "control-label" %>
 	<%= f.text_field :first_name, class: "form-control" %>

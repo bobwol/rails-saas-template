@@ -88,6 +88,10 @@ Rails.application.routes.draw do
 
   get 'users/invitation' => 'users/user_invitations#show', as: :new_user_invitation
   post 'users/invitation/accept' => 'users/user_invitations#accept', as: :accept_user_invitation
+  resources :users, only: [:index, :show, :edit, :update] do
+    get 'accounts' => 'users#accounts'
+    get 'user_invitations' => 'users#user_invitations'
+  end
   namespace :admin do
     resources :accounts, except: [:destroy] do
       resources :user_invitations
@@ -106,6 +110,7 @@ Rails.application.routes.draw do
     end
     resources :users do
       get 'accounts' => 'users#accounts'
+      get 'user_invitations' => 'users#user_invitations'
     end
     get 'events' => 'dashboard#events'
     get 'jobs' => 'dashboard#jobs'

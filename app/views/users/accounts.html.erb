@@ -5,9 +5,9 @@
 %>
 
 <ul class="nav nav-tabs">
-  <% if can?(:index, @user) %><li><%= link_to "User", admin_user_path(@user) %></li><% end %>
-  <li class="active"><%= link_to "Accounts", admin_user_accounts_path(@user) %></li>
-  <% if can?(:index, @user) %><li><%= link_to "Invitations", admin_user_user_invitations_path(@user) %></li><% end %>
+  <% if can?(:index, @user) %><li><%= link_to "User", user_path(@user) %></li><% end %>
+  <li class="active"><%= link_to "Accounts", user_accounts_path(@user) %></li>
+  <% if can?(:invitations, @user) %><li><%= link_to "Invitations", user_user_invitations_path(@user) %></li><% end %>
 </ul>
 
 <% if @user_permissions.empty? then %>
@@ -23,7 +23,7 @@
 	<tbody>
 <% @user_permissions.each do |user_permission| %>
 		<tr>
-			<td><%= link_to_if can?(:show, user_permission.account), user_permission.account.to_s, admin_account_path(user_permission.account) %></td>
+			<td><%= link_to user_permission.account.to_s, tenant_root_path(path: user_permission.account.id) %></td>
 			<td><%= user_permission.account_admin %></td>
 		</tr>
 <% end %>

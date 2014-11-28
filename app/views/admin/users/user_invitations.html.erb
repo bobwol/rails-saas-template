@@ -1,0 +1,33 @@
+<%
+@title = 'User Invitationss'
+@heading = 'User Invitaions'
+@subheading = @user
+%>
+
+<ul class="nav nav-tabs">
+  <% if can?(:show, @user) %><li><%= link_to "User", admin_user_path(@user) %></li><% end %>
+  <% if can?(:accounts, @user) %><li><%= link_to "Accounts", admin_user_accounts_path(@user) %></li><% end %>
+  <li class="active"><%= link_to "Invitations", admin_user_user_invitations_path(@user) %></li>
+</ul>
+
+<% if @user_invitations.empty? then %>
+<p>No user invitations found</p>
+<% else %>
+<table class="table table-condensed table-striped">
+	<thead>
+		<tr>
+			<th>Account</th>
+                        <th>Invitation</th>
+		</tr>
+	</thead>
+	<tbody>
+<% @user_invitations.each do |user_invitation| %>
+		<tr>
+			<td><%= link_to user_invitation.account, admin_account_path(user_invitation.account) %></td>
+			<td><%= link_to "Show", admin_account_user_invitation_path(user_invitation.account, user_invitation) %></td>
+		</tr>
+<% end %>
+	</tbody>
+</table>
+<%= paginate @user_invitations %>
+<% end %>

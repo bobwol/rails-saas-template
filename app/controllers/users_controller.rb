@@ -28,35 +28,20 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# Provides plans administration in the admin section
-class Admin::UsersController < Admin::ApplicationController
-  before_action :find_user, only: [:destroy, :edit, :show, :update, :accounts, :user_invitations]
+# The users controller implements users view and editing their own profiles
+class UsersController < ApplicationController
+  before_action :find_user, except: [:index]
 
   authorize_resource
 
   def index
-    @users = User.page(params[:page])
-  end
-
-  def create
-    @user = User.new(users_params)
-    if @user.save
-      UserMailer.welcome(@user).deliver
-      AppEvent.success("Created user #{@user}", nil, current_user)
-      redirect_to admin_user_path(@user), notice: 'User was successfully created.'
-    else
-      render 'new'
-    end
-  end
-
-  def edit
-  end
-
-  def new
-    @user = User.new
+    redirect_to user_path(current_user)
   end
 
   def show
+  end
+
+  def edit
   end
 
   def update
@@ -67,26 +52,20 @@ class Admin::UsersController < Admin::ApplicationController
     end
     if @user.update_attributes(p)
       AppEvent.success("Updated user #{@user}", nil, current_user)
-      redirect_to admin_user_path(@user), notice: 'User was successfully updated.'
+      redirect_to user_path(@user),
+                  notice: 'User was successfully updated.'
     else
       render 'edit'
     end
   end
 
-  def destroy
-    if @user.destroy
-      AppEvent.info("Deleted user #{@user}", nil, current_user)
-      redirect_to admin_users_path, notice: 'User was successfully removed.'
-    else
-      redirect_to admin_user_path(@user), alert: 'User could not be removed.'
-    end
-  end
-
   def accounts
+    authorize! :accounts, @user
     @user_permissions = @user.user_permissions.includes(:account).page(params[:page])
   end
 
   def user_invitations
+    authorize! :user_invitations, @user
     @user_invitations = UserInvitation.where(email: @user.email).page(params[:page])
   end
 
@@ -101,16 +80,10 @@ class Admin::UsersController < Admin::ApplicationController
   end
 
   def users_params
-    params.require(:user).permit(:active,
-                                 :email,
+    params.require(:user).permit(:email,
                                  :first_name,
                                  :last_name,
                                  :password,
-                                 :password_confirmation,
-                                 :super_admin)
-  end
-
-  def set_nav_item
-    @nav_item = 'users'
+                                 :password_confirmation)
   end
 end

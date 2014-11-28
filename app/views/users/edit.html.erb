@@ -1,0 +1,32 @@
+<%
+@title = 'Users'
+@heading = 'Users'
+@subheading = @user
+%>
+
+<%= render_errors @user %>
+
+<%= form_for [@user] do |f| %>
+  <div class="form-group">
+    <%= f.label :first_name, class: "control-label" %>
+	<%= f.text_field :first_name, class: "form-control" %>
+  </div>
+  <div class="form-group">
+    <%= f.label :last_name, class: "control-label" %>
+	<%= f.text_field :last_name, class: "form-control" %>
+  </div>
+  <div class="form-group">
+    <%= f.label :email, class: "control-label" %>
+	<%= f.text_field :email, class: "form-control" %>
+  </div>
+  <div class="form-group">
+    <%= f.label :password, class: "control-label" %>
+	<%= f.password_field :password, class: "form-control" %>
+  </div>
+  <div class="form-group">
+    <%= f.label :password_confirmation, class: "control-label" %>
+	<%= f.password_field :password_confirmation, class: "form-control" %>
+  </div>
+		<%= f.submit "Save", class: "btn btn-primary" %>
+		<%= link_to "Discard Changes", user_path(@user) %>
+<% end %>
