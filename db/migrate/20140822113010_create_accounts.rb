@@ -50,7 +50,7 @@ class CreateAccounts < ActiveRecord::Migration
       t.string :cancellation_reason
       t.string :cancellation_message
       t.datetime :cancelled_at
-      t.datetime :expires_at, null: false
+      t.datetime :expires_at
       t.timestamps
     end
 
