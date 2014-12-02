@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title><%= render_title %></title>
+  <title><%= page_title %></title>
   <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
   <!-- Just for debugging purposes. Don't actually copy this line! -->
   <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -18,11 +18,12 @@
   <%= yield :head %>
   <%= csrf_meta_tags %>
 </head>
-<body>
+<body class="<%= body_class %>">
 
 <div class="container">
   <div class="row">
     <div class="col-sm-12" style="text-align: center; padding-top: 80px">
+        <h1><%= yield :page_heading %></h1>
 <%= yield %>
       <p><%= link_to '<span class="glyphicon glyphicon-home"></span> Back Home'.html_safe, root_path, class: 'btn btn-lg btn-primary' %> <a href="mailto:support@example.com" class="btn btn-lg btn-default"><span class="glyphicon glyphicon-envelope"></span> Contact Support</a></p>
   </div>

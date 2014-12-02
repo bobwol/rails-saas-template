@@ -1,8 +1,8 @@
 <%
-@title = 'Accounts'
-@heading = 'Accounts'
-@subheading = 'New'
+content_for(:page_title, 'Sign Up')
+content_for(:page_heading, 'Sign Up')
 %>
+
 <% content_for :head do %>
 <% if @plan.require_card_upfront %>
 <script type="text/javascript" src="https://js.stripe.com/v2/"></script>

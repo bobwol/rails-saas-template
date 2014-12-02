@@ -1,8 +1,8 @@
 <%
-@title = 'New User'
-@heading = 'Users'
-@subheading = 'New User'
+content_for(:page_title, 'New User')
+content_for(:page_heading, 'New User')
 %>
+
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
 <%= render_errors resource %>
 

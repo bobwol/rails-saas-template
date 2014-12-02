@@ -1,6 +1,6 @@
 <%
-@title = 'Cancellation Reasons'
-@heading = 'Cancellation Reasons'
-@subheading = @cancellation_reason
+content_for(:page_title, "Edit Cancellation Reason - #{@cancellation_reason}")
+content_for(:page_heading, 'Edit Cancellation Reason')
 %>
+
 <%= render "form", cancellation_category: @cancellation_category, cancellation_reason: @cancellation_reason %>

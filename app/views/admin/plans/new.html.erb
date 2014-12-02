@@ -1,6 +1,6 @@
-﻿<%
-@title = 'Plans'
-@heading = 'Plans'
-@subheading = 'New'
+<%
+content_for(:page_title, 'New Plan')
+content_for(:page_heading, 'New Plan')
 %>
+
 <%= render "form", plan: @plan %>

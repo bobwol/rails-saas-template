@@ -1,6 +1,6 @@
 <%
-@title = 'User Invitations'
-@heading = 'User Invitations'
-@subheading = 'New'
+content_for(:page_title, 'New User Invitations')
+content_for(:page_heading, 'New User Invitations')
 %>
+
 <%= render 'form', account: @account, user_invitation: @user_invitation %>

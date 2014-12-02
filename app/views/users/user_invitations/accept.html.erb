@@ -1,7 +1,6 @@
 <%
-@title = 'User Invitation'
-@heading = 'User Invitation'
-@subheading = 'Accepted'
+content_for(:page_title, 'Invitation Accepted')
+content_for(:page_heading, 'Invitation Accepted')
 %>
 
 <p>Great. You now have access to <%= link_to @account, tenant_root_path(path: @account.id) %>.</p>

@@ -1,9 +1,7 @@
 <%
-@title = 'Users'
-@heading = 'Users'
-@subheading = 'Accounts'
+content_for(:page_title, "User Accounts - #{@user}")
+content_for(:page_heading, 'Accounts')
 %>
-
 <ul class="nav nav-tabs">
   <% if can?(:index, @user) %><li><%= link_to "User", admin_user_path(@user) %></li><% end %>
   <li class="active"><%= link_to "Accounts", admin_user_accounts_path(@user) %></li>

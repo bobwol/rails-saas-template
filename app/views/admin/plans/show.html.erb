@@ -1,7 +1,6 @@
 <%
-@title = 'Plans'
-@heading = 'Plans'
-@subheading = @plan
+content_for(:page_title, "Plan - #{@plan}")
+content_for(:page_heading, 'Plan')
 %>
 
 <ul class="nav nav-tabs">

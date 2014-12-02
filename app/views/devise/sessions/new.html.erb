@@ -1,7 +1,6 @@
 <%
-@title = 'Sign In'
-@heading = 'Users'
-@subheading = 'Sign In'
+content_for(:page_title, 'Sign In')
+content_for(:page_heading, 'Sign In')
 %>
 
 <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>

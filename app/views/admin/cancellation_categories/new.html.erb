@@ -1,6 +1,6 @@
 <%
-@title = 'Cancellation Categories'
-@heading = 'Cancellation Category'
-@subheading = 'New'
+content_for(:page_title, 'New Cancellation Category')
+content_for(:page_heading, 'New Cancellation Category')
 %>
+
 <%= render "form", cancellation_category: @cancellation_category %>

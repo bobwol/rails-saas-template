@@ -51,30 +51,4 @@ module ApplicationHelper
     end
     html.html_safe
   end
-
-  # Render the heading for the page
-  def render_heading
-    html = 'Rails-SaaS-Template'
-    if @heading
-      html = html_escape(@heading)
-    else
-      html = html_escape(@title) if @title
-    end
-    html = html + ' <small>'.html_safe + html_escape(@subheading) + '</small>'.html_safe if @subheading
-    html = '<h1 class="page-header">'.html_safe + html.html_safe + '</h1>'.html_safe
-    html.html_safe
-  end
-
-  # Render the title for the page
-  def render_title
-    if @title
-      html_escape(@title) + ' | Rails-SaaS-Template'
-    else
-      if @heading
-        html_escape(@heading) + ' | Rails-SaaS-Template'
-      else
-        'Rails-SaaS-Template'
-      end
-    end
-  end
 end

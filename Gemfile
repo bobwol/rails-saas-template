@@ -44,6 +44,9 @@ gem 'bootstrap-sass', '~> 3.2.0.2'
 # Add kaminari for paging results
 gem 'kaminari', '~> 0.16.1'
 
+# Add flutie for helpers with title and body class
+gem 'flutie', '~> 2.0.0'
+
 # Add devise for user authentication
 gem 'devise', '~> 3.3.0'
 

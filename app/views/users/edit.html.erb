@@ -1,7 +1,6 @@
 <%
-@title = 'Users'
-@heading = 'Users'
-@subheading = @user
+content_for(:page_title, "Edit User - #{@user}")
+content_for(:page_heading, 'Edit User')
 %>
 
 <%= render_errors @user %>

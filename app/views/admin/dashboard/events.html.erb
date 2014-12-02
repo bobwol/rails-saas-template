@@ -1,9 +1,7 @@
 <%
-@title = 'Events'
-@heading = 'Events'
-@subheading = 'List'
+content_for(:page_title, 'Events')
+content_for(:page_heading, 'Events')
 %>
-
 
 <% if @app_events.empty? then %>
 <p>No events found</p>

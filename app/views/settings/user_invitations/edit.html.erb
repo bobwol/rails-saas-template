@@ -1,6 +1,6 @@
 <%
-@title = 'User Invitations'
-@heading = 'User Invitations'
-@subheading = @user
+content_for(:page_title, "Edit User Invitation - #{@user_invitation}")
+content_for(:page_heading, 'Edit User Invitation')
 %>
+
 <%= render 'form', account: @account, user_invitation: @user_invitation %>

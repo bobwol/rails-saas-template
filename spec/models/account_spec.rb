@@ -742,6 +742,15 @@ RSpec.describe Account, type: :model do
     end
   end
 
+  describe '.plan' do
+    it 'links to plan' do
+      plan = FactoryGirl.create(:plan)
+      account = FactoryGirl.build(:account, plan: plan)
+      expect(account).to be_valid
+      expect(account.plan).to eq plan
+    end
+  end
+
   describe '.plan_id' do
     it 'is required' do
       account = FactoryGirl.build(:account, plan_id: '')

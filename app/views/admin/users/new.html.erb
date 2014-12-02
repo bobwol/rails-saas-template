@@ -1,7 +1,7 @@
 <%
-@title = 'Users'
-@heading = 'Users'
-@subheading = 'New'
+content_for(:page_title, 'New User')
+content_for(:page_heading, 'New User')
 @nav_item = 'accounts'
 %>
+
 <%= render 'form', account: @account, user: @user %>

@@ -1,9 +1,7 @@
 <%
-@title = 'Jobs'
-@heading = 'Jobs'
-@subheading = 'List'
+content_for(:page_title, 'Jobs')
+content_for(:page_heading, 'Jobs')
 %>
-
 
 <% if @jobs.empty? then %>
 <p>No jobs found</p>

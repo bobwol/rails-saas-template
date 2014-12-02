@@ -1,7 +1,6 @@
 <%
-@title = 'Account Settings'
-@heading = 'Settings'
-@subheading = 'Account'
+content_for(:page_title, 'Edit Account')
+content_for(:page_heading, 'Edit Account')
 %>
 
 <%= render "form", account: @account %>

@@ -1,7 +1,6 @@
 <%
-@title = 'Password Reset'
-@heading = 'Users'
-@subheading = 'Password Reset'
+content_for(:page_title, 'Password Reset')
+content_for(:page_heading, 'Password Reset')
 %>
 
 <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>

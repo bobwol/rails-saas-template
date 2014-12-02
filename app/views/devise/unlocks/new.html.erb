@@ -1,7 +1,6 @@
 <%
-@title = 'Unlock User'
-@heading = 'Users'
-@subheading = 'Unlock'
+content_for(:page_title, 'Unlock User')
+content_for(:page_heading, 'Unlock User')
 %>
 
 <%= form_for(resource, as: resource_name, url: unlock_path(resource_name), html: { method: :post }) do |f| %>

@@ -1,7 +1,6 @@
 <%
-@title = 'Account'
-@heading = 'Account'
-@subheading = 'Plan'
+content_for(:page_title, 'Pricing')
+content_for(:page_heading, 'Pricing')
 %>
 
 <%= render 'shared/pricing_table', plans: @plans, account: nil, action: :register %>
