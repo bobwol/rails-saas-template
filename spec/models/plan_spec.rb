@@ -162,6 +162,29 @@ RSpec.describe Plan, type: :model do
     end
   end
 
+  describe '.destroy' do
+    it 'can be destroyed if not in use' do
+      plan = FactoryGirl.create(:plan)
+      plan.destroy
+      expect(plan.destroyed?).to eq true
+    end
+
+    it 'cannot destroy if there are accounts using it' do
+      plan = FactoryGirl.create(:plan)
+      FactoryGirl.create(:account, plan: plan)
+      plan.destroy
+      expect(plan.destroyed?).to eq false
+      expect(plan.errors[:base]).to include 'plan is in use'
+    end
+
+    it 'cannot destroy if there are paused accounts using it' do
+      plan = FactoryGirl.create(:plan)
+      FactoryGirl.create(:account, paused_plan: plan)
+      plan.destroy
+      expect(plan.destroyed?).to eq false
+      expect(plan.errors[:base]).to include 'plan is in use'
+    end
+  end
   describe '.interval' do
     it 'is required' do
       plan = FactoryGirl.build(:plan, interval: '')

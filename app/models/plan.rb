@@ -34,6 +34,13 @@ class Plan < ActiveRecord::Base
   has_many :paused_accounts, class_name: 'Account', foreign_key: :paused_plan_id
   has_many :paused_plans, class_name: 'Plan', foreign_key: :paused_plan_id
 
+  before_destroy do |plan|
+    if Account.where('plan_id = ? or paused_plan_id= ?', plan.id, plan.id).count > 0
+      errors.add(:base, 'plan is in use')
+      false
+    end
+  end
+
   before_update do |plan|
     plan.errors.add :paused_plan_id, 'cannot use a plan as its own paused plan' if plan.id == plan.paused_plan_id
     plan.errors.add :currency, 'cannot change the currency' if plan.currency_changed?
