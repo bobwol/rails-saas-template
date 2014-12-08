@@ -74,6 +74,67 @@ RSpec.describe UserPermission, type: :model do
     end
   end
 
+  describe '.rec_num' do
+    it 'must be unique within an account' do
+      account = FactoryGirl.create(:account)
+      FactoryGirl.create(:user_permission, account: account, rec_num: 1)
+      user_permission2 = FactoryGirl.build(:user_permission, account: account, rec_num: 1)
+      expect(user_permission2).to_not be_valid
+      expect(user_permission2.errors[:rec_num]).to include 'has already been taken'
+    end
+
+    it 'can be duplicate with a different agency' do
+      user_permission = FactoryGirl.create(:user_permission, rec_num: 1)
+      expect(user_permission).to be_valid
+      user_permission2 = FactoryGirl.create(:user_permission, rec_num: 1)
+      expect(user_permission2).to be_valid
+    end
+
+    context 'when creating a record' do
+      it 'is automatically assigned if not provided' do
+        user_permission = FactoryGirl.create(:user_permission)
+        expect(user_permission).to be_valid
+      end
+
+      it 'starts at 1' do
+        user_permission = FactoryGirl.create(:user_permission)
+        expect(user_permission).to be_valid
+        expect(user_permission.rec_num).to eq 1
+      end
+
+      it 'increments correctly' do
+        account = FactoryGirl.create(:account)
+        user_permission1 = FactoryGirl.create(:user_permission, account: account)
+        expect(user_permission1).to be_valid
+        user_permission2 = FactoryGirl.create(:user_permission, account: account)
+        expect(user_permission2).to be_valid
+        expect(user_permission2.rec_num).to eq user_permission1.rec_num + 1
+        user_permission3 = FactoryGirl.create(:user_permission)
+        expect(user_permission3).to be_valid
+        expect(user_permission3.rec_num).to eq 1
+      end
+    end
+
+    context 'when updating a record' do
+      it 'is required' do
+        user_permission = FactoryGirl.create(:user_permission)
+        expect(user_permission).to be_valid
+        user_permission.rec_num = ''
+        expect(user_permission).to_not be_valid
+        expect(user_permission.errors[:rec_num]).to include 'can\'t be blank'
+      end
+    end
+  end
+
+  describe '.to_param' do
+    it 'returns rec_num' do
+      user_permission = FactoryGirl.create(:user_permission)
+      user_permission.rec_num = user_permission.id + 1
+      expect(user_permission.to_param).to eq user_permission.rec_num
+      expect(user_permission.to_param).to_not eq user_permission.id
+    end
+  end
+
   describe '.user_id' do
     it 'is required' do
       user_permission = FactoryGirl.build(:user_permission, user_id: '')

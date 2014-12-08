@@ -71,7 +71,7 @@ class Settings::UserPermissionsController < Settings::ApplicationController
     else
       id = params[:id]
     end
-    @user_permission = current_account.user_permissions.includes(:user).find(id)
+    @user_permission = current_account.user_permissions.includes(:user).where(rec_num: id).first!
     @user = @user_permission.user
   end
 

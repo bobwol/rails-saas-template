@@ -44,13 +44,17 @@ RSpec.describe Settings::UserPermissionsController, type: :controller do
 
     context 'as anonymous user' do
       it 'redirects to login page' do
-        delete :destroy, path: @account.id, id: @user_permission.id
+        delete :destroy, path: @account.id, id: @user_permission.to_param
         expect(response).to be_redirect
         expect(response).to redirect_to(new_user_session_path)
       end
 
       it 'does not delete a user permission' do
-        expect { delete :destroy, path: @account.id, id: @user_permission.id }.to change { UserPermission.count }.by(0)
+        # rubocop:disable Style/Blocks
+        expect {
+          delete :destroy, path: @account.id, id: @user_permission.to_param
+        }.to change { UserPermission.count }.by(0)
+        # rubocop:enable Style/Blocks
       end
     end
 
@@ -61,18 +65,22 @@ RSpec.describe Settings::UserPermissionsController, type: :controller do
       end
 
       it 'responds with forbidden' do
-        delete :destroy, path: @account.id, id: @user_permission.id
+        delete :destroy, path: @account.id, id: @user_permission.to_param
         expect(response).to be_forbidden
       end
 
       it 'renders the forbidden' do
-        delete :destroy, path: @account.id, id: @user_permission.id
+        delete :destroy, path: @account.id, id: @user_permission.to_param
         expect(response).to render_template('errors/forbidden')
         expect(response).to render_template('layouts/errors')
       end
 
       it 'does not delete a user permission' do
-        expect { delete :destroy, path: @account.id, id: @user_permission.id }.to change { UserPermission.count }.by(0)
+        # rubocop:disable Style/Blocks
+        expect {
+          delete :destroy, path: @account.id, id: @user_permission.to_param
+        }.to change { UserPermission.count }.by(0)
+        # rubocop:enable Style/Blocks
       end
     end
 
@@ -85,18 +93,18 @@ RSpec.describe Settings::UserPermissionsController, type: :controller do
         end
 
         it 'responds with forbidden' do
-          delete :destroy, path: @account.id, id: @user_permission.id
+          delete :destroy, path: @account.id, id: @user_permission.to_param
           expect(response).to be_forbidden
         end
 
         it 'renders the forbidden' do
-          delete :destroy, path: @account.id, id: @user_permission.id
+          delete :destroy, path: @account.id, id: @user_permission.to_param
           expect(response).to render_template('errors/forbidden')
           expect(response).to render_template('layouts/errors')
         end
 
         it 'does not delete a user' do
-          expect { delete :destroy, path: @account.id, id: @user_permission.id }.to change { User.count }.by(0)
+          expect { delete :destroy, path: @account.id, id: @user_permission.to_param }.to change { User.count }.by(0)
         end
       end
 
@@ -108,20 +116,20 @@ RSpec.describe Settings::UserPermissionsController, type: :controller do
         end
 
         it 'it redirects to users' do
-          delete :destroy, path: @account.id, id: @user_permission.id
+          delete :destroy, path: @account.id, id: @user_permission.to_param
           expect(response).to be_redirect
           expect(response).to redirect_to(settings_user_permissions_path)
         end
 
         it 'sets a notice' do
-          delete :destroy, path: @account.id, id: @user_permission.id
+          delete :destroy, path: @account.id, id: @user_permission.to_param
           expect(request.flash[:notice]).to eq 'User was successfully removed.'
         end
 
         it 'deletes a user' do
           # rubocop:disable Style/Blocks
           expect {
-            delete :destroy, path: @account.id, id: @user_permission.id
+            delete :destroy, path: @account.id, id: @user_permission.to_param
           }.to change { UserPermission.count }.by(-1)
           # rubocop:enable Style/Blocks
         end
@@ -135,18 +143,22 @@ RSpec.describe Settings::UserPermissionsController, type: :controller do
       end
 
       it 'it redirects to users' do
-        delete :destroy, path: @account.id, id: @user_permission.id
+        delete :destroy, path: @account.id, id: @user_permission.to_param
         expect(response).to be_redirect
         expect(response).to redirect_to(settings_user_permissions_path)
       end
 
       it 'sets a notice' do
-        delete :destroy, path: @account.id, id: @user_permission.id
+        delete :destroy, path: @account.id, id: @user_permission.to_param
         expect(request.flash[:notice]).to eq 'User was successfully removed.'
       end
 
       it 'deletes a user' do
-        expect { delete :destroy, path: @account.id, id: @user_permission.id }.to change { UserPermission.count }.by(-1)
+        # rubocop:disable Style/Blocks
+        expect {
+          delete :destroy, path: @account.id, id: @user_permission.to_param
+        }.to change { UserPermission.count }.by(-1)
+        # rubocop:enable Style/Blocks
       end
     end
   end
@@ -159,7 +171,7 @@ RSpec.describe Settings::UserPermissionsController, type: :controller do
 
     context 'as anonymous user' do
       it 'redirects to login page' do
-        get :edit, path: @account.id, id: @user_permission.id
+        get :edit, path: @account.id, id: @user_permission.to_param
         expect(response).to be_redirect
         expect(response).to redirect_to(new_user_session_path)
       end
@@ -172,12 +184,12 @@ RSpec.describe Settings::UserPermissionsController, type: :controller do
       end
 
       it 'responds with forbidden' do
-        get :edit, path: @account.id, id: @user_permission.id
+        get :edit, path: @account.id, id: @user_permission.to_param
         expect(response).to be_forbidden
       end
 
       it 'renders the forbidden' do
-        get :edit, path: @account.id, id: @user_permission.id
+        get :edit, path: @account.id, id: @user_permission.to_param
         expect(response).to render_template('errors/forbidden')
         expect(response).to render_template('layouts/errors')
       end
@@ -191,24 +203,24 @@ RSpec.describe Settings::UserPermissionsController, type: :controller do
       end
 
       it 'responds successfully with an HTTP 200 status code' do
-        get :edit, path: @account.id, id: @user_permission.id
+        get :edit, path: @account.id, id: @user_permission.to_param
         expect(response).to be_success
         expect(response).to have_http_status(:success)
       end
 
       it 'sets the nav_item to users' do
-        get :edit, path: @account.id, id: @user_permission.id
+        get :edit, path: @account.id, id: @user_permission.to_param
         expect(assigns(:nav_item)).to eq 'users'
       end
 
       it 'renders the edit template' do
-        get :edit, path: @account.id, id: @user_permission.id
+        get :edit, path: @account.id, id: @user_permission.to_param
         expect(response).to render_template('edit')
         expect(response).to render_template('layouts/settings')
       end
 
       it 'assigns a edit user permission' do
-        get :edit, path: @account.id, id: @user_permission.id
+        get :edit, path: @account.id, id: @user_permission.to_param
         ui = assigns(:user_permission)
         expect(ui).to_not be_nil
         expect(ui.id).to eq @user_permission.id
@@ -222,24 +234,24 @@ RSpec.describe Settings::UserPermissionsController, type: :controller do
       end
 
       it 'responds successfully with an HTTP 200 status code' do
-        get :edit, path: @account.id, id: @user_permission.id
+        get :edit, path: @account.id, id: @user_permission.to_param
         expect(response).to be_success
         expect(response).to have_http_status(:success)
       end
 
       it 'sets the nav_item to users' do
-        get :edit, path: @account.id, id: @user_permission.id
+        get :edit, path: @account.id, id: @user_permission.to_param
         expect(assigns(:nav_item)).to eq 'users'
       end
 
       it 'renders the edit template' do
-        get :edit, path: @account.id, id: @user_permission.id
+        get :edit, path: @account.id, id: @user_permission.to_param
         expect(response).to render_template('edit')
         expect(response).to render_template('layouts/settings')
       end
 
       it 'assigns a edit user permission' do
-        get :edit, path: @account.id, id: @user_permission.id
+        get :edit, path: @account.id, id: @user_permission.to_param
         ui = assigns(:user_permission)
         expect(ui).to_not be_nil
         expect(ui.id).to eq @user_permission.id
@@ -355,7 +367,7 @@ RSpec.describe Settings::UserPermissionsController, type: :controller do
 
     context 'as anonymous user' do
       it 'redirects to login page' do
-        get :show, path: @account.id, id: @user_permission.id
+        get :show, path: @account.id, id: @user_permission.to_param
         expect(response).to be_redirect
         expect(response).to redirect_to(new_user_session_path)
       end
@@ -368,12 +380,12 @@ RSpec.describe Settings::UserPermissionsController, type: :controller do
       end
 
       it 'responds with forbidden' do
-        get :show, path: @account.id, id: @user_permission.id
+        get :show, path: @account.id, id: @user_permission.to_param
         expect(response).to be_forbidden
       end
 
       it 'renders the forbidden' do
-        get :show, path: @account.id, id: @user_permission.id
+        get :show, path: @account.id, id: @user_permission.to_param
         expect(response).to render_template('errors/forbidden')
         expect(response).to render_template('layouts/errors')
       end
@@ -387,24 +399,24 @@ RSpec.describe Settings::UserPermissionsController, type: :controller do
       end
 
       it 'responds successfully with an HTTP 200 status code' do
-        get :show, path: @account.id, id: @user_permission.id
+        get :show, path: @account.id, id: @user_permission.to_param
         expect(response).to be_success
         expect(response).to have_http_status(200)
       end
 
       it 'sets the nav_item to users' do
-        get :show, path: @account.id, id: @user_permission.id
+        get :show, path: @account.id, id: @user_permission.to_param
         expect(assigns(:nav_item)).to eq 'users'
       end
 
       it 'renders the show template' do
-        get :show, path: @account.id, id: @user_permission.id
+        get :show, path: @account.id, id: @user_permission.to_param
         expect(response).to render_template('show')
         expect(response).to render_template('layouts/settings')
       end
 
       it 'assigns a show user permission' do
-        get :show, path: @account.id, id: @user_permission.id
+        get :show, path: @account.id, id: @user_permission.to_param
         ui = assigns(:user_permission)
         expect(ui).to_not be_nil
         expect(ui.id).to eq @user_permission.id
@@ -418,24 +430,24 @@ RSpec.describe Settings::UserPermissionsController, type: :controller do
       end
 
       it 'responds successfully with an HTTP 200 status code' do
-        get :show, path: @account.id, id: @user_permission.id
+        get :show, path: @account.id, id: @user_permission.to_param
         expect(response).to be_success
         expect(response).to have_http_status(200)
       end
 
       it 'sets the nav_item to users' do
-        get :show, path: @account.id, id: @user_permission.id
+        get :show, path: @account.id, id: @user_permission.to_param
         expect(assigns(:nav_item)).to eq 'users'
       end
 
       it 'renders the show template' do
-        get :show, path: @account.id, id: @user_permission.id
+        get :show, path: @account.id, id: @user_permission.to_param
         expect(response).to render_template('show')
         expect(response).to render_template('layouts/settings')
       end
 
       it 'assigns a show user permission' do
-        get :show, path: @account.id, id: @user_permission.id
+        get :show, path: @account.id, id: @user_permission.to_param
         ui = assigns(:user_permission)
         expect(ui).to_not be_nil
         expect(ui.id).to eq @user_permission.id
@@ -453,7 +465,7 @@ RSpec.describe Settings::UserPermissionsController, type: :controller do
       it 'redirects to login page' do
         patch :update,
               path: @account.id,
-              id: @user_permission.id,
+              id: @user_permission.to_param,
               user_permission: FactoryGirl.attributes_for(:user_permission)
         expect(response).to be_redirect
         expect(response).to redirect_to(new_user_session_path)
@@ -469,7 +481,7 @@ RSpec.describe Settings::UserPermissionsController, type: :controller do
       it 'responds with forbidden' do
         patch :update,
               path: @account.id,
-              id: @user_permission.id,
+              id: @user_permission.to_param,
               user_permission: FactoryGirl.attributes_for(:user_permission)
         expect(response).to be_forbidden
       end
@@ -477,7 +489,7 @@ RSpec.describe Settings::UserPermissionsController, type: :controller do
       it 'renders the forbidden' do
         patch :update,
               path: @account.id,
-              id: @user_permission.id,
+              id: @user_permission.to_param,
               user_permission: FactoryGirl.attributes_for(:user_permission, user: @user, account: @account)
         expect(response).to render_template('errors/forbidden')
         expect(response).to render_template('layouts/errors')
@@ -495,7 +507,7 @@ RSpec.describe Settings::UserPermissionsController, type: :controller do
         it 'sets the nav_item to users' do
           patch :update,
                 path: @account.id,
-                id: @user_permission.id,
+                id: @user_permission.to_param,
                 user_permission: FactoryGirl.attributes_for(:user_permission)
           expect(assigns(:nav_item)).to eq 'users'
         end
@@ -503,7 +515,7 @@ RSpec.describe Settings::UserPermissionsController, type: :controller do
         it 'it redirects to user' do
           patch :update,
                 path: @account.id,
-                id: @user_permission.id,
+                id: @user_permission.to_param,
                 user_permission: FactoryGirl.attributes_for(:user_permission)
           expect(response).to be_redirect
           expect(response).to redirect_to(settings_user_permission_path(@user_permission))
@@ -512,7 +524,7 @@ RSpec.describe Settings::UserPermissionsController, type: :controller do
         it 'sets a notice' do
           patch :update,
                 path: @account.id,
-                id: @user_permission.id,
+                id: @user_permission.to_param,
                 user_permission: FactoryGirl.attributes_for(:user_permission)
           expect(request.flash[:notice]).to eq 'User permissions were successfully updated.'
         end
@@ -522,7 +534,7 @@ RSpec.describe Settings::UserPermissionsController, type: :controller do
         it 'sets the nav_item to users' do
           patch :update,
                 path: @account.id,
-                id: @user_permission.id,
+                id: @user_permission.to_param,
                 user_permission: FactoryGirl.attributes_for(:user_permission, account_admin: '')
           expect(assigns(:nav_item)).to eq 'users'
         end
@@ -530,7 +542,7 @@ RSpec.describe Settings::UserPermissionsController, type: :controller do
         it 'it renders the new template' do
           patch :update,
                 path: @account.id,
-                id: @user_permission.id,
+                id: @user_permission.to_param,
                 user_permission: FactoryGirl.attributes_for(:user_permission, account_admin: '')
           expect(response).to render_template('edit')
           expect(response).to render_template('layouts/settings')
@@ -539,7 +551,7 @@ RSpec.describe Settings::UserPermissionsController, type: :controller do
         it 'it pass a new user permission' do
           patch :update,
                 path: @account.id,
-                id: @user_permission.id,
+                id: @user_permission.to_param,
                 user_permission: FactoryGirl.attributes_for(:user_permission, account_admin: '')
           user_permission = assigns(:user_permission)
           expect(user_permission).to_not be_nil
@@ -558,7 +570,7 @@ RSpec.describe Settings::UserPermissionsController, type: :controller do
         it 'sets the nav_item to users' do
           patch :update,
                 path: @account.id,
-                id: @user_permission.id,
+                id: @user_permission.to_param,
                 user_permission: FactoryGirl.attributes_for(:user_permission)
           expect(assigns(:nav_item)).to eq 'users'
         end
@@ -566,7 +578,7 @@ RSpec.describe Settings::UserPermissionsController, type: :controller do
         it 'it redirects to user permissions' do
           patch :update,
                 path: @account.id,
-                id: @user_permission.id,
+                id: @user_permission.to_param,
                 user_permission: FactoryGirl.attributes_for(:user_permission)
           expect(response).to be_redirect
           expect(response).to redirect_to(settings_user_permission_path(@user_permission))
@@ -575,7 +587,7 @@ RSpec.describe Settings::UserPermissionsController, type: :controller do
         it 'sets a notice' do
           patch :update,
                 path: @account.id,
-                id: @user_permission.id,
+                id: @user_permission.to_param,
                 user_permission: FactoryGirl.attributes_for(:user_permission)
           expect(request.flash[:notice]).to eq 'User permissions were successfully updated.'
         end
@@ -585,7 +597,7 @@ RSpec.describe Settings::UserPermissionsController, type: :controller do
         it 'sets the nav_item to users' do
           patch :update,
                 path: @account.id,
-                id: @user_permission.id,
+                id: @user_permission.to_param,
                 user_permission: FactoryGirl.attributes_for(:user_permission, account_admin: '')
           expect(assigns(:nav_item)).to eq 'users'
         end
@@ -593,7 +605,7 @@ RSpec.describe Settings::UserPermissionsController, type: :controller do
         it 'it renders the new template' do
           patch :update,
                 path: @account.id,
-                id: @user_permission.id,
+                id: @user_permission.to_param,
                 user_permission: FactoryGirl.attributes_for(:user_permission, account_admin: '')
           expect(response).to render_template('edit')
           expect(response).to render_template('layouts/settings')
@@ -602,7 +614,7 @@ RSpec.describe Settings::UserPermissionsController, type: :controller do
         it 'it pass a new user permission' do
           patch :update,
                 path: @account.id,
-                id: @user_permission.id,
+                id: @user_permission.to_param,
                 user_permission: FactoryGirl.attributes_for(:user_permission, account_admin: '')
           user_permission = assigns(:user_permission)
           expect(user_permission).to_not be_nil

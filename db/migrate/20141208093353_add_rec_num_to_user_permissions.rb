@@ -28,33 +28,10 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# User Permission model
-class UserPermission < ActiveRecord::Base
-  belongs_to :user
-  belongs_to :account
-
-  delegate :email, to: :user, prefix: true
-
-  validates :account_admin, inclusion: { in: [true, false] }, presence: false, allow_blank: false
-  validates :account_id, presence: true
-  validates :rec_num,
-            numericality: { greater_than: 0, integer_only: true },
-            uniqueness: { scope: :account_id },
-            presence: true
-  validates :user_id, uniqueness: { scope: :account_id }, presence: true
-
-  before_validation(on: :create) do
-    unless rec_num
-      max_rec_num = UserPermission.where(account_id: account_id).maximum(:rec_num)
-      if max_rec_num
-        self.rec_num = max_rec_num + 1
-      else
-        self.rec_num = 1
-      end
-    end
-  end
-
-  def to_param
-    rec_num
+# Migration to add rec_num property to user_permissions
+class AddRecNumToUserPermissions < ActiveRecord::Migration
+  def change
+    add_column :user_permissions, :rec_num, :integer, null: false, after: :id
+    add_index :user_permissions, [:account_id, :rec_num], unique: true
   end
 end

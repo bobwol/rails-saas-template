@@ -23,10 +23,10 @@
 <%= render "shared/navbar" %>
 
 <div class="container">
-  <div class="row">
+  <div class="row" style="padding-top: 60px">
     <div class="col-sm-12 main">
 
-      <%= render_heading %>
+      <h1 class="page-header"><%= yield :page_heading %><% if content_for? :page_sub_heading %>  <small><%= yield :page_sub_heading %></small><% end %> </h1>
 
 <%= render "shared/flash" %>
 
