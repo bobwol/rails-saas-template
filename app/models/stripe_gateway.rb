@@ -131,7 +131,6 @@ class StripeGateway
 
     def plan_create(id)
       plan = Plan.find(id)
-      plan.stripe_id = "plan_#{plan.id}"
       data = {
         id: plan.stripe_id,
         amount: plan.amount,

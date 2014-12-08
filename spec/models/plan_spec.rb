@@ -103,8 +103,7 @@ RSpec.describe Plan, type: :model do
       # Three inactive plans
       FactoryGirl.create(:plan, active: false)
       FactoryGirl.create(:plan, public: false)
-      FactoryGirl.create(:plan, stripe_id: nil)
-      # On active plan
+      # One active plan
       plan = FactoryGirl.create(:plan)
 
       plans = Plan.available
@@ -298,9 +297,10 @@ RSpec.describe Plan, type: :model do
   end
 
   describe '.stripe_id' do
-    it 'is not required' do
+    it 'is required' do
       plan = FactoryGirl.build(:plan, stripe_id: '')
-      expect(plan).to be_valid
+      expect(plan).to_not be_valid
+      expect(plan.errors[:stripe_id]).to include 'can\'t be blank'
     end
 
     it 'must be 150 characters or less' do

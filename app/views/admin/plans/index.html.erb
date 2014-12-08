@@ -14,6 +14,7 @@ content_for(:page_heading, 'Plans')
 	<thead>
 		<tr>
 			<th>Name</th>
+			<th>Stripe</th>
 			<th>Active</th>
 			<th>Public</th>
 			<th>Currency</th>
@@ -26,6 +27,7 @@ content_for(:page_heading, 'Plans')
 <% @plans.each do |plan| %>
 		<tr>
 			<td><%= link_to_if can?(:show, plan), plan.name, admin_plan_path(plan) %></td>
+			<td><%= plan.stripe_id %></td>
 			<td><%= plan.active %></td>
 			<td><%= plan.public %></td>
 			<td><%= plan.currency %></td>

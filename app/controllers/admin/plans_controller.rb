@@ -120,6 +120,7 @@ class Admin::PlansController < Admin::ApplicationController
                                  :public,
                                  :require_card_upfront,
                                  :statement_description,
+                                 :stripe_id,
                                  :trial_period_days)
   end
 

@@ -16,6 +16,8 @@ content_for(:page_heading, 'Plan')
 <dl class="dl-horizontal">
   <dt>Name</dt>
   <dd><%= @plan.name %></dd>
+  <dt>Stripe</dt>
+  <dd><%= @plan.stripe_id %></dd>
   <dt>Statement Description</dt>
   <dd><%= @plan.statement_description %></dd>
   <dt>Active</dt>

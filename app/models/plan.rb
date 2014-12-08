@@ -47,11 +47,7 @@ class Plan < ActiveRecord::Base
 
   belongs_to :paused_plan, class_name: 'Plan'
 
-  scope :available,
-        lambda {
-          where('active = ? AND public = ? AND stripe_id IS NOT NULL', true, true)
-            .order('amount DESC, name ASC')
-        }
+  scope :available, -> { where('active = ? AND public = ?', true, true).order('amount DESC, name ASC') }
   scope :available_for_currency,
         lambda { |for_currency|
           available.where('currency = ?', for_currency).order('amount DESC, name ASC')
@@ -80,7 +76,7 @@ class Plan < ActiveRecord::Base
   validates :name, length: { maximum: 150 }, presence: true
   validates :public, inclusion: { in: [true, false] }, presence: false, allow_blank: false
   validates :statement_description, length: { maximum: 150 }
-  validates :stripe_id, length: { maximum: 80 }
+  validates :stripe_id, length: { maximum: 80 }, presence: true
   validates :trial_period_days, presence: true
   validates :trial_period_days,
             numericality: { greater_than_or_equal_to: 0, integer_only: true },
