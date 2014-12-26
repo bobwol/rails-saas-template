@@ -32,5 +32,4 @@ require 'rails_helper'
 
 # Test for customized Devise unlocks controller
 RSpec.describe Users::UnlocksController, type: :controller do
-
 end

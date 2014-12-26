@@ -118,5 +118,4 @@ RSpec.describe UserInvitation, type: :model do
       expect(user_invitation.errors[:last_name]).to include 'is too long (maximum is 60 characters)'
     end
   end
-
 end

@@ -76,7 +76,7 @@ RSpec.describe Admin::UsersController, type: :controller do
       context 'with valid attributes' do
         before :each do
           mailer = double(ActionMailer::Base)
-          expect(mailer).to receive(:deliver).once
+          expect(mailer).to receive(:deliver_now).once
           expect(UserMailer).to receive(:welcome).with(kind_of(User)).once.and_return(mailer)
         end
 

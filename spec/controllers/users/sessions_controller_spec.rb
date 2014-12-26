@@ -32,5 +32,4 @@ require 'rails_helper'
 
 # Test for customized Devise sessions controller
 RSpec.describe Users::SessionsController, type: :controller do
-
 end
