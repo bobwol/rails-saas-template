@@ -48,7 +48,7 @@ gem 'kaminari', '~> 0.16.1'
 gem 'flutie', '~> 2.0.0'
 
 # Add devise for user authentication
-gem 'devise', '~> 3.4.1'
+gem 'devise', '~> 4.7.1'
 
 # Add cancancan for authorization
 gem 'cancancan', '~> 1.9.2'
