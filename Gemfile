@@ -42,7 +42,7 @@ gem 'tzinfo-data', '~> 1.2014.10', platforms: [:mingw, :mswin]
 gem 'bootstrap-sass', '~> 3.4.1'
 
 # Add kaminari for paging results
-gem 'kaminari', '~> 0.16.1'
+gem 'kaminari', '~> 1.2.1'
 
 # Add flutie for helpers with title and body class
 gem 'flutie', '~> 2.0.0'
