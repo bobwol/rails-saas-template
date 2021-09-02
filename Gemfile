@@ -39,7 +39,7 @@ gem 'sdoc', '~> 0.4.1',          group: :doc
 gem 'tzinfo-data', '~> 1.2014.10', platforms: [:mingw, :mswin]
 
 # Add bootstrap-sass for a theme
-gem 'bootstrap-sass', '~> 3.3.1.0'
+gem 'bootstrap-sass', '~> 3.4.1'
 
 # Add kaminari for paging results
 gem 'kaminari', '~> 0.16.1'
