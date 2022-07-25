@@ -71,7 +71,7 @@ group :development do
   gem 'bullet', '~> 4.14.0'
   gem 'rails_best_practices', '~> 1.15.4'
   gem 'brakeman', '~> 2.6.3'
-  gem 'rubocop', '~> 0.28.0'
+  gem "rubocop", "0.49.0"
 end
 
 # Testing tools
