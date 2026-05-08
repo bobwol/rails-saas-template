@@ -2,24 +2,24 @@ source 'https://rubygems.org'
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2.0'
+gem 'rails', '8.1.3'
 # Use MySQL as the database for Active Record
 gem 'mysql2', '0.3.17'
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 5.0.0'
+gem 'sass-rails', '~> 5.0.8'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 2.6.0'
 # Use CoffeeScript for .js.coffee assets and views
-gem 'coffee-rails', '~> 4.1.0'
+gem 'coffee-rails', '~> 5.0.0'
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer',  platforms: :ruby
 
 # Use jquery as the JavaScript library
-gem 'jquery-rails', '~> 4.0.2'
+gem 'jquery-rails', '~> 4.6.1'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks', '~> 2.5.3'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 2.2.6'
+gem 'jbuilder', '~> 2.14.1'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.1',          group: :doc
 
@@ -42,13 +42,13 @@ gem 'tzinfo-data', '~> 1.2014.10', platforms: [:mingw, :mswin]
 gem 'bootstrap-sass', '~> 3.4.1'
 
 # Add kaminari for paging results
-gem 'kaminari', '~> 1.2.1'
+gem 'kaminari', '~> 1.2.2'
 
 # Add flutie for helpers with title and body class
 gem 'flutie', '~> 2.0.0'
 
 # Add devise for user authentication
-gem 'devise', '~> 4.7.1'
+gem 'devise', '~> 5.0.4'
 
 # Add cancancan for authorization
 gem 'cancancan', '~> 1.9.2'
@@ -59,8 +59,8 @@ gem 'country_select', '~> 2.1.0'
 
 # Add delayed jobs so we can background tasks that aren't critical
 gem 'daemons', '~> 1.1.9'
-gem 'delayed_job', '~> 4.0.6'
-gem 'delayed_job_active_record', '~> 4.0.3'
+gem 'delayed_job', '~> 4.2.0'
+gem 'delayed_job_active_record', '~> 4.1.11'
 
 # Yay Stripe!
 gem 'stripe', '~> 1.16.1'
@@ -76,7 +76,7 @@ end
 
 # Testing tools
 group :test, :development do
-  gem 'faker', '~> 1.4.3'
+  gem 'faker', '~> 3.8.0'
   gem 'factory_girl_rails', '~> 4.5.0'
   gem 'database_cleaner', '~> 1.3.0'
   gem 'rspec', '~> 3.1.0'
